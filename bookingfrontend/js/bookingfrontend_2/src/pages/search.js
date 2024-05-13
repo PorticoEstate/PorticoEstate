@@ -561,7 +561,6 @@ class BookingSearch {
                     menuaction: 'bookingfrontend.uibuilding.show',
                     id: buildings[0].id
                 })
-                console.log(resource.name, buildings)
 
                 // language=HTML
                 append.push(`
@@ -798,20 +797,34 @@ class Search {
                 menuaction: 'bookingfrontend.uisearch.get_search_data_all',
                 length: -1
             }, true)) // Fetch local data
-                .then(response => response.json()),
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch local data');
+                    return response.json();
+                }),
             ...remote_search.map(remote => {
                 const remoteUrl = phpGWLink('bookingfrontend/', {
                     menuaction: 'bookingfrontend.uisearch.get_search_data_all',
                     length: -1
                 }, true, remote.webservicehost);
                 return fetch(remoteUrl) // Fetch remote data
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) throw new Error(`Failed to fetch data from ${remote.webservicehost}`);
+                        return response.json();
+                    })
                     .then(data => ModifyIds(data, remote))
+                    .catch(error => {
+                        console.error(`Error fetching or processing data from ${remote.webservicehost}: ${error}`);
+                        return null; // Return null or a default object to handle failed remote fetches
+                    })
             })
         ];
 
         Promise.all(promises).then(responses => {
-            console.log(responses);
+            // console.log(responses);
+            // Filter out null responses from failed fetches
+            responses = responses.filter(response => response !== null);
+            if (responses.length === 0) throw new Error('No data retrieved from any source.');
+
             // Combine local and remote data
             const combinedData = responses.reduce((acc, data, indx) => {
                 if(indx === 0 ){

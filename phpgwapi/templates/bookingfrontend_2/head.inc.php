@@ -440,7 +440,7 @@ HTML;
       </div>
       <ul class="list-unstyled navbar__section__links">
         <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
-        <li><a href="{$faq}"><i class="fa-solid fa-clipboard"></i><span class="badge badge-light">2</span>
+        <li><a href="{$faq}">FAQ</a></li>
   </span>
 </a></li>
       </ul>
