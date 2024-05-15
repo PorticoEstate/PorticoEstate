@@ -68,7 +68,7 @@ Choose date-range	bookingfrontend	no	Velg dato
 Choose resources	bookingfrontend	no	Velg lokaler
 Close	bookingfrontend	no	Lukke
 Collects users from all applications and events	booking	no	Samler brukere fra alle søknader og arrangementer
-Complete applications	bookingfrontend	no	Fullfør søknad
+complete_applications	bookingfrontend	no	Fullfør søknad
 Confirm e-mail address	bookingfrontend	no	Bekreft e-postadressen
 Contact information name is to long. max 50 characters	bookingfrontend	no	Navn i kontakt informasjon er for langt. Maksimalt 50 tegn
 Could not delete allocation due to a booking still use it	bookingfrontend	no	Kunne ikke slette denne tildelingen på grunn av at en interntildeling forsatt bruker den

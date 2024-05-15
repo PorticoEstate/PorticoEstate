@@ -116,8 +116,7 @@
 				// no need for unserialize
 				return $data;
 			}
-			
-
+//            error_log($data);
 			$newdata = @unserialize($data);
 			if ($newdata || is_array($newdata)) // Check for empty array
 			{

@@ -69,6 +69,7 @@ Choose resources	bookingfrontend	nn	Velg lokaler
 Close	bookingfrontend	nn	Lukke
 Collects users from all applications and events	booking	nn	Haustar brukarar frå alle søknader og arrangement
 Complete applications	bookingfrontend	nn	Fullfør søknad
+complete_applications	bookingfrontend	nn	Fullfør søknad
 Confirm e-mail address	bookingfrontend	nn	Stadfest e-postadressa
 Contact information name is to long. max 50 characters	bookingfrontend	nn	Namnet i kontaktinformasjonen er for langt, maksimalt 50 teikn.
 Could not delete allocation due to a booking still use it	bookingfrontend	nn	Kan ikkje slette denne interntildelinga fordi ei interntildeling framleis brukar ho
