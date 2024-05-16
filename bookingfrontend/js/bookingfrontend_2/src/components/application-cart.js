@@ -39,7 +39,6 @@ class ApplicationsCartModel {
 
     updateCartItems(data) {
         const {list, total_sum} = data;
-        this.applicationCartItems(null);
         if (total_sum) {
             // document.getElementById("total_sum").textContent = total_sum.toFixed(2);
             // document.getElementById("total_sum_block").style.display = 'block';
