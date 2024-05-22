@@ -3,7 +3,7 @@
         <div class="dialog-header">
             <span class="dialog-title">Søknader klar for innsending</span>
 <!--            <button class="dialog-close-btn">&times;</button>-->
-            <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal"
+            <button type="button" class="btn-close  " data-bs-dismiss="modal"
                     aria-label="Close"></button>
         </div>
         <div class="dialog-ingress">

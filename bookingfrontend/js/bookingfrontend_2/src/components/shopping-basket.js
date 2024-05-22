@@ -70,7 +70,7 @@ ko.components.register('shopping-basket', {
             <div class="dialog-container">
                 <div class="dialog-header">
                     <span class="dialog-title">Søknader klar for innsending</span>
-                    <button type="button" class="btn-close btn-close-white" data-bind="click: () => togglePopper(false)"
+                    <button type="button" class="btn-close" data-bind="click: () => togglePopper(false)"
                             aria-label="Close"></button>
                 </div>
                 <div class="dialog-ingress">
@@ -81,47 +81,50 @@ ko.components.register('shopping-basket', {
                     <div class="article-table-wrapper" data-bind="visible: cartElementExpanded">
                         <div data-bind="foreach: applicationCartItems">
 
-                            <div class="article-table-header">
+                            <div class="article-table-header title-only">
                                 <div class="resource-name" data-bind="text: building_name"></div>
                                 <div class="resource-expand float-right">
                                     <span class="far fa-trash-alt mr-2" data-bind="click: $parent.deleteItem"></span>
                                 </div>
                             </div>
                             <div class="category-table">
-                                <!-- ko foreach: { data: resources, as: 'item' } -->
-                                
-                                    <div class="category-header">
-                                        <div class="category-article-row">
-                                        <div class="category-name" data-bind="text: item.name"></div>
+
+                                    <div class="category-header category-article-row d-flex flex-wrap">
+                                        <!-- ko foreach: { data: resources, as: 'item' } -->
+
+                                        <div class="pill pill">
+                                            <i class="fa-solid fa-layer-group"></i>
+                                            <div class="pill-label" data-bind="text: item.name"></div>
                                         </div>
+                                        <!-- /ko -->
+
                                     </div>
 
-                                <!-- /ko -->
                                 <div class="category-articles">
-                                    <div class="category-article-row">
+                                    <div class="category-article-row d-flex  flex-wrap">
                                         <!-- ko foreach: { data: dates, as: 's' } -->
                                         <time-slot-pill params="date: s"></time-slot-pill>
                                         <!-- /ko -->
-                                        
+
                                     </div>
                                 </div>
-                                
+
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="dialog-actions">
+                    <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3"
+                       data-bind="attr: { href: phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false) } ">
+                        <div class="text-bold">
+                            <trans params="group: 'bookingfrontend', tag:'complete_applications'"></trans>
+                        </div>
+                        <div class="text-bold d-flex align-items-center">
+                            <i class="fa-solid fa-arrow-right-long"></i>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="dialog-actions">
-                <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3"
-                   data-bind="attr: { href: phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false) } ">
-                    <div class="text-bold">
-                        <trans params="group: 'bookingfrontend', tag:'complete_applications'"></trans>
-                    </div>
-                    <div class="text-bold d-flex align-items-center">
-                        <i class="fa-solid fa-arrow-right-long"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
         </div>
     `
 });
