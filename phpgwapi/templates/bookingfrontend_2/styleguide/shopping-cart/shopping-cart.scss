@@ -1,20 +1,20 @@
 div#applications-cart-content {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  bottom: 0;
-  right: 0;
-  //margin-left: 100%;
-  //transform: translate(100%, -1rem); /* Moves dialog left and up */
-  //background: none;
-  background-color: $white;
-  border: 1px solid $purple-24;
-  margin-right: 10px;
-  padding: 0;
-  z-index: 100;
+  //position: fixed;
+  //display: flex;
+  //flex-direction: column;
+  //bottom: 0;
+  //right: 0;
+  ////margin-left: 100%;
+  ////transform: translate(100%, -1rem); /* Moves dialog left and up */
+  ////background: none;
+  //background-color: $white;
+  //border: 1px solid $purple-24;
+  //margin-right: 10px;
+  //padding: 0;
+  //z-index: 100;
   width: 27%;
   min-width: 480px;
-  max-height: 100%;
-  overflow-y: scroll;
+  //max-height: 100%;
+  //overflow-y: scroll;
 
 }

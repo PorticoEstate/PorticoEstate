@@ -802,6 +802,9 @@
     display: none;
   }
 }
+.article-table-wrapper .article-table-header.title-only {
+  grid-template-areas: "name name name name name expand";
+}
 .article-table-wrapper .article-table-header.collapsed-head {
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
