@@ -593,8 +593,8 @@ JS;
 			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 			{
 				case 'bootstrap':
-					$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-bs4');
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-bs4.css");
+					$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-bs5');
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-bs5.css");
 					break;
 				default:
 					$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-lite');
