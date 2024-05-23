@@ -112,10 +112,33 @@ class ApplicationModel {
         this.typeApplicationValidationMessage = ko.observable(false);
         this.applicationSuccess = ko.observable(false);
 
+
+        this.customerOrganizationNumberFallback = ko.observable('');
+        this.customerOrganizationName = ko.observable('');
+        this.isOrganizationNumberReadonly = ko.observable(true);
+        this.isOrganizationNameReadonly = ko.observable(true);
     }
 
     deleteItem(e) {
         ApplicationCart.deleteItem(e);
+    }
+    addNewOrganization() {
+        this.customerOrganizationNumberFallback('');
+        this.customerOrganizationName('');
+        this.isOrganizationNumberReadonly(false);
+        this.isOrganizationNameReadonly(false);
+
+        // Focus on the organization number field
+        document.querySelector("input[name='customer_organization_number_fallback']").focus();
+
+        // Clear and update the select element
+        const customerOrgNumber = document.getElementById('customer_organization_number');
+        customerOrgNumber.required = false;
+        customerOrgNumber.value = null;
+
+        // Trigger 'change' event manually
+        const event = new Event('change', { bubbles: true });
+        customerOrgNumber.dispatchEvent(event);
     }
 
 }

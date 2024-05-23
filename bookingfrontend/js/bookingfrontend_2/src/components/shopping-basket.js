@@ -82,7 +82,9 @@ ko.components.register('shopping-basket', {
                         <div data-bind="foreach: applicationCartItems">
 
                             <div class="article-table-header title-only">
-                                <div class="resource-name" data-bind="text: building_name"></div>
+                                <div class="resource-name d-flex gap-2 align-items-center">
+                                    <i class="fa-solid fa-location-dot"></i><h3 class="p-0 m-0" data-bind="text: building_name"></h3>
+                                </div>
                                 <div class="resource-expand float-right">
                                     <span class="far fa-trash-alt mr-2" data-bind="click: $parent.deleteItem"></span>
                                 </div>

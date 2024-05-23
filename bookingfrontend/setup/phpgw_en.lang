@@ -618,3 +618,10 @@ minute	bookingfrontend	en	Minute
 days	bookingfrontend	en	Days
 continue	bookingfrontend	en	Continue
 billing	bookingfrontend	en	Billing
+home_page	bookingfrontend	en	To the homepage
+summary	bookingfrontend	en	Summary
+your_applications	bookingfrontend	en	Your applications
+billing_information_contact_person	bookingfrontend	en	Billing information for contact person
+billing_information	bookingfrontend	en	Billing information
+submit_application	bookingfrontend	en	Submit application
+

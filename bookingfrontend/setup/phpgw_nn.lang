@@ -618,4 +618,9 @@ minute	bookingfrontend	nn	Minutt
 days	bookingfrontend	nn	Dagar
 continue	bookingfrontend	nn	Fortsett
 billing	bookingfrontend	nn	Fakturering
-
+home_page	bookingfrontend	nn	Til forsiden
+summary	bookingfrontend	nn	Oppsummering
+your_applications	bookingfrontend	nn	Dine søknader
+billing_information_contact_person	bookingfrontend	nn	Fakturainformasjon til kontaktperson
+billing_information	bookingfrontend	nn	Fakturainformasjon
+submit_application	bookingfrontend	nn	Send inn søknad
