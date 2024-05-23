@@ -805,14 +805,14 @@ h1, .h1 {
   }
 }
 
-h2, .h2 {
+h2, .dialog-container .dialog-header .dialog-title, .h2 {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 2.25rem;
   line-height: 2.75rem;
 }
 @media (max-width: 1024px) {
-  h2, .h2 {
+  h2, .dialog-container .dialog-header .dialog-title, .h2 {
     font-size: 1.5rem;
     line-height: 1.875rem;
   }
@@ -1223,6 +1223,32 @@ a.link-button--transparent {
 .pe-btn:focus-visible {
   border-color: #793C8A;
   box-shadow: 0 0 0 0.25rem #946da8;
+}
+.pe-btn-text {
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pe-btn-text.underline {
+  text-decoration: underline;
+}
+.pe-btn-text-primary {
+  --bs-btn-close-color: #793C8A;
+  color: #793C8A;
+}
+.pe-btn-text-primary:hover {
+  color: #28358B;
+}
+.pe-btn-text-secondary {
+  color: #28358B;
+}
+.pe-btn-text-secondary:hover {
+  color: #793C8A;
+}
+.pe-btn-text-white {
+  color: #FFFFFF;
 }
 .pe-btn-primary {
   background: #793C8A;
@@ -1921,6 +1947,7 @@ textarea {
   display: block;
 }
 .js-dropdown-content, .js-slidedown-content {
+  display: block;
   display: none;
 }
 
@@ -3078,20 +3105,41 @@ textarea {
 }
 
 div#applications-cart-content {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  bottom: 0;
-  right: 0;
-  background-color: #FFFFFF;
-  border: 1px solid #dfd0e3;
-  margin-right: 10px;
-  padding: 0;
-  z-index: 100;
   width: 27%;
   min-width: 480px;
-  max-height: 100%;
-  overflow-y: scroll;
+}
+
+.dialog-container {
+  background-color: #FFFFFF;
+  border-radius: 0.5rem;
+  border-color: purple;
+  border-width: 1px;
+  border-style: solid;
+  padding: 1.5rem;
+  max-width: min(90vw, 840px);
+  width: max-content;
+}
+.dialog-container .dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.dialog-container .dialog-ingress {
+  margin-bottom: 1.5rem;
+}
+.dialog-container .dialog-ingress p {
+  margin: 0;
+}
+.dialog-container .dialog-content {
+  margin-bottom: 1.5rem;
+  /* Additional styles for content can be added here */
+}
+.dialog-container .dialog-actions {
+  text-align: center;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /*# sourceMappingURL=main.css.map */
