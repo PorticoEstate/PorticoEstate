@@ -80,79 +80,81 @@
 					</p>
 					<div data-bind="visible: applicationCartItems().length != 0">
 						<div data-bind="foreach: applicationCartItems">
-							<div class="applications mx-5 p-3 bg-light border rounded">
-								<input type="hidden" data-bind="value:id" name="application_id[]" class="application_id" />
-								<div class="row">
-									<span class="col-5" data-bind="text: building_name"></span>
-									<div data-bind="" class="col-5">
-										<span class="mr-3" data-bind="text: joinedResources"></span>
+							<div class="article-table-wrapper">
+								<div class="article-table-header" >
+									<div class="resource-name" data-bind="text: building_name"></div>
+									<div class="resource-price">
 									</div>
-									<div class="col-2 text-right d-flex justify-content-end">
-										<span data-bind="click: $parent.deleteItem" class="fa-solid fa-trash-can mr-2"></span>
+									<div class="resource-expand" data-bind="click: $parent.deleteItem">
+										<button class="btn btn-subtle" type="button">
+											<i class="fa-solid fa-trash-can"></i>
+										</button>
 									</div>
 								</div>
-								<div class="row" data-bind="foreach: dates">
-									<span class="col-5" data-bind="text: date"></span>
-									<span class="col-6" data-bind="text: periode"></span>
+								<div class="category-table">
+
+									<div class="category-header category-article-row d-flex flex-wrap"  data-bind="foreach: resources">
+
+										<div class="pill pill">
+											<i class="fa-solid fa-layer-group"></i>
+											<div class="pill-label" data-bind="text: $data.name"></div>
+										</div>
+
+									</div>
+
+									<div class="category-articles">
+										<div class="category-article-row d-flex  flex-wrap" data-bind="foreach: dates">
+											<time-slot-pill params="date: $data"></time-slot-pill>
+										</div>
+									</div>
+									<div class="collapsible-part">
+										<table class='table' data-bind="foreach: orders">
+											<thead>
+												<tr>
+													<th><xsl:value-of select="$lang_name" /></th>
+													<th><xsl:value-of select="$lang_unit" /></th>
+													<th><xsl:value-of select="$lang_amount" /></th>
+													<th><xsl:value-of select="$lang_tax" /></th>
+													<th><xsl:value-of select="$lang_quantity" /></th>
+													<th><xsl:value-of select="$lang_sum" /></th>
+												</tr>
+											</thead>
+											<tbody data-bind="foreach: lines">
+												<tr>
+													<td data-bind="text: name"></td>
+													<td data-bind="text: lang[unit]"></td>
+													<td class="text-right" data-bind="text: amount.toFixed(2)"></td>
+													<td class="text-right" data-bind="text: tax.toFixed(2)"></td>
+													<td class="text-right" data-bind="text: quantity"></td>
+													<td class="text-right" data-bind="text: (tax + amount).toFixed(2)"></td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td><xsl:value-of select="$lang_sum" /></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td class="text-right" data-bind="text: sum.toFixed(2)"></td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
 								</div>
-								<table class='table' data-bind="foreach: orders">
-									<caption style="caption-side:top">
-										<xsl:value-of select="$lang_details" />
-									</caption>
-									<tr>
-										<th>
-											<xsl:value-of select="$lang_name" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_unit" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_amount" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_tax" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_quantity" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_sum" />
-										</th>
-									</tr>
-									<tbody data-bind="foreach: lines">
-										<td data-bind="text: name"></td>
-										<td data-bind="text: lang[unit]"></td>
-										<td class="text-right" data-bind="text: amount.toFixed(2)"></td>
-										<td class="text-right" data-bind="text: tax.toFixed(2)"></td>
-										<td class="text-right" data-bind="text: quantity"></td>
-										<td class="text-right" data-bind="text: (tax + amount).toFixed(2)"></td>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td>
-												<xsl:value-of select="$lang_sum" />
-											</td>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td class="text-right" data-bind="text: sum.toFixed(2)"></td>
-										</tr>
-									</tfoot>
-								</table>
+
+
 							</div>
 						</div>
 						<div id="total_sum_block" class="applications p-4 mb-2" style="display:none;">
 							<table class='table'>
 								<tr>
-									<th>
-										Total sum
-									</th>
-									<th class="text-right d-flex justify-content-end" id="total_sum">
-									</th>
+									<th>Total sum</th>
+									<th class="text-right d-flex justify-content-end" id="total_sum"></th>
 								</tr>
 							</table>
 						</div>
+
 						<hr class="divider divider-primary my-3"></hr>
 						<div class="form-group d-flex flex-column">
 							<label>
