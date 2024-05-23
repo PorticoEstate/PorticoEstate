@@ -1,11 +1,11 @@
 import {onDocumentReady, phpGWLink} from '../helpers/util.js';
+import './shopping-basket';
 
 class ApplicationsCartModel {
     constructor() {
         this.applicationCartItems = ko.observableArray([]);
         this.applicationCartItemsEmpty = ko.observable(false);
         this.visible = ko.observable(true);
-        this.cartElementExpanded = ko.observable(true);
         this.initializeCart();
     }
 
@@ -13,9 +13,7 @@ class ApplicationsCartModel {
         this.getApplicationsCartItems();
     }
 
-    toggleCartExpansion() {
-        this.cartElementExpanded(!this.cartElementExpanded());
-    };
+
 
     deleteItem(item) {
         console.log("got delete request")
@@ -31,6 +29,7 @@ class ApplicationsCartModel {
     }
 
     getApplicationsCartItems() {
+
         const getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials"}, true);
         fetch(getJsonURL)
             .then(response => response.json())

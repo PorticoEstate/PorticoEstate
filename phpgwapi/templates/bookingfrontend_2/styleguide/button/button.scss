@@ -27,6 +27,35 @@
     border-color: $purple;
     box-shadow: $box-focus-shadow;
   }
+  &-text {
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    &.underline {
+      text-decoration: underline;
+    }
+    &-primary {
+      --bs-btn-close-color: #{$purple};
+      color: $purple;
+      &:hover {
+        color: $blue;
+      }
+    }
+
+    &-secondary {
+      color: $blue;
+      &:hover {
+        color: $purple;
+
+      }
+    }
+    &-white {
+      color: $white;
+    }
+
+  }
 
   &-primary {
     background: $purple;

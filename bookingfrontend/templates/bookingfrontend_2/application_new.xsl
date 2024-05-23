@@ -38,24 +38,24 @@
                                         <h2 class="m-0">
                                             <xsl:value-of select="building/name"/>
                                         </h2>
-                                        <map-modal>
-                                            <span>
-                                                <xsl:value-of select="building/street"/>,
-                                            </span>
-                                            <span>
-                                                <xsl:value-of select="building/zip_code"/>
-                                            </span>
-                                            <span style="display: none">
-                                                <xsl:value-of select="building/city"/>
-                                            </span>
-                                        </map-modal>
-                                        <div class="text-overline">
-                                            <xsl:value-of select="building/part_of_town"/>
-                                        </div>
+
                                     </div>
 
                                 </div>
-
+                                <map-modal>
+                                    <span>
+                                        <xsl:value-of select="building/street"/>,
+                                    </span>
+                                    <span>
+                                        <xsl:value-of select="building/zip_code"/>
+                                    </span>
+                                    <span style="display: none">
+                                        <xsl:value-of select="building/city"/>
+                                    </span>
+                                </map-modal>
+                                <div class="text-overline">
+                                    <xsl:value-of select="building/part_of_town"/>
+                                </div>
                             </div>
                         </div>
                         <!-- Retaining the msgbox and hidden input -->
@@ -104,7 +104,7 @@
 
                         <div class="col-sm-12 mb-4">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
+                                <h3 class="fa-solid fa-layer-group m-0 text-bold"></h3>
                                 <h3 class="m-0 text-bold">
                                     <xsl:value-of
                                             select="php:function('lang', 'rent object')"/>
@@ -302,10 +302,10 @@
                             <div class="row gx-3">
                                 <div class="col d-flex flex-column">
                                     <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                        <h2 class="fas fa-shapes text-primary"></h2>
-                                        <h2>
+                                        <h3 class="fas fa-shapes m-0 text-bold"></h3>
+                                        <h3 class="m-0 text-bold">
                                             <xsl:value-of select="php:function('lang', 'Articles')"/>
-                                        </h2>
+                                        </h3>
                                     </div>
                                 </div>
                             </div>
@@ -538,7 +538,7 @@
 
                         <div>
                             <button id="backBTN"
-                                    class=" pe-btn pe-btn-secondary pe-btn--large align-items-center gap-2"
+                                    class=" pe-btn pe-btn-secondary align-items-center gap-2"
                                     data-bind="visible: formStep() !== 0, click: () => goPrev()">
                                 <div class="text-bold d-flex align-items-center">
                                     <i class="fa-solid fa-arrow-left-long"></i>
@@ -557,7 +557,7 @@
                                 </div>
                             </a>
                             <button id="submitBtn"
-                                    class=" pe-btn pe-btn-primary pe-btn--large  align-items-center gap-2"
+                                    class=" pe-btn pe-btn-primary  align-items-center gap-2"
                                     type="submit" data-bind="visible: formStep() === 1">
                                 <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>
@@ -567,7 +567,7 @@
                                 </div>
                             </button>
                             <button id="nextBTN"
-                                    class=" pe-btn pe-btn-primary pe-btn--large align-items-center gap-2"
+                                    class=" pe-btn pe-btn-primary align-items-center gap-2"
                                     data-bind="visible: formStep() !== 1, click: () => goNext()">
                                 <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>

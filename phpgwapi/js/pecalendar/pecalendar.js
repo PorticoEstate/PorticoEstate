@@ -199,7 +199,7 @@ class PECalendar {
 
     instance = undefined;
 
-    constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = false, instance = undefined}) {
+    constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = true, instance = undefined}) {
         luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
         this.instance = instance;
 

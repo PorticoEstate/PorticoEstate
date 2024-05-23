@@ -1,16 +1,47 @@
 
+function formatDateString(dateStr) {
+    // Regular expressions to match the input and desired formats
+    const inputFormat = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    const desiredFormat = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/;
+
+    // Check if the input matches the desired format
+    if (desiredFormat.test(dateStr)) {
+        return dateStr; // Return the input if it already matches the desired format
+    }
+
+    // Check if the input matches the initial format
+    if (inputFormat.test(dateStr)) {
+        // Parse the date components
+        const [datePart, timePart] = dateStr.split(' ');
+        const [year, month, day] = datePart.split('-');
+        const [hours, minutes] = timePart.split(':');
+
+        // Construct the desired format
+        const formattedDateStr = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+        return formattedDateStr;
+    }
+
+    throw new Error('Invalid date format'); // Handle invalid input format
+}
+
+
 ko.components.register('time-slot-pill', {
     viewModel: function (params) {
         const self = this;
         self.schedule = params.schedule;
         self.selectedResources = params.selectedResources;
+        console.log(params);
 
         self.date = params.date
         self.options = {hour: '2-digit', minute: '2-digit'};
-        self.startTime = ko.computed(() => luxon.DateTime.fromFormat(self.date.from_, "dd/MM/yyyy HH:mm").toJSDate())
-        self.endTime = ko.computed(() => luxon.DateTime.fromFormat(self.date.to_, "dd/MM/yyyy HH:mm").toJSDate())
+        console.log(self.date)
+        self.startTime = ko.computed(() => luxon.DateTime.fromFormat(formatDateString(self.date.from_), "dd/MM/yyyy HH:mm").toJSDate())
+        self.endTime = ko.computed(() => luxon.DateTime.fromFormat(formatDateString(self.date.to_), "dd/MM/yyyy HH:mm").toJSDate())
 
-        self.toDateStr = (d) => `${d.getDate()}. ${monthNamesShort[d.getMonth()].toLowerCase()}`
+        self.toDateStr = (d) => {
+            return `${d.getDate()}. ${monthNamesShort[d.getMonth()].toLowerCase()}`
+        }
         self.toTimeStr = (start, end) => {
             if(end) {
                 return `${start.toLocaleTimeString('no', self.options).replace(':', '.')} -
