@@ -248,6 +248,9 @@
 
     border-top-right-radius: 0.5rem;
     border-top-left-radius: 0.5rem;
+    &.title-only {
+      grid-template-areas: "name name name name name expand";
+    }
 
     &.collapsed-head {
       border-bottom-right-radius: 0.5rem;

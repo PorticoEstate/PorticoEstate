@@ -2,6 +2,7 @@ import '../components/light-box'
 import '../components/time-slot-pill'
 import '../components/collapsable-text'
 import '../helpers/util';
+import {ApplicationCart} from "../components/application-cart";
 
 
 /* global lang */

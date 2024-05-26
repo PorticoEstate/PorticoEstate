@@ -1,0 +1,56 @@
+
+.dialog-container {
+  background-color: $white;
+  border-radius: $rounded-mini;
+  border-color: purple;
+  border-width: 1px;
+  border-style: solid;
+  //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  //max-width: 400px;
+  max-width: min(90vw, 840px);
+  width: max-content;
+  //margin: auto;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //border-bottom: 1px solid $border-color;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    .dialog-title {
+      @extend h2;
+    }
+    //
+    //.dialog-close-btn {
+    //  background: none;
+    //  border: none;
+    //  font-size: 24px;
+    //  color: $font-color;
+    //  cursor: pointer;
+    //}
+  }
+
+  .dialog-ingress {
+    margin-bottom: 1.5rem;
+
+    p {
+      margin: 0;
+      //color: $font-color;
+    }
+  }
+
+  .dialog-content {
+    margin-bottom: 1.5rem;
+    /* Additional styles for content can be added here */
+  }
+
+  .dialog-actions {
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+
+  }
+}

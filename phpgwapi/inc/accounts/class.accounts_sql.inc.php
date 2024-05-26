@@ -366,7 +366,7 @@
 			if ( $use_cache )
 			{
 				$account = phpgwapi_cache::system_get('phpgwapi', "account_{$id}");
-				if ( is_object($account) )
+				if (is_object($account) && get_class($account) !== '__PHP_Incomplete_Class')
 				{
 					$account->firstname = $this->db->stripslashes($account->firstname);
 					$account->lastname = $this->db->stripslashes($account->lastname);

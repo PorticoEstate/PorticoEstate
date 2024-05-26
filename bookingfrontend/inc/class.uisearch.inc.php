@@ -114,7 +114,8 @@
                 $landing_sections->organization = in_array('organization', $config->config_data['landing_sections']);
                 $landing_sections->event = in_array('event', $config->config_data['landing_sections']);
             }
-
+            $bogeneric = createObject('booking.bogeneric');
+            $multi_domain_list = $bogeneric->read(array('location_info' => array('type' => 'multi_domain')));
 
             $params = array(
                 'landing_sections' => $landing_sections,
@@ -125,9 +126,9 @@
 				'frontpagetitle' => $frontpagetitle,
 				'frontpagetext' => $frontpagetext,
 				'frontimagetext' => $frontimagetext,
-				'activity_top_level' => $activity_top_level
+				'activity_top_level' => $activity_top_level,
+                'multi_domain_list' => json_encode($multi_domain_list)
 			);
-
 			$bobuilding = CreateObject('booking.bobuilding');
 			$building = $bobuilding->read_single($building_id);
 			$params['building_name'] = $building['name'];

@@ -1,4 +1,5 @@
 import {onDocumentReady, phpGWLink} from '../helpers/util.js';
+import './shopping-basket';
 
 class ApplicationsCartModel {
     constructor() {
@@ -11,6 +12,8 @@ class ApplicationsCartModel {
     initializeCart() {
         this.getApplicationsCartItems();
     }
+
+
 
     deleteItem(item) {
         console.log("got delete request")
@@ -26,6 +29,7 @@ class ApplicationsCartModel {
     }
 
     getApplicationsCartItems() {
+
         const getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials"}, true);
         fetch(getJsonURL)
             .then(response => response.json())
@@ -36,8 +40,8 @@ class ApplicationsCartModel {
     updateCartItems(data) {
         const {list, total_sum} = data;
         if (total_sum) {
-            document.getElementById("total_sum").textContent = total_sum.toFixed(2);
-            document.getElementById("total_sum_block").style.display = 'block';
+            // document.getElementById("total_sum").textContent = total_sum.toFixed(2);
+            // document.getElementById("total_sum_block").style.display = 'block';
         }
 
         this.applicationCartItemsEmpty(list.length < 1);
@@ -70,9 +74,10 @@ class ApplicationsCartModel {
 
 let ApplicationCart = new ApplicationsCartModel();
 onDocumentReady(() => {
-    if (document.getElementById("applications-cart-content")) {
+    const elem = document.getElementById('application-cart-container') || document.getElementById("applications-cart-content");
+    if (elem) {
         console.log("INITIALISING CART")
-        ko.applyBindings(ApplicationCart, document.getElementById('application-cart-container'));
+        ko.applyBindings(ApplicationCart, elem);
     }
 })
 

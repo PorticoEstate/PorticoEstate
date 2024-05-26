@@ -173,7 +173,7 @@
 	<xsl:for-each select="convert_data">
 		<tr>
 			<td align="left">
-				<xsl:value-of select="qr_input"/>
+				<xsl:value-of disable-output-escaping="yes" select="qr_input"/>
 			</td>
 			<td align="center">
 				<img src="{encoded_text}"/>

@@ -69,6 +69,7 @@ Choose resources	bookingfrontend	en	Choose resources
 Close	bookingfrontend	en	Close
 Collects users from all applications and events	booking	en	Collects users from all applications and events
 Complete applications	bookingfrontend	en	Complete applications
+complete_applications	bookingfrontend	en	Complete applications
 Confirm e-mail address	bookingfrontend	en	Confirm e-mail address
 Contact information name is to long. max 50 characters	bookingfrontend	en	Contact information name is to long. max 50 characters
 Could not delete allocation due to a booking still use it	bookingfrontend	en	Could not delete allocation due to a booking still use it
@@ -617,3 +618,10 @@ minute	bookingfrontend	en	Minute
 days	bookingfrontend	en	Days
 continue	bookingfrontend	en	Continue
 billing	bookingfrontend	en	Billing
+home_page	bookingfrontend	en	To the homepage
+summary	bookingfrontend	en	Summary
+your_applications	bookingfrontend	en	Your applications
+billing_information_contact_person	bookingfrontend	en	Billing information for contact person
+billing_information	bookingfrontend	en	Billing information
+submit_application	bookingfrontend	en	Submit application
+
