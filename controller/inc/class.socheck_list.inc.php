@@ -268,6 +268,8 @@
 			$sql .= "FROM controller_check_list ";
 			$sql .= "WHERE control_id = {$control_id} ";
 			$sql .= "AND deadline = {$deadline_ts} ";
+	// alternative
+	//	$sql .= "AND (deadline = {$deadline_ts} OR planned_date = {$deadline_ts})";
 
 			if ($type == "location")
 			{
