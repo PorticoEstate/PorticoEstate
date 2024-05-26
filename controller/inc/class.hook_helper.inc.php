@@ -99,6 +99,9 @@
 			// fetch all repeat types
 			$repeat_type = null;
 
+			//hack to avoid duplicate controls
+			$already_assigned = array();
+
 			// Fetches controls current user is responsible for 1 month ahead
 			$my_controls = array();
 
@@ -144,11 +147,15 @@ HTML;
 
 				$location_id	 = isset($check_list['location_id']) && $check_list['location_id'] ? $check_list['location_id'] : 0;
 				$component_id	 = isset($check_list['component_id']) && $check_list['component_id'] ? $check_list['component_id'] : 0;
+				if($component_id)
+				{
+					$already_assigned[$component_id][$check_list['control_id']] = $check_list['planned_date'];
+				}
 
 				$control_area_name = $this->get_control_area_name($check_list["control_area_id"]);
 
 				$deadline_formatted	 = date($dateformat, $deadline_ts);
-				$planned_formatted	 = date($dateformat, $planned_date_ts);
+				$planned_formatted	 = date($dateformat, $check_list['planned_date']);
 
 				$location_code	 = $check_list['location_code'];
 
@@ -244,6 +251,7 @@ HTML;
 
 					foreach ($controls as $my_control)
 					{
+
 						if ($my_control["repeat_type"] == controller_control::REPEAT_TYPE_DAY)
 						{
 							// Daily control: Todate in one week
@@ -261,6 +269,10 @@ HTML;
 						$check_list_array = array();
 						foreach ($deadline_dates_for_control as $deadline_ts)
 						{
+							/*
+								$already_assigned[<component_id>][<control_id>] = <deadline_ts>
+							*/
+						//	continue;
 							$check_list = null;
 
 							if ($control_type == "location")
@@ -272,7 +284,14 @@ HTML;
 							{
 								$component = $container_arr[3];
 
-								// Gets checklist for control with current date as deadline if there exists one
+								//hack to avoid duplicate controls
+								if (isset($already_assigned[$component['id']][$my_control['id']]) && $already_assigned[$component['id']][$my_control['id']] == $deadline_ts)
+								{
+//										_debug_array("duplicate control");
+									continue;
+								}
+
+							// Gets checklist for control with current date as deadline if there exists one
 								$check_list = $so_check_list->get_check_list_for_control_by_date($my_control['id'], $deadline_ts, null, null, $component['location_id'], $component['id'], "component");
 							}
 
@@ -1073,7 +1092,11 @@ HTML;
 				foreach ($controls_at_location as $control)
 				{
 					// Saves location code, location type and an array containing controls at locations
-					$my_controls[] = array($control['location_code'], 'location', $controls_at_location);
+					$my_controls[] = array(
+						$control['location_code'],
+						'location',
+						$controls_at_location
+					);
 				}
 			}
 
@@ -1082,7 +1105,12 @@ HTML;
 				foreach ($components_with_controls_array as $component)
 				{
 					// Saves location code, location type, an array containing controls at locations and component object
-					$my_controls[] = array($component['location_code'], 'component', $component['controls_array'], $component);
+					$my_controls[] = array(
+						$component['location_code'],
+						'component',
+						$component['controls_array'],
+						$component
+					);
 				}
 			}
 

@@ -7,120 +7,123 @@ var dateformat_javascript = dateformat_backend.replace(/d/gi, "dd").replace(/m/g
  * @param String strURL target URL
  * @param Object oArgs Query String args as associate array object
  * @param bool bAsJSON ask that the request be returned as JSON (experimental feature)
+ * @param String baseURL (optional) Base URL to use instead of strBaseURL
  * @returns String URL
  */
-function phpGWLink(strURL, oArgs, bAsJSON)
-{
-	var arURLParts = strBaseURL.split('?');
-	var strNewURL = arURLParts[0] + strURL + '?';
+function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
+	// console.log(strBaseURL)
+	if (baseURL) {
+		const baseURLParts = (baseURL).split('/').filter(a => a !== '' && !a.includes('http'));
+		baseURL = '//'+baseURLParts.slice(0, baseURLParts.length - 1).join('/') + '/'; // Remove last element (file name)
+	}
+	const urlParts = (baseURL || strBaseURL).split('?');
+	let newURL = urlParts[0] + strURL + '?';
 
-	if (oArgs == null)
-	{
+	if (oArgs == null) {
 		oArgs = new Object();
 	}
-
-	for (obj in oArgs)
-	{
-		strNewURL += obj + '=' + oArgs[obj] + '&';
+	for (const key in oArgs) {
+		newURL += key + '=' + oArgs[key] + '&';
 	}
-	strNewURL += arURLParts[1];
-
-	if (bAsJSON)
-	{
-		strNewURL += '&phpgw_return_as=json';
+	if(urlParts[1]) {
+		newURL += urlParts[1];
 	}
-	return strNewURL;
+
+	if (bAsJSON) {
+		newURL += '&phpgw_return_as=json';
+	}
+	return newURL;
 }
 
 
-function ApplicationsCartModel()
-{
-	var self = this;
-	self.applicationCartItems = ko.observableArray([]);
-	self.applicationCartItemsEmpty = ko.observable();
-
-	self.deleteItem = function (e)
-	{
-		requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
-		var answer = confirm(footerlang['Do you want to delete application?']);
-		if (answer)
-		{
-			$.post(requestUrl, {id: e.id}).done(function (response)
-			{
-				GetApplicationsCartItems(self);
-			});
-		}
-
-	};
-	self.visible = ko.observable(true);
-}
-
-function GetApplicationsCartItems(bc)
-{
-	bc.applicationCartItems.removeAll();
-
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials"}, true);
-	$.getJSON(getJsonURL, function (data)
-	{
-		var result = data.list;
-		var total_sum = data.total_sum;
-		if(total_sum)
-		{
-			$("#total_sum_block").show();
-			$("#total_sum").html(total_sum.toFixed(2));
-		}
-
-		if (result.length < 1)
-		{
-			bc.applicationCartItemsEmpty(true);
-		}
-		else
-		{
-			bc.applicationCartItemsEmpty(false);
-		}
-		for (var i = 0; i < result.length; i++)
-		{
-			var dates = [];
-			var resources = [];
-			var joinedResources = [];
-			var exist = ko.utils.arrayFirst(bc.applicationCartItems(), function (item)
-			{
-				return item.id == result[i].id;
-			});
-			if (!exist)
-			{
-				for (var k = 0; k < result[i].dates.length; k++)
-				{
-					var currentStartDate = new Date((result[i].dates[k].from_).replace(" ", "T"));
-					currentStartDate.setHours((result[i].dates[k].from_).substring(11, 13));
-					currentStartDate.setMinutes((result[i].dates[k].from_).substring(14, 16));
-
-					var currentEndDate = new Date((result[i].dates[k].to_).replace(" ", "T"));
-					currentEndDate.setHours((result[i].dates[k].to_).substring(11, 13));
-					currentEndDate.setMinutes((result[i].dates[k].to_).substring(14, 16));
-
-					dates.push({date: formatSingleDateWithoutHours(currentStartDate),
-						from_: result[i].dates[k].from_, to_: result[i].dates[k].to_,
-						periode: formatPeriodeHours(currentStartDate, currentEndDate)});
-				}
-				for (var k = 0; k < result[i].resources.length; k++)
-				{
-					resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id});
-					joinedResources.push(result[i].resources[k].name);
-				}
-				bc.applicationCartItems.push(
-				{
-					id: result[i].id,
-					building_name: result[i].building_name,
-					dates: dates,
-					orders:  result[i].orders,
-					resources: ko.observableArray(resources),
-					joinedResources: joinedResources.join(", ")
-				});
-			}
-		}
-	});
-}
+// function ApplicationsCartModel()
+// {
+// 	var self = this;
+// 	self.applicationCartItems = ko.observableArray([]);
+// 	self.applicationCartItemsEmpty = ko.observable();
+//
+// 	self.deleteItem = function (e)
+// 	{
+// 		requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
+// 		var answer = confirm(footerlang['Do you want to delete application?']);
+// 		if (answer)
+// 		{
+// 			$.post(requestUrl, {id: e.id}).done(function (response)
+// 			{
+// 				GetApplicationsCartItems(self);
+// 			});
+// 		}
+//
+// 	};
+// 	self.visible = ko.observable(true);
+// }
+//
+// function GetApplicationsCartItems(bc)
+// {
+// 	bc.applicationCartItems.removeAll();
+//
+// 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials"}, true);
+// 	$.getJSON(getJsonURL, function (data)
+// 	{
+// 		var result = data.list;
+// 		var total_sum = data.total_sum;
+// 		if(total_sum)
+// 		{
+// 			$("#total_sum_block").show();
+// 			$("#total_sum").html(total_sum.toFixed(2));
+// 		}
+//
+// 		if (result.length < 1)
+// 		{
+// 			bc.applicationCartItemsEmpty(true);
+// 		}
+// 		else
+// 		{
+// 			bc.applicationCartItemsEmpty(false);
+// 		}
+// 		for (var i = 0; i < result.length; i++)
+// 		{
+// 			var dates = [];
+// 			var resources = [];
+// 			var joinedResources = [];
+// 			var exist = ko.utils.arrayFirst(bc.applicationCartItems(), function (item)
+// 			{
+// 				return item.id == result[i].id;
+// 			});
+// 			if (!exist)
+// 			{
+// 				for (var k = 0; k < result[i].dates.length; k++)
+// 				{
+// 					var currentStartDate = new Date((result[i].dates[k].from_).replace(" ", "T"));
+// 					currentStartDate.setHours((result[i].dates[k].from_).substring(11, 13));
+// 					currentStartDate.setMinutes((result[i].dates[k].from_).substring(14, 16));
+//
+// 					var currentEndDate = new Date((result[i].dates[k].to_).replace(" ", "T"));
+// 					currentEndDate.setHours((result[i].dates[k].to_).substring(11, 13));
+// 					currentEndDate.setMinutes((result[i].dates[k].to_).substring(14, 16));
+//
+// 					dates.push({date: formatSingleDateWithoutHours(currentStartDate),
+// 						from_: result[i].dates[k].from_, to_: result[i].dates[k].to_,
+// 						periode: formatPeriodeHours(currentStartDate, currentEndDate)});
+// 				}
+// 				for (var k = 0; k < result[i].resources.length; k++)
+// 				{
+// 					resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id});
+// 					joinedResources.push(result[i].resources[k].name);
+// 				}
+// 				bc.applicationCartItems.push(
+// 				{
+// 					id: result[i].id,
+// 					building_name: result[i].building_name,
+// 					dates: dates,
+// 					orders:  result[i].orders,
+// 					resources: ko.observableArray(resources),
+// 					joinedResources: joinedResources.join(", ")
+// 				});
+// 			}
+// 		}
+// 	});
+// }
 
 
 function CreateUrlParams(params) {
@@ -163,11 +166,11 @@ $(document).ready(function ()
 		}
 	});
 
-	if (document.getElementById("applications-cart-content")) {
-		bc = new ApplicationsCartModel();
-		ko.applyBindings(bc, document.getElementById("applications-cart-content"));
-		GetApplicationsCartItems(bc);
-	}
+	// if (document.getElementById("applications-cart-content")) {
+	// 	bc = new ApplicationsCartModel();
+	// 	ko.applyBindings(bc, document.getElementById("applications-cart-content"));
+	// 	GetApplicationsCartItems(bc);
+	// }
 
 	$(document).on('click', '.scheduler-base-icon-next', function ()
 	{
@@ -232,20 +235,7 @@ $(document).ready(function ()
 		$("#lightbox").find($('img')).attr("id", $(this).attr('id'));
 	});
 
-	$(".booking-cart-title").click(function ()
-	{
-		if ($(".booking-cart-icon").hasClass("fa-window-minimize"))
-		{
-			$(".booking-cart-icon").removeClass("far fa-window-minimize");
-			$(".booking-cart-icon").addClass("fas fa-plus");
-		}
-		else if ($(".booking-cart-icon").hasClass("fas fa-plus"))
-		{
-			$(".booking-cart-icon").removeClass("fas fa-plus");
-			$(".booking-cart-icon").addClass("far fa-window-minimize");
-		}
-		$(".booking-cart-items").toggle();
-	});
+
 
 	$(window).scroll(function ()
 	{

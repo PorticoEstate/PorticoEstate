@@ -87,6 +87,11 @@
             'folder' => 'modal',
             'filename' => 'modal',
           ),
+          'Dialog' => array(
+            'name' => 'Dialog',
+            'folder' => 'dialogs',
+            'filename' => 'dialog',
+          ),
           'Filter' => array(
             'name' => 'Filter',
             'folder' => 'filter',
