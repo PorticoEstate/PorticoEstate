@@ -138,7 +138,7 @@
                                             </thead>
                                             <tbody data-bind="foreach: lines">
                                                 <tr>
-                                                    <td data-bind="text: name"></td>
+                                                    <td data-bind="text: name, style: {{'padding-left': parent_mapping_id === 0 ? '0.5rem': '1rem'}}"></td>
                                                     <td data-bind="text: lang[unit]"></td>
                                                     <td class="text-right" data-bind="text: amount.toFixed(2)"></td>
                                                     <td class="text-right" data-bind="text: tax.toFixed(2)"></td>
