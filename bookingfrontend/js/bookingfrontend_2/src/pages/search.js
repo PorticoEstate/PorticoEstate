@@ -793,10 +793,18 @@ class Search {
     fetchData = () => {
         const self = this;
 
+        AbortSignal.timeout ??= function timeout(ms) {
+            const ctrl = new AbortController()
+            setTimeout(() => ctrl.abort(), ms)
+            return ctrl.signal
+        }
+
+
         const promises = [
             fetch(phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uisearch.get_search_data_all',
-                length: -1
+                length: -1,
+
             }, true)) // Fetch local data
                 .then(response => {
                     if (!response.ok) throw new Error('Failed to fetch local data');
@@ -805,9 +813,12 @@ class Search {
             ...remote_search.map(remote => {
                 const remoteUrl = phpGWLink('bookingfrontend/', {
                     menuaction: 'bookingfrontend.uisearch.get_search_data_all',
-                    length: -1
+                    length: -1,
                 }, true, remote.webservicehost);
-                return fetch(remoteUrl) // Fetch remote data
+                return fetch(remoteUrl, {
+                    signal: AbortSignal.timeout(2500)
+
+                }) // Fetch remote data
                     .then(response => {
                         if (!response.ok) throw new Error(`Failed to fetch data from ${remote.webservicehost}`);
                         return response.json();

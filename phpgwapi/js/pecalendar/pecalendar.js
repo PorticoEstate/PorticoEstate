@@ -284,6 +284,35 @@ class PECalendar {
         return slots;
     });
 
+
+    availableTimeSlotWithOverlaps = ko.computed(() => {
+        const allocations = this.events().filter(event => event.type === 'allocation');
+        const availableSlots = this.availableTimeSlots()[this.resource_id()] || [];
+
+        const updatedslots = availableSlots.map(slot => {
+            const slotStart = DateTime.fromMillis(parseInt(slot.start));
+            const slotEnd = DateTime.fromMillis(parseInt(slot.end));
+            let overlap = false;
+
+            allocations.forEach(allocation => {
+                const allocationStart = DateTime.fromISO(`${allocation.date}T${allocation.from}`);
+                const allocationEnd = DateTime.fromISO(`${allocation.date}T${allocation.to}`);
+
+                if (allocationStart <= slotEnd && allocationEnd >= slotStart) {
+                    overlap = true;
+                }
+            });
+
+            return {...slot, overlap: overlap ? 2 : slot.overlap};
+        });
+
+        console.log(updatedslots);
+        return updatedslots;
+
+        // Update the availableTimeSlots observable to trigger reactivity
+        // this.availableTimeSlots.valueHasMutated();
+    });
+
     /**
      * Generates Unix timestamps for the provided start and end times on a given date.
      *
@@ -1951,7 +1980,7 @@ if (globalThis['ko']) {
                 <!-- ko if: hasTimeSlots() -->
                 <div class="time-slot-body">
                     <!-- ko if: hasTimeSlotsInCurrentCalendarRange -->
-                    <!-- ko foreach: availableTimeSlots()[resource_id()] -->
+                    <!-- ko foreach: availableTimeSlotWithOverlaps -->
                     <!-- ko if: $data.overlap !== 3 && $parent.isWithinCurrentCalendarRange($data.start, $data.end) -->
                     <div class="time-slot-card">
                         <!-- Status section -->
