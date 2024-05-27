@@ -717,98 +717,59 @@ class PECalendar {
         if (!events) {
             return [];
         }
-        const DBG = events[0].date.from.toISODate() === '2024-03-24';
+        const DBG = events[0].date.from.toISODate() === '2024-05-28';
 
         // Assuming the day starts at 00:00 and ends at 24:00, creating intervals based on hourParts
         let intervals = new Array(24 * this.hourParts()).fill(null).map(() => []);
 
         // Populate intervals with events
         events.forEach(event => {
-            let start = this.convertToStartIntervalIndex(event.date.from);
-            let end = this.convertToEndIntervalIndex(event.date.to);
-
+            const start = this.convertToStartIntervalIndex(event.date.from);
+            const end = this.convertToEndIntervalIndex(event.date.to);
             for (let i = start; i < end; i++) {
-                if (!intervals[i]) {
-                    intervals[i] = [];
-                }
                 intervals[i].push(event);
             }
         });
 
 
-        // Initialize occupied space for each interval
-        let occupiedSpace = new Map();
 
-        // Populate the map with empty arrays for each interval
+        const occupiedColumns = new Map();
         for (let i = 0; i < intervals.length; i++) {
-            occupiedSpace.set(i, new Array(12).fill(false));
+            occupiedColumns.set(i, new Array(12).fill(false));
         }
 
-        // Allocate columns based on overlaps within each interval
         events.forEach(event => {
-            let startInterval = this.convertToStartIntervalIndex(event.date.from);
-            let endInterval = this.convertToEndIntervalIndex(event.date.to);
+            const startInterval = this.convertToStartIntervalIndex(event.date.from);
+            const endInterval = this.convertToEndIntervalIndex(event.date.to);
             let overlapCount = 0;
 
-            // Find the maximum overlap for this event
+            // Determine maximum overlap in the interval range
             for (let i = startInterval; i < endInterval; i++) {
                 overlapCount = Math.max(overlapCount, intervals[i].length);
             }
 
-            // Calculate column span
             event.columnSpan = Math.floor(12 / overlapCount);
 
-            // Allocate a start column that is not occupied
-            let space = occupiedSpace.get(startInterval);
-            for (let i = 0; i < space.length; i += event.columnSpan) {
-                if (space.slice(i, i + event.columnSpan).every(x => !x)) {
-                    // Found space for the event
-                    event.startColumn = i;
-                    for (let j = startInterval; j < endInterval; j++) {
-                        // Mark space as occupied for the duration of the event
-                        let jSpace = occupiedSpace.get(j);
-                        jSpace.fill(true, i, i + event.columnSpan);
-                        occupiedSpace.set(j, jSpace);
+            // Find available column span
+            let foundColumn = false;
+            for (let col = 0; col < 12; col++) {
+                if (foundColumn) break;
+
+                // Check if the required column span is available
+                for (let i = startInterval; i < endInterval; i++) {
+                    const columnCheck = occupiedColumns.get(i).slice(col, col + event.columnSpan).every(x => !x);
+                    if (!columnCheck) break;
+
+                    if (i === endInterval - 1) {
+                        event.startColumn = col;
+                        for (let j = startInterval; j < endInterval; j++) {
+                            occupiedColumns.set(j, occupiedColumns.get(j).fill(true, col, col + event.columnSpan));
+                        }
+                        foundColumn = true;
                     }
-                    break;
                 }
             }
         });
-
-
-        for (let i = 0; i < intervals.length; i++) {
-            let intervalEvents = intervals[i];
-            if (intervalEvents.length > 0) {
-                let totalSpan = intervalEvents.reduce((acc, curr) => acc + curr.columnSpan, 0);
-                // Check if total span does not equal 12 and events do not overlap with other intervals
-                if (totalSpan !== 12) {
-                    let uniqueEvents = intervalEvents.filter(event => {
-                        // Check if this event exists only in the current interval
-                        let startInterval = this.convertToStartIntervalIndex(event.date.from);
-                        let endInterval = this.convertToEndIntervalIndex(event.date.to);
-                        return startInterval === i && endInterval === i + 1;
-                    });
-
-
-                    // If unique events found
-                    if (uniqueEvents.length > 0) {
-
-                        let remainingSpans = 12 - totalSpan;
-
-                        let additionalSpanPerEvent = Math.floor(remainingSpans / uniqueEvents.length);
-                        let additionalSpanRemainder = remainingSpans % uniqueEvents.length;
-
-                        // Evenly distribute remaining spans among events
-                        uniqueEvents.forEach((event, index) => {
-                            event.columnSpan += additionalSpanPerEvent;
-                            if (index < additionalSpanRemainder) {
-                                event.columnSpan += 1; // Distribute any remainder
-                            }
-                        });
-                    }
-                }
-            }
-        }
 
         if (DBG) {
             console.log(intervals);
