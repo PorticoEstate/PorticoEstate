@@ -1795,7 +1795,7 @@ if (globalThis['ko']) {
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
                              data-bind="
-                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1}), 
+                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}), 
                                  style: {
                                         gridRow: $parent.getGridRow($data.date, $data.event),
                                         gridColumn: $parent.getGridColumn($data.date, $data)
@@ -1815,6 +1815,7 @@ if (globalThis['ko']) {
                             <button class="dots-container"
                                     data-bind="click: () => $parent.removeTempEventPill($data.event)">
                                 <i class="fas fa-times"></i>
+                                
                             </button>
                             <!-- /ko -->
                             <!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
@@ -1826,6 +1827,7 @@ if (globalThis['ko']) {
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
                                 <i class="fas fa-info-circle"></i>
+                              
                             </button>
 
                             <div class="info"
