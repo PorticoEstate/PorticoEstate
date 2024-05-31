@@ -1966,7 +1966,7 @@ if (globalThis['ko']) {
                         <div class="time-slot-button">
                             <!-- ko if: $data.overlap === false -->
                             <a class="pe-btn  pe-btn-secondary pe-btn--small link-text "
-                               data-bind="attr: {href: phpGWLink('bookingfrontend/', $data.applicationLink, false, this.instance)}">Velg
+                               data-bind="attr: {href: phpGWLink('bookingfrontend/', $data.applicationLink, false, $parent.instance)}">Velg
                             </a>
 
                             <!-- /ko -->
