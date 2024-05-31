@@ -306,7 +306,6 @@ class PECalendar {
             return {...slot, overlap: overlap ? 2 : slot.overlap};
         });
 
-        console.log(updatedslots);
         return updatedslots;
 
         // Update the availableTimeSlots observable to trigger reactivity
@@ -1815,7 +1814,7 @@ if (globalThis['ko']) {
                             <button class="dots-container"
                                     data-bind="click: () => $parent.removeTempEventPill($data.event)">
                                 <i class="fas fa-times"></i>
-                                
+
                             </button>
                             <!-- /ko -->
                             <!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
@@ -1827,7 +1826,7 @@ if (globalThis['ko']) {
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
                                 <i class="fas fa-info-circle"></i>
-                              
+
                             </button>
 
                             <div class="info"
@@ -1918,7 +1917,7 @@ if (globalThis['ko']) {
                                         <!-- iCal Link -->
                                         <!-- ko if: infoData.info_ical_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank' }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
-                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary" ></a>
+                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary"></a>
                                         <!-- /ko -->
                                         <!-- Additional Actions for Allocations -->
                                         <!-- ko if: $parent.event.type === 'allocation' -->
@@ -1947,9 +1946,13 @@ if (globalThis['ko']) {
                     <!-- ko if: $data.overlap !== 3 && $parent.isWithinCurrentCalendarRange($data.start, $data.end) -->
                     <div class="time-slot-card">
                         <!-- Status section -->
+                        <!--                        <div class="time-slot-status"-->
+                        <!--                             data-bind="css: { 'green': $data.overlap === false, 'yellow': $data.overlap === 2, 'red': $data.overlap === 1 }">-->
+                        <!--                            <span data-bind="text: $data.overlap === false ? 'Ledig' : ($data.overlap === 2 ? 'Reservert' : 'Opptatt')"></span>-->
+                        <!--                        </div>-->
                         <div class="time-slot-status"
-                             data-bind="css: { 'green': $data.overlap === false, 'yellow': $data.overlap === 2, 'red': $data.overlap === 1 }">
-                            <span data-bind="text: $data.overlap === false ? 'Ledig' : ($data.overlap === 2 ? 'Reservert' : 'Opptatt')"></span>
+                             data-bind="css: { 'green': $data.overlap === false, 'red': $data.overlap !== false }">
+                            <span data-bind="text: $data.overlap === false ? 'Ledig' : 'Opptatt'"></span>
                         </div>
 
                         <!-- Date and time section -->
