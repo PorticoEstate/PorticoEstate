@@ -360,10 +360,9 @@
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'allocation');
 
-					$a = $_mymail[0]['email'];
-
-					if(!empty($a))
+					if(!empty($_mymail[0]['email']))
 					{
+						$a = $_mymail[0]['email'];
 						if (array_key_exists($a, $data))
 						{
 							$data[$a][] = array(
@@ -380,7 +379,7 @@
 						}
 					}
 
-					if ($_mymail[1]['email'])
+					if (!empty($_mymail[1]['email']))
 					{
 						$b = $_mymail[1]['email'];
 						if (array_key_exists($b, $data))
@@ -421,10 +420,9 @@
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'booking');
 
-					$a = $_mymail[0]['email'];
-
-					if(!empty($a))
+					if(!empty($_mymail[0]['email']))
 					{
+						$a = $_mymail[0]['email'];
 						if (array_key_exists($a, $data))
 						{
 							$data[$a][] = array(
@@ -441,9 +439,9 @@
 						}
 					}
 
-					if ($_mymail[1]['email'])
+					if (!empty($_mymail[1]['email']))
 					{
-						$b = $_mymail[1];
+						$b = $_mymail[1]['email'];
 						if (array_key_exists($b, $data))
 						{
 							$data[$b][] = array(
