@@ -1,14 +1,17 @@
 import {emptySearch, getAllSubRowsIds, joinWithDot} from "./search-util";
 import './info-cards/organization-info-card'
+
 class OrganizationSearchViewModel {
     result = ko.observableArray([]);  // This observable array will hold the search results
     result_shown = ko.observable(25);  // This observable tracks the number of results shown
 
     show_only_available = ko.observable(false);
-    transCallable = ko.computed(function() {
-        if(globalThis['translations'] && globalThis['translations']()) {}
+    transCallable = ko.computed(function () {
+        if (globalThis['translations'] && globalThis['translations']()) {
+        }
         return trans;
     });
+
     constructor(params) {
         params.instance(this)
         console.log(params);
@@ -102,6 +105,7 @@ class OrganizationSearchViewModel {
             this.result_shown(this.result_shown() + 25);
         }
     }
+
     resLength = ko.computed(() => {
         const maxCount = this.result().length;
         const currentResults = this.result_shown() > maxCount ? maxCount : this.result_shown();
@@ -112,6 +116,7 @@ class OrganizationSearchViewModel {
 
 ko.components.register('organization-search', {
     viewModel: OrganizationSearchViewModel,
+    // language=HTML
     template: `
         <div id="search-organization">
             <div class="bodySection">
@@ -124,8 +129,8 @@ ko.components.register('organization-search', {
                                         <trans>common:search</trans>
                                     </label>
                                     <input id="search-organization-text" type="text"
-                                           data-bind="textInput: text, attr: {'placeholder': transCallable()('bookingfrontend','enter_team_organization_name')}" />
-                                    
+                                           data-bind="textInput: text, attr: {'placeholder': transCallable()('bookingfrontend','enter_team_organization_name')}"/>
+
                                 </div>
                             </div>
                             <div class="col mb-3 mb-md-0">
@@ -148,17 +153,17 @@ ko.components.register('organization-search', {
                     </div>
                 </div>
             </div>
-               <div id="search-count" class="pt-3" data-bind="text: resLength"></div>
+            <div id="search-count" class="pt-3" data-bind="text: resLength"></div>
 
-<!--            <div class="col-12 d-flex justify-content-start my-4 mb-md-0">-->
-<!--                <input type="checkbox" id="show_only_available" class="checkbox-fa"-->
-<!--                       data-bind="checked: show_only_available"/>-->
-<!--                <label class="choice text-purple text-label" for="show_only_available">-->
-<!--                    <i class="far fa-square unchecked-icon"></i>-->
-<!--                    <i class="far fa-check-square checked-icon"></i>-->
-<!--                    <trans>bookingfrontend:show_only_available</trans>-->
-<!--                </label>-->
-<!--            </div>-->
+            <!--            <div class="col-12 d-flex justify-content-start my-4 mb-md-0">-->
+            <!--                <input type="checkbox" id="show_only_available" class="checkbox-fa"-->
+            <!--                       data-bind="checked: show_only_available"/>-->
+            <!--                <label class="choice text-purple text-label" for="show_only_available">-->
+            <!--                    <i class="far fa-square unchecked-icon"></i>-->
+            <!--                    <i class="far fa-check-square checked-icon"></i>-->
+            <!--                    <trans>bookingfrontend:show_only_available</trans>-->
+            <!--                </label>-->
+            <!--            </div>-->
 
             <div id="search-result" class="pt-3">
                 <div data-bind="foreach: { data: result.slice(0, result_shown()), as: 'org' }">

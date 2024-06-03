@@ -382,6 +382,7 @@ found none	booking	no	Fant ingen
 fr	bookingfrontend	no	fr.
 free	bookingfrontend	no	Ledig
 from	bookingfrontend	no	Fra
+from_date	bookingfrontend	no	Fra dato
 generate allocations	bookingfrontend	no	Lag tildeling
 generate allocations from week template	bookingfrontend	no	Lag tildelninger fra ukeplan
 get name from external source	bookingfrontend	no	Hent navn fra ekstern kilde (som Gule Sider)
@@ -569,6 +570,7 @@ th	bookingfrontend	no	tor
 this application is not within a valid season	bookingfrontend	no	Denne søknaden er utenfor gyldig åpningstid
 title	bookingfrontend	no	Tittel
 to	bookingfrontend	no	Til
+to_date	bookingfrontend	no	Til dato
 tu	bookingfrontend	no	tir
 type	bookingfrontend	no	Type
 unit	bookingfrontend	no	Enhet
