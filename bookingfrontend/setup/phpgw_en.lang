@@ -100,6 +100,7 @@ Event was created	booking	en	The event was created
 Event/activity description	bookingfrontend	en	Event/activity description
 Event/activity homepage	bookingfrontend	en	Event/activity homepage
 Facilities	bookingfrontend	en	Facilities
+facilities	bookingfrontend	en	Facilities
 Field %1 is required	bookingfrontend	en	Field %1 is required
 Field %1: Invalid format	bookingfrontend	en	Field %1: invalid format
 Find available	bookingfrontend	en	Find available

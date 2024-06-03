@@ -100,6 +100,7 @@ Event was created	booking	nn	Arrangementet vart oppretta
 Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
 Event/activity homepage	bookingfrontend	nn	Heimeside for arrangementet / aktiviteten
 Facilities	bookingfrontend	nn	Fasiliteter
+facilities	bookingfrontend	nn	Fasiliteter
 Field %1 is required	bookingfrontend	nn	Feltet '%1' må fylles ut
 Field %1: Invalid format	bookingfrontend	nn	Feltet '%1': ugyldig format
 Find available	bookingfrontend	nn	Finn tilgjengelig
