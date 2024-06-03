@@ -306,9 +306,10 @@ HTML;
 			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
 			$detected .= $request_order;
 			$detected .= $get_max_value_length;
-
+		$extensions = get_loaded_extensions();
+		//_debug_array($extensions);
 			$supported_db = array();
-			if (extension_loaded('pgsql') || function_exists('pg_connect'))
+			if (extension_loaded('pdo_pgsql') || function_exists('pg_connect'))
 			{
 				$detected .= '<li>' . lang('You appear to have Postgres-DB support enabled') . "</li>\n";
 				$supported_db[]  = 'postgres';
@@ -317,7 +318,7 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No Postgres-DB support found. Disabling') . "</li>\n";
 			}
-			if (extension_loaded('mysqli'))
+			if (extension_loaded('pdo_mysql'))
 			{
 				$detected .= '<li>' . lang('You appear to have MySQL support enabled') . "</li>\n";
 //				$supported_db[] = 'mysql';
@@ -326,7 +327,7 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No MySQL support found. Disabling') . "</li>\n";
 			}
-			if (extension_loaded('mssql') || function_exists('mssql_connect') || extension_loaded('sqlsrv'))
+			if (extension_loaded('mssql') || function_exists('mssql_connect') || extension_loaded('sqlsrv') || extension_loaded('pdo_sqlsrv'))
 			{
 				$detected .= '<li>' . lang('You appear to have Microsoft SQL Server support enabled') . "</li>\n";
 //				$supported_db[] = 'mssql';
