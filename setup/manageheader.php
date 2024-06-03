@@ -306,8 +306,7 @@ HTML;
 			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
 			$detected .= $request_order;
 			$detected .= $get_max_value_length;
-		$extensions = get_loaded_extensions();
-		//_debug_array($extensions);
+
 			$supported_db = array();
 			if (extension_loaded('pdo_pgsql') || function_exists('pg_connect'))
 			{
