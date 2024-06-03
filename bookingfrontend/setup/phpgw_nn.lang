@@ -383,6 +383,7 @@ found none	booking	nn	Fann ingen
 fr	bookingfrontend	nn	fr.
 free	bookingfrontend	nn	Ledig
 from	bookingfrontend	nn	Frå
+from_date	bookingfrontend	nn	Fra dato
 generate allocations	bookingfrontend	nn	Lag tildeling
 generate allocations from week template	bookingfrontend	nn	Lag tildeling frå vekeplan
 get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
@@ -570,6 +571,7 @@ th	bookingfrontend	nn	tor
 this application is not within a valid season	bookingfrontend	nn	Denne søknaden er utanfor gyldig åpningstid
 title	bookingfrontend	nn	Tittel
 to	bookingfrontend	nn	Til
+to_date	bookingfrontend	nn	Til dato
 tu	bookingfrontend	nn	tys
 type	bookingfrontend	nn	Type
 unit	bookingfrontend	nn	Enhet

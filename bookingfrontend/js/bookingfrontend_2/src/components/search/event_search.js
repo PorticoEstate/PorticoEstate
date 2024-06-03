@@ -12,6 +12,10 @@ class EventSearch {
     to_date = ko.observable(getSearchDateString(new Date(new Date().getTime() + (7 * 86400 * 1000))));
     events = ko.observableArray([]);
     result_shown = ko.observable(25);
+    transCallable = ko.computed(function() {
+        if(globalThis['translations'] && globalThis['translations']()) {}
+        return trans;
+    });
 
     constructor() {
         this.from_date.subscribe(from => {
@@ -21,7 +25,6 @@ class EventSearch {
 
         this.to_date.subscribe(to => {
             console.log("TO", to);
-
             this.fetchEventOnDates();
         })
 
@@ -137,68 +140,65 @@ class EventSearch {
 
 ko.components.register('event-search', {
     viewModel: EventSearch,
+    // language=HTML
     template: `
-       <div id="search-event">
-        <div class="bodySection">
-            <div class="multisearch w-100 mb-5">
-                <div class="multisearch__inner w-100">
-                    <div class="row flex-column flex-md-row">
-                        <div class="col mb-3 mb-md-0">
-                            <div class="multisearch__inner__item">
-                                <label for="search-event-text">
-                                    <xsl:value-of select="php:function('lang', 'search')"/>
-                                </label>
-                                <input id="search-event--text" type="text"
-                                       data-bind="textInput: text">
-                                    <xsl:attribute name="placeholder">
-                                        <xsl:value-of select="php:function('lang', 'event_building')"/>
-                                    </xsl:attribute>
-                                </input>
+        <div id="search-event">
+            <div class="bodySection">
+                <div class="multisearch w-100 mb-5">
+                    <div class="multisearch__inner w-100">
+                        <div class="row flex-column flex-md-row">
+                            <div class="col mb-3 mb-md-0">
+                                <div class="multisearch__inner__item">
+                                    <label for="search-event-text">
+                                        <trans>common:search</trans>
+                                    </label>
+                                    <input id="search-event--text" type="text"
+                                           data-bind="textInput: text, attr: {'placeholder': transCallable()('bookingfrontend','event_building')}"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col mb-3 mb-md-0 multisearch__inner--border">
-                            <div class="multisearch__inner__item">
-                                <label for="search-event-datepicker-from">
-                                    <xsl:value-of select="php:function('lang', 'From date')"/>
-                                </label>
-                                <input type="text" id="search-event-datepicker-from" class="js-basic-datepicker"
-                                       placeholder="dd.mm.yyyy" data-bind="textInput: from_date, datepicker"/>
+                            <div class="col mb-3 mb-md-0 multisearch__inner--border">
+                                <div class="multisearch__inner__item">
+                                    <label for="search-event-datepicker-from">
+                                        <trans params="{tag: 'from_date', group: 'bookingfrontend'}"></trans>
+                                    </label>
+                                    <input type="text" id="search-event-datepicker-from" class="js-basic-datepicker"
+                                           placeholder="dd.mm.yyyy" data-bind="textInput: from_date, datepicker"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col mb-3 mb-md-0 multisearch__inner--border">
-                            <div class="multisearch__inner__item">
-                                <label for="search-event-datepicker-to">
-                                    <xsl:value-of select="php:function('lang', 'To date')"/>
-                                </label>
-                                <input type="text" id="search-event-datepicker-to" class="js-basic-datepicker"
-                                       placeholder="dd.mm.yyyy" data-bind="textInput: to_date, datepicker"/>
+                            <div class="col mb-3 mb-md-0 multisearch__inner--border">
+                                <div class="multisearch__inner__item">
+                                    <label for="search-event-datepicker-to">
+                                        <trans params="{tag: 'to_date', group: 'bookingfrontend'}"></trans>
+                                    </label>
+                                    <input type="text" id="search-event-datepicker-to" class="js-basic-datepicker"
+                                           placeholder="dd.mm.yyyy" data-bind="textInput: to_date, datepicker"/>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-                   <div id="search-count" class="pt-3" data-bind="text: resLength"></div>
 
-<!--            <div class="col-12 d-flex justify-content-start my-4 mb-md-0">-->
-<!--                <input type="checkbox" id="show_only_available" class="checkbox-fa"-->
-<!--                       data-bind="checked: show_only_available"/>-->
-<!--                <label class="choice text-purple text-label" for="show_only_available">-->
-<!--                    <i class="far fa-square unchecked-icon"></i>-->
-<!--                    <i class="far fa-check-square checked-icon"></i>-->
-<!--                    <trans>bookingfrontend:show_only_available</trans>-->
-<!--                </label>-->
-<!--            </div>-->
+            <div id="search-count" class="pt-3" data-bind="text: resLength"></div>
+
+            <!--            <div class="col-12 d-flex justify-content-start my-4 mb-md-0">-->
+            <!--                <input type="checkbox" id="show_only_available" class="checkbox-fa"-->
+            <!--                       data-bind="checked: show_only_available"/>-->
+            <!--                <label class="choice text-purple text-label" for="show_only_available">-->
+            <!--                    <i class="far fa-square unchecked-icon"></i>-->
+            <!--                    <i class="far fa-check-square checked-icon"></i>-->
+            <!--                    <trans>bookingfrontend:show_only_available</trans>-->
+            <!--                </label>-->
+            <!--            </div>-->
 
             <div id="search-result" class="pt-3">
-                    <div data-bind="foreach: { data: result().slice(0, result_shown()), as: 'event' }">
+                <div data-bind="foreach: { data: result().slice(0, result_shown()), as: 'event' }">
                     <event-info-card
                             params="{ event: event }"></event-info-card>
                 </div>
             </div>
-        
-    </div>
+
+        </div>
     `
 });
 
