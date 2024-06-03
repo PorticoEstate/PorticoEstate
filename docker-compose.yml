@@ -26,11 +26,8 @@ services:
     build:
         context: .
         dockerfile: Dockerfile
-#    image: sigurdne/portico_estate_webserver:latest
-#    image: sigurdne/portico_estate_webserver_oracle:latest
     ports:
       - 8080:80
-      - 443:443
     environment:
       XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
