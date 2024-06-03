@@ -20,7 +20,8 @@
 	/**
 	* phpGroupWare Information level "error"
 	*/
-//	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
+	error_reporting(E_ERROR);
 
 	define('PHPGW_E_INFO', -512);
 
@@ -211,7 +212,9 @@
 	*/
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
-		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
+		$error_reporting = error_reporting();
+
+		if ($error_reporting == 0) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
 		}
@@ -240,12 +243,20 @@
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
+				if ($error_reporting != E_ERROR && $error_reporting != E_USER_ERROR)
+				{
+					return true;
+				}
 				$log_args['severity'] = 'F'; //all "ERRORS" should be fatal
 				$log->fatal($log_args);
 				echo "\n<br>" . lang('ERROR Fatal: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n";
 				break;
 			case E_WARNING:
 			case E_USER_WARNING:
+				if ($error_reporting != E_WARNING && $error_reporting != E_USER_WARNING)
+				{
+					return true;
+				}
 				$log_args['severity'] = 'W';
 				$log->warn($log_args);
 				echo "\n<br>" . lang('ERROR Warning: %1 in %2 at line %3', $error_msg, $error_file, $error_line) . "<br>\n";
