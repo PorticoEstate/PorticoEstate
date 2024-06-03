@@ -7,8 +7,8 @@ import './info-cards/event-info-card'
 
 class EventSearch {
     text = ko.observable("");
-    // from_date = ko.observable(getSearchDateString(new Date()));
-    from_date = ko.observable(getSearchDateString(new Date(2021, 1, 1)));
+    from_date = ko.observable(getSearchDateString(new Date()));
+    // from_date = ko.observable(getSearchDateString(new Date(2021, 1, 1)));
     to_date = ko.observable(getSearchDateString(new Date(new Date().getTime() + (7 * 86400 * 1000))));
     events = ko.observableArray([]);
     result_shown = ko.observable(25);
