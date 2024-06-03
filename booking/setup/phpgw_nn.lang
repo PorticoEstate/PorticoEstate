@@ -784,6 +784,7 @@ Please select a resource category	booking	nn	Velg en ressurskategori
 Resource (2018)	booking	nn	Lokale
 Resource categories	booking	nn	Ressurskategorier
 Resource category	booking	nn	Ressurskategori
+resource_category	booking	nn	Ressurskategori
 Resources (2018)	booking	nn	Lokaler
 responsible_city	booking	nn	Poststed
 responsible_street	booking	nn	Gate
