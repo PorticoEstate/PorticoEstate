@@ -12,8 +12,8 @@ RUN apt-get update  && apt-get install -y software-properties-common \
      libaio1 locales wget
 
 ## uncomment the following lines to install php-pear from behind a proxy
-RUN pear config-set http_proxy ${http_proxy} && \
-    pear config-set php_ini $PHP_INI_DIR/php.ini
+#RUN pear config-set http_proxy ${http_proxy} && \
+#    pear config-set php_ini $PHP_INI_DIR/php.ini
 
 # Install PHP extensions
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
