@@ -1,4 +1,6 @@
 const createJsSlidedowns = () => {
+
+    console.log("PLES NO")
     // Dropdown f.ex. search result
     $(".js-slidedown").each(function () {
         var $toggler = $(this).find(".js-slidedown-toggler");

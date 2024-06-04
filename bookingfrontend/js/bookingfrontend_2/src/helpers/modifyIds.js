@@ -93,6 +93,7 @@ export function ModifyIds(response, remoteInstance) {
             id: modifyId(organization.id),
             original_activity_id: organization.activity_id,
             activity_id: modifyId(organization.activity_id),
+            remoteInstance: remoteInstance
         })),
     };
 
