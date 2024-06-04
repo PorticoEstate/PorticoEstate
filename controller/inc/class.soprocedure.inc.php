@@ -360,7 +360,8 @@
 
 			$sql = "SELECT * FROM controller_procedure"
 				. " WHERE {$filter_control_area}"
-				. " AND (end_date IS NULL OR procedure_id IS NOT NULL)"
+//				. " AND (end_date IS NULL OR procedure_id IS NOT NULL)"
+				. " AND procedure_id IS NOT NULL"
 				. " {$filter_procedure} ORDER BY title ASC";
 			$this->db->query($sql);
 
@@ -394,7 +395,7 @@
 
 			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 
-			$condition = "WHERE end_date IS NULL";
+		//	$condition = "WHERE end_date IS NULL";
 
 			if (isset($filters['control_areas']) && $filters['control_areas'])
 			{
@@ -455,6 +456,7 @@
 
 			//$sql = "SELECT * FROM controller_procedure WHERE $condition $order";
 			//$condition = "WHERE end_date IS NULL";
+			$condition = '';
 			$sql = "SELECT * FROM controller_procedure $condition $order";
 			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 
@@ -593,7 +595,7 @@
 			}
 
 			$filter_clauses = array();
-			$filter_clauses[] = "procedure.end_date IS NULL";
+	//		$filter_clauses[] = "procedure.end_date IS NULL";
 			/*
 			  switch($filters['is_active']){
 			  case "non_active":
