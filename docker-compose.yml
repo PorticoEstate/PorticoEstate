@@ -13,33 +13,6 @@ services:
     volumes:
        - postgres15_volume:/data/postgres
     restart: unless-stopped
-  mssql:
-    container_name: mssql_container
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - 1433:1433
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=ChangeMe10
-      - MSSQL_COLLATION="Latin1_General_CS_AI"
-      # Note: collation settings here has no effect...
-    volumes:
-       - sqldata1:/var/opt/mssql
-    restart: unless-stopped
-  myqsl:
-    container_name: mysql_container
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ChangeMe10
-      MYSQL_DATABASE: mybb
-      MYSQL_USER: mybb
-      MYSQL_PASSWORD: ChangeMe10
-    ports:
-      - 3306:3306
-    volumes:
-       - sqldata2:/var/lib/mysql
-#    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_as_cs']
-    restart: unless-stopped
   redis:
       container_name: redis_container
       image: redis
@@ -48,14 +21,13 @@ services:
        - redisdata:/data
       ports:
         - '6379:6379'
-
   web:
     container_name: portico_container
-    image: sigurdne/portico_estate_webserver:latest
-#    image: sigurdne/portico_estate_webserver_oracle:latest
+    build:
+        context: .
+        dockerfile: Dockerfile
     ports:
       - 8080:80
-      - 443:443
     environment:
       XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
@@ -66,22 +38,8 @@ services:
     depends_on:
       - postgres15
       - redis
-  pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    volumes:
-       - pgadmin:/root/.pgadmin
-    restart: unless-stopped
 
 volumes:
     postgres15_volume:
-    pgadmin:
-    sqldata1:
-    sqldata2:
     redisdata:
 

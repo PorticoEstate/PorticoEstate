@@ -290,7 +290,7 @@
 					{
 						if (!is_null($cell))
 						{
-							$row_values[] = $cell->getCalculatedValue();
+							$row_values[] = nl2br($cell->getCalculatedValue());
 						}
 					}
 					$html_table .= "<tr><td>{$_radio}</td><td>{$row_key}</td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
@@ -309,7 +309,7 @@
 				for ($j = 1; $j <= $highestColumnIndex; $j++)
 				{
 					$_column	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j);
-					$_value		 = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+					$_value		 = nl2br($spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue());
 					$selected	 = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
 					$_listbox	 = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true);
@@ -376,6 +376,7 @@
 		{
 			foreach ($convert_data as & $entry)
 			{
+				$entry['qr_input']		 = nl2br($entry['qr_input']);
 				$code_text				 = $entry['qr_input'];
 				$filename				 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
 				QRcode::png($code_text, $filename);
