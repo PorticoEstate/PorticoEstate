@@ -239,7 +239,7 @@
 										</button>
 									</form>
 								</xsl:if>
-								<xsl:if test="application/status='PENDING' or application/status='REJECTED'">
+								<xsl:if test="application/status='PENDING' or application/status='REJECTED' or application/status='NEWPARTIAL1'">
 									<xsl:choose>
 										<xsl:when test="num_associations='0'">
 											<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" >
