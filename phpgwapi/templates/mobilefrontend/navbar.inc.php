@@ -96,6 +96,9 @@ HTML;
 						  </div>
 						</div>
 					 </div>
+HTML;
+/*
+				$landing .= <<<HTML
 					 <div class="col">
 						<div class="mb-5 card" style="width: 18rem;">
 						  <div class="text-center card-body">
@@ -105,7 +108,7 @@ HTML;
 						</div>
 					 </div>
 HTML;
-
+*/
 			if ('controller' == $GLOBALS['phpgw_info']['flags']['currentapp'])
 			{
 				$menu_gross = execMethod("controller.menu.get_menu");
