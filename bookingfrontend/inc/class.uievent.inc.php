@@ -652,7 +652,7 @@ class bookingfrontend_uievent extends booking_uievent
         $fieldsToRedact = array('organizer', 'homepage', 'description', 'contact_name',
             'contact_email', 'contact_phone', 'customer_organization_name',
             'customer_identifier_type', 'customer_ssn', 'customer_organization_number', 'secret', 'name');
-
+        $redactedEvent['comments'] = array();
         foreach ($fieldsToRedact as $field) {
             if (isset($redactedEvent[$field])) {
                 $redactedEvent[$field] = 'PRIVATE';
