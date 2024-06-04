@@ -49,7 +49,7 @@
                 </div>
             </xsl:if>
         </div>
-        <div data-bind="text: type_group"></div>
+<!--        <div data-bind="text: type_group"></div>-->
         <div data-bind="if: type_group() == 'booking'">
             <booking-search params="
                     instance: booking,

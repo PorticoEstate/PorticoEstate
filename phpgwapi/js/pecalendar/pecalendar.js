@@ -1804,7 +1804,12 @@ if (globalThis['ko']) {
                                  click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? (e,c) => $parent.togglePopper(e,c) : undefined
                             ">
                             <div class="event-text">
+                                <!-- ko if: $data.event.is_public === 1 -->
                                 <span class="event-title" data-bind="text: $parent.getEventName($data.event)"></span>
+                                <!-- /ko -->
+                                <!-- ko if: $data.event.is_public === 0 -->
+                                <span class="event-title"><trans>bookingfrontend:private event</trans></span>
+                                <!-- /ko -->
                                 <!-- ko if: $data.event.resources -->
                                 <!--                                <div data-bind="text: $data.event.resources.filter(r => r.id).map(r => r.name).join(' / ')"></div>-->
                                 <!-- /ko -->
@@ -1835,7 +1840,12 @@ if (globalThis['ko']) {
                                     <!-- Display ID for all types -->
                                     <div class="info-title mb-3">
                                         <h3>
+                                            <!-- ko if: $parent.event.is_public === 1 -->
                                             <span data-bind="text: $component.getEventName($parent.event)"></span>
+                                            <!-- /ko -->
+                                            <!-- ko if: $parent.event.is_public === 0 -->
+                                            <span><trans>bookingfrontend:private event</trans></span>
+                                            <!-- /ko -->
                                         </h3>
                                         <span data-bind="text: '(#' + infoData.id +')'"></span>
                                     </div>
@@ -1849,7 +1859,12 @@ if (globalThis['ko']) {
                                     <!-- ko if: $parent.event.type === 'event' -->
                                     <div>
                                         <span class="text-bold"><trans>booking:organizer</trans>:</span>
+                                        <!-- ko if: $parent.event.is_public === 1 -->
                                         <span data-bind="text: infoData.organizer"></span>
+                                        <!-- /ko -->
+                                        <!-- ko if: $parent.event.is_public === 0 -->
+                                        <span><trans>bookingfrontend:private event</trans></span>
+                                        <!-- /ko -->
                                     </div>
                                     <!-- /ko -->
                                     <!-- Event/Booking/Allocation Time -->
