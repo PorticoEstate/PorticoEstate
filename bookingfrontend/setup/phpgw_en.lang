@@ -100,6 +100,7 @@ Event was created	booking	en	The event was created
 Event/activity description	bookingfrontend	en	Event/activity description
 Event/activity homepage	bookingfrontend	en	Event/activity homepage
 Facilities	bookingfrontend	en	Facilities
+facilities	bookingfrontend	en	Facilities
 Field %1 is required	bookingfrontend	en	Field %1 is required
 Field %1: Invalid format	bookingfrontend	en	Field %1: invalid format
 Find available	bookingfrontend	en	Find available
@@ -382,6 +383,7 @@ found none	booking	en	Found none
 fr	bookingfrontend	en	Fr
 free	bookingfrontend	en	Free
 from	bookingfrontend	en	From
+from_date	bookingfrontend	en	From date
 generate allocations	bookingfrontend	en	Generate allocations
 generate allocations from week template	bookingfrontend	en	Generate allocations from week template
 get name from external source	bookingfrontend	en	Get name from external source
@@ -569,6 +571,7 @@ th	bookingfrontend	en	Th
 this application is not within a valid season	bookingfrontend	en	This application is outside the valid season
 title	bookingfrontend	en	Title
 to	bookingfrontend	en	To
+to_date	bookingfrontend	en	To date
 tu	bookingfrontend	en	Tu
 type	bookingfrontend	en	Type
 unit	bookingfrontend	en	Unit
