@@ -99,6 +99,7 @@ Event was created	booking	no	Arrangementet ble opprettet
 Event/activity description	bookingfrontend	no	Kort beskrivelse av arrangementet / aktiviteten
 Event/activity homepage	bookingfrontend	no	Hjemmeside for arrangementet / aktiviteten
 Facilities	bookingfrontend	no	Fasiliteter
+facilities	bookingfrontend	no	Fasiliteter
 Field %1 is required	bookingfrontend	no	Feltet '%1' må fylles ut
 Field %1: Invalid format	bookingfrontend	no	Feltet '%1': ugyldig format
 Find available	bookingfrontend	no	Finn tilgjengelig
@@ -381,6 +382,7 @@ found none	booking	no	Fant ingen
 fr	bookingfrontend	no	fr.
 free	bookingfrontend	no	Ledig
 from	bookingfrontend	no	Fra
+from_date	bookingfrontend	no	Fra dato
 generate allocations	bookingfrontend	no	Lag tildeling
 generate allocations from week template	bookingfrontend	no	Lag tildelninger fra ukeplan
 get name from external source	bookingfrontend	no	Hent navn fra ekstern kilde (som Gule Sider)
@@ -568,6 +570,7 @@ th	bookingfrontend	no	tor
 this application is not within a valid season	bookingfrontend	no	Denne søknaden er utenfor gyldig åpningstid
 title	bookingfrontend	no	Tittel
 to	bookingfrontend	no	Til
+to_date	bookingfrontend	no	Til dato
 tu	bookingfrontend	no	tir
 type	bookingfrontend	no	Type
 unit	bookingfrontend	no	Enhet
