@@ -1035,9 +1035,11 @@ h4, .h4 {
   border-bottom-right-radius: 3.125rem;
 }
 
-.footer-list a {
+.footer-list a, .footer-list a.span {
   word-wrap: break-word;
   white-space: normal;
+  overflow-wrap: break-word; /* Ensures compatibility */
+  word-break: break-all; /* Breaks long words at any character */
 }
 
 a, a:link, a:visited {
@@ -1073,6 +1075,9 @@ a.link-text {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+a.link-text.normal {
+  font-weight: 400;
 }
 a.link-text.underline {
   text-decoration: underline;

@@ -1,7 +1,9 @@
 .footer-list {
-  a {
+  a, a.span {
     word-wrap: break-word;
     white-space: normal;
+    overflow-wrap: break-word; /* Ensures compatibility */
+    word-break: break-all; /* Breaks long words at any character */
   }
 }
 
@@ -74,6 +76,10 @@ a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
+    &.normal {
+      font-weight: 400;
+    }
 
     &.underline {
       text-decoration: underline;
