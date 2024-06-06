@@ -444,7 +444,7 @@ HTML;
         <li><a href="{$faq}">FAQ</a></li>
         <li>
       <div class="js-dropdown menu position-relative " id="application-cart-container">
-        <shopping-basket params="applicationCartItems: applicationCartItems, deleteItem:deleteItem"></shopping-basket>
+        <shopping-basket params="applicationCartItems: applicationCartItems, deleteItem: (a) => deleteItem(a)"></shopping-basket>
     </div>
     </li>
       </ul>
