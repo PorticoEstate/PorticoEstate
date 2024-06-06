@@ -1035,6 +1035,11 @@ h4, .h4 {
   border-bottom-right-radius: 3.125rem;
 }
 
+.footer-list a {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
 a, a:link, a:visited {
   color: #000000;
   text-decoration: underline;

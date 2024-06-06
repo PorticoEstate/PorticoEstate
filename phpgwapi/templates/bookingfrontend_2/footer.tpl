@@ -8,7 +8,7 @@
             </div>
             <div class="col-12 col-sm-6 col-md-3 d-flex flex-column mb-4">
                 <h4 class="text-body mb-1">{contact}</h4>
-                <ul class="text-small list-unstyled mb-0">
+                <ul class="text-small list-unstyled mb-0 footer-list">
                     <li><a target="_blank" rel="noopener noreferrer" href="mailto:{support_email}">{support_email}</a>
                     </li>
                     <li><a target="_blank" rel="noopener noreferrer"
@@ -18,7 +18,7 @@
             </div>
             <div class="col-12 col-sm-6 col-md-3 d-flex flex-column mb-4">
                 <h4 class="text-body mb-1">Aktiv kommune</h4>
-                <ul class="text-small list-unstyled mb-0">
+                <ul class="text-small list-unstyled mb-0 footer-list">
                     <li><a target="_blank" rel="noopener noreferrer"
                            href="https://www.aktiv-kommune.no/">{textaboutmunicipality}</a></li>
                     <li><a target="_blank" rel="noopener noreferrer"
@@ -29,7 +29,7 @@
             </div>
             <div class="col-12 col-sm-6 col-md-3 d-flex flex-column mb-4">
                 <h4 class="text-body mb-1">{sign_in}</h4>
-                <ul class="text-small list-unstyled mb-0">
+                <ul class="text-small list-unstyled mb-0 footer-list">
                     {user_info_view}
                     <li><i class="fas fa-sign-in-alt me-1"></i><a href="{login_url}">{login_text}</a></li>
                     {org_info_view}
