@@ -3,12 +3,12 @@
         <div class="container">
             <div class="row pb-2">
                 <div class="col-md-2">
-                    <a class=" pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3  pe-btn--small">
+                    <a class="link-text link-text-primary">
                         <xsl:attribute name="href">
                             <xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/', '')"/>
                         </xsl:attribute>
                         <i class="fa-solid fa-arrow-left"></i>
-                        <xsl:value-of select="php:function('lang', 'Homepage')"/>
+                        <xsl:value-of select="php:function('lang', 'home_page')"/>
                     </a>
                 </div>
 
