@@ -7,9 +7,13 @@
 if (!globalThis['trans']) {
     // Initialize translations as a Knockout observable object
     globalThis['translations'] = ko.observable({});
+    globalThis['translationsLoaded'] = ko.observable(false);
     const getJsonURL = phpGWLink('bookingfrontend/lang.php', null, true);
 
-    fetch(getJsonURL).then(a => a.json()).then(a => globalThis['translations'](a))
+    fetch(getJsonURL).then(a => a.json()).then(a => {
+        globalThis['translations'](a);
+        globalThis['translationsLoaded'](true);
+    })
 
     // Define the translate function
     globalThis['trans'] = (group, tag, ...args) => {
