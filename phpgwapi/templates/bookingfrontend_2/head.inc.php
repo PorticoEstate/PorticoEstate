@@ -124,7 +124,7 @@ JS;
 	if (!empty($config_frontend['url_uustatus']))
 	{
 		$lang_uustatus = lang('uustatus');
-		$url_uustatus ="<li><a target='_blank' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></li>";
+		$url_uustatus ="<li><a target='_blank' class='link-text link-text-secondary normal' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></li>";
 		$GLOBALS['phpgw']->template->set_var('url_uustatus', $url_uustatus);
 	}
 
