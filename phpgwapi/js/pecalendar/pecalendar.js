@@ -1033,6 +1033,7 @@ class PECalendar {
             to: endTime,
             date: date,
             type: "temporary",
+            is_public: 1,
             resources: [
                 resource
             ]
@@ -1144,6 +1145,7 @@ class PECalendar {
             id: `TOTEST`,
             from: startTime,
             to: endTime,
+            is_public: 1,
             date: date,
             resources: [
                 resource
