@@ -69,7 +69,7 @@ class ArticleTableViewModel {
                 // return "Dagspris"
                 return "daily_rate"
             case 'each':
-                // return "Dagspris"
+                // return "Stk pris"
                 return "each"
             default:
                 // If the unit doesn't match minute, hour, or day, log an error or set a default
