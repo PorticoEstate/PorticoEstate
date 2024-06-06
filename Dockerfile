@@ -2,6 +2,10 @@ FROM php:8-apache
 
 LABEL maintainer="Sigurd Nes <sigurdne@gmail.com>"
 
+# Define build arguments
+ARG INSTALL_MSSQL=false
+ARG INSTALL_XDEBUG=false
+
 # Install necessary packages
 RUN apt-get update  && apt-get install -y software-properties-common \
      apt-utils libcurl4-openssl-dev libicu-dev libxslt-dev libpq-dev zlib1g-dev libpng-dev libc-client-dev libkrb5-dev libzip-dev libonig-dev \
