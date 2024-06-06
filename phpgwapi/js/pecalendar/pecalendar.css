@@ -755,6 +755,12 @@ fieldset {
   margin-bottom: 2rem;
 }
 
+.fi {
+  width: 1.625rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   font-weight: 400;

@@ -755,6 +755,12 @@ fieldset {
   margin-bottom: 2rem;
 }
 
+.fi {
+  width: 1.625rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+}
+
 :root {
   --bs-gutter-x: 0.625rem;
   --bs-gutter-y: 0.625rem;
@@ -1389,6 +1395,9 @@ a.link-button--transparent {
 }
 
 .choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   position: relative;
   cursor: pointer;
   padding-left: 2.5rem;
