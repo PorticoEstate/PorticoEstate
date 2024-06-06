@@ -1,3 +1,11 @@
+.footer-list {
+  a {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}
+
+
 @mixin pill() {
   padding: 0.713rem 1.5rem;
   border: 1px solid $grey;
@@ -66,11 +74,14 @@ a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     &.underline {
       text-decoration: underline;
     }
+
     &-primary {
       color: $purple;
+
       &:hover {
         color: $blue;
       }
@@ -78,11 +89,13 @@ a {
 
     &-secondary {
       color: $blue;
+
       &:hover {
         color: $purple;
 
       }
     }
+
     &-white {
       color: $white;
     }
