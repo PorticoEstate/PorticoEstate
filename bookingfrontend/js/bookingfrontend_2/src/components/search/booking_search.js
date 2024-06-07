@@ -94,7 +94,6 @@ export class BookingSearch {
 
         this.lang = getCookie("selected_lang") || 'no';
 
-        this.initializeSubscriptions();
 
 
         this.show_only_available.subscribe(show => {
@@ -131,6 +130,8 @@ export class BookingSearch {
 
 
         this.initializeComputed();
+        this.initializeSubscriptions();
+
     }
 
     initializeSubscriptions() {
@@ -158,20 +159,21 @@ export class BookingSearch {
 
     initializeComputed() {
         this.buildings = ko.computed(() => {
-            console.log("buildings", this.towns_data)
             if (!this.towns_data || !this.towns_data()) {
                 return [];
             }
             const town = this.selected_town();
-            return this.towns_data()
+            const filtered =  this.towns_data()
                 .filter(item => town ? town.id === item.id : true)
                 .map(item => ({
                     id: item.b_id,
                     name: htmlDecode(item.b_name),
                     original_id: item.original_b_id,
-                    remoteInstance: item.remoteInstance
+                    remoteInstance: item.remoteInstance,
                 }))
                 .sort((a, b) => a.name?.localeCompare(b.name, "no"));
+            return filtered;
+
         });
     }
 
