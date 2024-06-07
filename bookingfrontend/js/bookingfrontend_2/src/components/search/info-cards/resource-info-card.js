@@ -37,25 +37,31 @@ function ResourceInfoCardViewModel(params) {
     })
 
     this.url = ko.computed(() => {
+        if(!this.buildings || this.buildings.length === 0) {
+            return '';
+        }
         if (this.resource.simple_booking === 1) {
             return phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uiresource.show',
-                building_id: this.buildings[0].id,
+                building_id: this.buildings?.[0].id,
                 id: this.resource.id
             }, false);
         } else {
             return phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uiapplication.add',
-                building_id: this.buildings[0].id,
+                building_id: this.buildings?.[0].id,
                 resource_id: this.resource.id
             }, false);
         }
     });
 
     this.locationUrl = ko.computed(() => {
+        if(!this.buildings || this.buildings.length === 0) {
+            return '';
+        }
         return phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibuilding.show',
-            id: this.buildings[0].id
+            id: this.buildings?.[0].id
         });
     });
 
@@ -63,7 +69,7 @@ function ResourceInfoCardViewModel(params) {
 
     this.infoText = ko.computed(() => {
         const towns = this.towns().map(t => this.cleanTownName(t.name)).join(' • ');
-        const buildings = this.buildings.map(b => {
+        const buildings = this.buildings?.map(b => {
             const buildingUrl = phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uibuilding.show',
                 id: b.original_id !== undefined ? b.original_id : b.id
