@@ -38,12 +38,14 @@ class Search {
         resource_facilities: ko.observableArray([]),
         resource_category_activity: ko.observableArray([])
     }
+
     // booking = new BookingSearch();
     booking = ko.observable();
     organization = ko.observable();
     event = ko.observable();
     // event = new EventSearch();
     // organization = new OrganizationSearch();
+    ready = globalThis['translationsLoaded'];
 
     // ko_search = {
     type_group = ko.observable(null);

@@ -68,10 +68,13 @@ class ArticleTableViewModel {
             case 'day':
                 // return "Dagspris"
                 return "daily_rate"
+            case 'each':
+                // return "Stk pris"
+                return "each"
             default:
                 // If the unit doesn't match minute, hour, or day, log an error or set a default
                 console.error('Unknown unit type for mandatory item:', resource.info.unit);
-                break;
+                return  resource.info.unit;
         }
     }
 

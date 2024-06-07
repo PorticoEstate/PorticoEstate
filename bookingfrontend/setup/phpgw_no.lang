@@ -301,6 +301,7 @@ category	bookingfrontend	no	Kategori
 choose a date	bookingfrontend	no	Velg dato
 choose file	bookingfrontend	no	Velg dokument
 choose rent object and rentperiod	bookingfrontend	no	Velg leieobjekt og leieperiode
+choose rent object	bookingfrontend	no	Velg leieobjekt
 choose rent period	bookingfrontend	no	Velg leieperiode
 choose target audience	bookingfrontend	no	Velg målgruppe for arrangement / aktiviteten
 chosen rent object	bookingfrontend	no	Valgte ressurser

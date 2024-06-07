@@ -1,3 +1,13 @@
+.footer-list {
+  a, a.span {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word; /* Ensures compatibility */
+    word-break: break-all; /* Breaks long words at any character */
+  }
+}
+
+
 @mixin pill() {
   padding: 0.713rem 1.5rem;
   border: 1px solid $grey;
@@ -66,11 +76,18 @@ a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
+    &.normal {
+      font-weight: 400;
+    }
+
     &.underline {
       text-decoration: underline;
     }
+
     &-primary {
       color: $purple;
+
       &:hover {
         color: $blue;
       }
@@ -78,11 +95,13 @@ a {
 
     &-secondary {
       color: $blue;
+
       &:hover {
         color: $purple;
 
       }
     }
+
     &-white {
       color: $white;
     }
