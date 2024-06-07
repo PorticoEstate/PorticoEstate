@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <div id="search-page-content">
+    <div id="search-page-content"  data-bind="visible: ready">
         <div id="search-header">
             <H1 class="text-primary text-md-start text-center mb-0">
                 <trans params="tag: header_text_kword().tag, group: header_text_kword().group"></trans>

@@ -138,7 +138,7 @@
                                 <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
                                         id="select-multiple">
                                     <xsl:attribute name="data-placeholder">
-                                        <xsl:value-of select="php:function('lang', 'rent object')"/>
+                                        <xsl:value-of select="php:function('lang', 'choose rent object')"/>
                                     </xsl:attribute>
                                     <option></option>
                                     <option data-bind="text: name,

@@ -199,7 +199,13 @@ class PECalendar {
 
     instance = undefined;
 
-    constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = true, instance = undefined}) {
+    constructor({
+                    building_id,
+                    resource_id = null,
+                    dateString = null,
+                    disableResourceSwap = true,
+                    instance = undefined
+                }) {
         luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
         this.instance = instance;
 
@@ -731,7 +737,6 @@ class PECalendar {
         });
 
 
-
         const occupiedColumns = new Map();
         for (let i = 0; i < intervals.length; i++) {
             occupiedColumns.set(i, new Array(12).fill(false));
@@ -1028,6 +1033,7 @@ class PECalendar {
             to: endTime,
             date: date,
             type: "temporary",
+            is_public: 1,
             resources: [
                 resource
             ]
@@ -1139,6 +1145,7 @@ class PECalendar {
             id: `TOTEST`,
             from: startTime,
             to: endTime,
+            is_public: 1,
             date: date,
             resources: [
                 resource
@@ -1640,6 +1647,47 @@ class PECalendar {
         return name;
     }
 
+    /**
+     * Helper method to escape special characters for iCal format
+     * @param {string} text
+     * @returns {string}
+     */
+    escapeICalText(text) {
+        return text.replace(/([\,;])/g, '\\$1').replace(/\n/g, '\\n');
+    }
+
+    /**
+     * Method to generate iCal data
+     */
+    generateICal() {
+        const events = this.calendarEvents();
+        let icalContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Your Product//EN\n';
+        console.log(events);
+        events.forEach(eventData => {
+            const event = eventData.event;
+            const eventStart = DateTime.fromISO(`${event.date}T${event.from}`).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+            const eventEnd = DateTime.fromISO(`${event.date}T${event.to}`).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+            const summary = this.escapeICalText(this.getEventName(event));
+            const description = this.escapeICalText(event.description || '');
+            const location = this.escapeICalText(event.building_name) + ': ' + this.escapeICalText(event.resources.map(resource => resource.name).join(', '));
+            const uid = event.id_string || event.id;
+            const eventType = event.type.charAt(0).toUpperCase() + event.type.slice(1); // Capitalize first letter
+
+            icalContent += `BEGIN:VEVENT\nUID:${uid}@yourdomain.com\nDTSTAMP:${DateTime.now().toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'")}\nDTSTART:${eventStart}\nDTEND:${eventEnd}\nSUMMARY:${summary}\nDESCRIPTION:${description}\nLOCATION:${location}\nX-EVENT-TYPE:${eventType}\nEND:VEVENT\n`;
+        });
+
+        icalContent += 'END:VCALENDAR';
+
+        // Trigger the download
+        const blob = new Blob([icalContent], {type: 'text/calendar'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'calendar.ics';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
 
 }
 
@@ -1729,9 +1777,16 @@ if (globalThis['ko']) {
                                 </button>
                             </div>
                         </div data-bind="css: { 'invisible': !hasTimeSlots() }">
+                        <button type="button"
+                                class="pe-btn  pe-btn--transparent text-secondary d-flex gap-2 align-items-center"
+                                data-bind="click: generateICal">
+                            <div>iCal</div>
+                            <div><i class="fas fa-calendar-alt export-ical" title="Export to iCal"
+                                    data-bind="click: generateICal"></i></div>
+                        </button>
                         <!-- ko ifnot: hasTimeSlots() -->
 
-                        <div class="info-types">
+                        <div class="info-types d-none">
                             <div class="type text-small">
                                 <img class="event-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false, this.instance)}"
@@ -2052,6 +2107,7 @@ function getCookie(cname) {
     }
     return "";
 }
+
 /**
  * Emulate phpGW's link function
  *
@@ -2065,7 +2121,7 @@ function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
     // console.log(strBaseURL)
     if (baseURL) {
         const baseURLParts = (baseURL).split('/').filter(a => a !== '' && !a.includes('http'));
-        baseURL = '//'+baseURLParts.slice(0, baseURLParts.length - 1).join('/') + '/'; // Remove last element (file name)
+        baseURL = '//' + baseURLParts.slice(0, baseURLParts.length - 1).join('/') + '/'; // Remove last element (file name)
     }
     const urlParts = (baseURL || strBaseURL).split('?');
     let newURL = urlParts[0] + strURL + '?';
@@ -2076,7 +2132,7 @@ function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
     for (const key in oArgs) {
         newURL += key + '=' + oArgs[key] + '&';
     }
-    if(urlParts[1]) {
+    if (urlParts[1]) {
         newURL += urlParts[1];
     }
 

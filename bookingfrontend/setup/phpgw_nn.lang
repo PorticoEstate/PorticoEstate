@@ -302,6 +302,7 @@ category	bookingfrontend	nn	Kategori
 choose a date	bookingfrontend	nn	Vel ein dato
 choose file	bookingfrontend	nn	Vel fil du vil leggja til
 choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeperiode
+choose rent object	bookingfrontend	nn	Vel leigeobjekt
 choose rent period	bookingfrontend	nn	Velg leigeperiode
 choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
 chosen rent object	bookingfrontend	nn	Valde ressursar

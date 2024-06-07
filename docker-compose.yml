@@ -1,4 +1,7 @@
-version: '3.6'
+## istructions to build the image ##
+# export INSTALL_MSSQL=true
+# export INSTALL_XDEBUG=true
+# docker compose build
 
 services:
   postgres15:
@@ -26,6 +29,9 @@ services:
     build:
         context: .
         dockerfile: Dockerfile
+        args:
+           INSTALL_MSSQL: ${INSTALL_MSSQL}
+           INSTALL_XDEBUG: ${INSTALL_XDEBUG}
     ports:
       - 8080:80
     environment:

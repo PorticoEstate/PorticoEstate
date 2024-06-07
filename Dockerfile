@@ -2,6 +2,10 @@ FROM php:8-apache
 
 LABEL maintainer="Sigurd Nes <sigurdne@gmail.com>"
 
+# Define build arguments
+ARG INSTALL_MSSQL=false
+ARG INSTALL_XDEBUG=false
+
 # Install necessary packages
 RUN apt-get update  && apt-get install -y software-properties-common \
      apt-utils libcurl4-openssl-dev libicu-dev libxslt-dev libpq-dev zlib1g-dev libpng-dev libc-client-dev libkrb5-dev libzip-dev libonig-dev \
@@ -15,6 +19,9 @@ RUN apt-get update  && apt-get install -y software-properties-common \
 #RUN pear config-set http_proxy ${http_proxy} && \
 #    pear config-set php_ini $PHP_INI_DIR/php.ini
 
+RUN if [ -n "${http_proxy}" ]; then pear config-set http_proxy ${http_proxy}; fi && \
+    pear config-set php_ini $PHP_INI_DIR/php.ini
+
 # Install PHP extensions
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install curl intl xsl pdo_pgsql pdo_mysql gd imap soap zip mbstring
@@ -22,21 +29,19 @@ RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
 # Install PECL extensions
 RUN pecl install xdebug apcu && docker-php-ext-enable xdebug apcu
 
-# MSSQL-support
-RUN wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-RUN echo "deb [arch=amd64] https://packages.microsoft.com/debian/$(cat /etc/debian_version | cut -d. -f1)/prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/mssql-release.list
-RUN apt-get update
+# Conditionally install MSSQL support
 
-RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
-# optional: for bcp and sqlcmd
-RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+RUN if [ "${INSTALL_MSSQL}" = "true" ]; then \
+    wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/debian/$(cat /etc/debian_version | cut -d. -f1)/prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql17 && \
+    ACCEPT_EULA=Y apt-get install -y mssql-tools18 && \
+    apt-get install -y unixodbc unixodbc-dev && \
+    pecl install sqlsrv pdo_sqlsrv && \
+    docker-php-ext-enable sqlsrv pdo_sqlsrv; \
+    fi
 
-# Install sqlsrv
-RUN apt-get install -y unixodbc
-RUN apt-get install -y unixodbc-dev
-RUN pecl install sqlsrv
-RUN pecl install pdo_sqlsrv
-RUN docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 # Configure locales
 RUN locale-gen --purge en_US.UTF-8
@@ -63,11 +68,14 @@ RUN a2enmod ssl
 # PHP
 ENV PHP_INI ""
 ENV XDEBUG_REMOTE_PORT ""
-RUN echo 'xdebug.mode=debug,develop' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+
+RUN if [ "${INSTALL_XDEBUG}" = "true" ]; then \
+ echo 'xdebug.mode=debug,develop' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo 'xdebug.discover_client_host=1' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo 'xdebug.client_host=""' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo 'xdebug.start_with_request=yes' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo 'xdebug.idekey=netbeans-xdebug' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    && echo 'xdebug.idekey=netbeans-xdebug' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+   fi
 
 RUN echo 'session.cookie_secure=Off' >> /usr/local/etc/php/php.ini
 RUN echo 'session.use_cookies=On' >> /usr/local/etc/php/php.ini
@@ -84,3 +92,6 @@ RUN echo 'upload_max_filesize = 8M' >> /usr/local/etc/php/php.ini
 
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN mkdir -p /var/public/files
+RUN chmod 777 /var/public/files
