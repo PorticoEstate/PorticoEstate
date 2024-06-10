@@ -124,7 +124,7 @@ JS;
 	if (!empty($config_frontend['url_uustatus']))
 	{
 		$lang_uustatus = lang('uustatus');
-		$url_uustatus ="<li><a target='_blank' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></li>";
+		$url_uustatus ="<li><a target='_blank' class='link-text link-text-secondary normal' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></li>";
 		$GLOBALS['phpgw']->template->set_var('url_uustatus', $url_uustatus);
 	}
 
@@ -444,7 +444,7 @@ HTML;
         <li><a href="{$faq}">FAQ</a></li>
         <li>
       <div class="js-dropdown menu position-relative " id="application-cart-container">
-        <shopping-basket params="applicationCartItems: applicationCartItems, deleteItem:deleteItem"></shopping-basket>
+        <shopping-basket params="applicationCartItems: applicationCartItems, deleteItem: (a) => deleteItem(a)"></shopping-basket>
     </div>
     </li>
       </ul>
@@ -509,7 +509,7 @@ HTML;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));
 	$lang_user = lang('My page');
-	$tpl_vars['user_info_view'] = "<li><i class='fas fa-user me-1'></i><a href='{$user_url}'>{$lang_user}</a></li>";
+	$tpl_vars['user_info_view'] = "<li><a class='link-text link-text-secondary normal' href='{$user_url}'><i class='fas fa-user'></i>{$lang_user}</a></li>";
 
 	$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
 	if ($bouser->is_logged_in())
@@ -527,7 +527,7 @@ HTML;
 				'id' => $org->get_orgid($bouser->orgnr, $bouser->ssn)));
 
 			$lang_organization = lang('Organization');
-			$tpl_vars['org_info_view'] = "<li><i class='fas fa-sign-in-alt me-1' title='{$lang_organization}'></i><a href='{$org_url}'>{$bouser->orgname}</a></li>";
+			$tpl_vars['org_info_view'] = "<li><a class='link-text link-text-secondary normal' href='{$org_url}'><i class='fas fa-sign-in-alt' title='{$lang_organization}'></i>{$bouser->orgname}</a></li>";
 			$tpl_vars['login_text_org']	 = $bouser->orgname;
 			$tpl_vars['login_text']		 = lang('Logout');
 		}

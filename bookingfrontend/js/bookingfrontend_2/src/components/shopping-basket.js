@@ -86,7 +86,7 @@ ko.components.register('shopping-basket', {
                                     <i class="fa-solid fa-location-dot"></i><h3 class="p-0 m-0" data-bind="text: building_name"></h3>
                                 </div>
                                 <div class="resource-expand float-right">
-                                    <span class="far fa-trash-alt mr-2" data-bind="click: $parent.deleteItem"></span>
+                                    <span class="far fa-trash-alt mr-2" data-bind="click: () => $parent.deleteItem($data)"></span>
                                 </div>
                             </div>
                             <div class="category-table">

@@ -755,6 +755,12 @@ fieldset {
   margin-bottom: 2rem;
 }
 
+.fi {
+  width: 1.625rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+}
+
 :root {
   --bs-gutter-x: 0.625rem;
   --bs-gutter-y: 0.625rem;
@@ -1035,6 +1041,13 @@ h4, .h4 {
   border-bottom-right-radius: 3.125rem;
 }
 
+.footer-list a, .footer-list a.span {
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word; /* Ensures compatibility */
+  word-break: break-all; /* Breaks long words at any character */
+}
+
 a, a:link, a:visited {
   color: #000000;
   text-decoration: underline;
@@ -1068,6 +1081,9 @@ a.link-text {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+a.link-text.normal {
+  font-weight: 400;
 }
 a.link-text.underline {
   text-decoration: underline;
@@ -1379,6 +1395,9 @@ a.link-button--transparent {
 }
 
 .choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   position: relative;
   cursor: pointer;
   padding-left: 2.5rem;

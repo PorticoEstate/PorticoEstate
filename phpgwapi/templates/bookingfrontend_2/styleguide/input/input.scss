@@ -1,4 +1,7 @@
 .choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   position: relative;
   cursor: pointer;
   padding-left: 2.5rem;
