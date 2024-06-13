@@ -602,6 +602,7 @@ why?	bookingfrontend	no	Hvorfor?
 you must accept to follow all terms and conditions of lease first	common	no	Du må bekrefte at du har lest juridiske betingelser
 zip code	bookingfrontend	no	Postnummer
 see_more_filters	bookingfrontend	no	Se flere filtre
+see_less_filters	bookingfrontend	no	Se mindre filtre
 event_building	bookingfrontend	no	Arrangement / bygning
 enter_team_organization_name	bookingfrontend	no	Skriv navn på lag/organisasjon
 show_only_available	bookingfrontend	no	Vis kun tilgjengelige
