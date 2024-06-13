@@ -256,7 +256,7 @@
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			self::add_javascript('bookingfrontend', 'base', 'organization.js', true);
-
+//            _debug_array(array('organization' => $organization, 'config_data' => $config->config_data));die();
 			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
 		public function index()
