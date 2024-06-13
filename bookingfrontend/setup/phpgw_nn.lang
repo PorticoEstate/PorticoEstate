@@ -603,6 +603,7 @@ why?	bookingfrontend	nn	Kvifor?
 you must accept to follow all terms and conditions of lease first	common	nn	Stadfest at du har lese vilkåra
 zip code	bookingfrontend	nn	Postnummer
 see_more_filters	bookingfrontend	nn	Sjå fleire filter
+see_less_filters	bookingfrontend	nn	Sjå mindre filter
 event_building	bookingfrontend	nn	Arrangement / bygning
 enter_team_organization_name	bookingfrontend	nn	Skriv namn på lag/organisasjon
 show_only_available	bookingfrontend	nn	Vis berre tilgjengelege

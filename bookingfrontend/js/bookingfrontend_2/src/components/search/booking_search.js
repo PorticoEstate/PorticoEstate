@@ -54,6 +54,8 @@ export class BookingSearch {
     resources_with_available_time = ko.observableArray([]);
     easy_booking_available_ids = ko.observableArray([])
 
+    show_more_filters = ko.observable(false);
+
     result = ko.observableArray([]);  // This observable array will hold the search results
     result_shown = ko.observable(25);  // This observable tracks the number of results shown
 
@@ -541,6 +543,26 @@ export class BookingSearch {
             window.scrollTo(0, searchBox.getBoundingClientRect().top);
         }, 200);
     }
+
+    onTextFocus(data,event) {
+        if(!isMobile()) {
+            return true;
+        }
+        // console.log(event)
+        let target = event.target;
+
+        while (target) {
+            if (target.className === 'bodySection') {
+                // console.log('Parent found:', target);
+                break;
+            }
+            target = target.parentElement;
+        }
+        if(target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // event.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 
@@ -561,7 +583,7 @@ ko.components.register('booking-search', {
                                         <trans>common:search</trans>
                                     </label>
                                     <input id="search-booking-text" type="text"
-                                           data-bind="textInput: text, attr: {placeholder: strings.search}"/>
+                                           data-bind="textInput: text, attr: {placeholder: strings.search}, event: { focus: onTextFocus }"/>
 
                                 </div>
                             </div>
@@ -575,7 +597,8 @@ ko.components.register('booking-search', {
                                            class="js-basic-datepicker" data-bind="textInput: date, datepicker"/>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border"
+                                 data-bind="css: {'filter-element': !show_more_filters()}">
                                 <div class="multisearch__inner__item ">
                                     <label class="text-bold text-primary" for="search-booking-activities">
                                         <trans>bookingfrontend:activity</trans>
@@ -592,7 +615,8 @@ select2: {theme: 'select-v2 select-v2--main-search'}
                             </div>
                         </div>
                         <div class="row flex-column flex-md-row">
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 filter-element">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0"
+                                 data-bind="css: {'filter-element': !show_more_filters()}">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-area">
                                         <trans>bookingfrontend:where</trans>
@@ -609,7 +633,8 @@ select2: {theme: 'select-v2 select-v2--main-search'}
                                     </select>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border"
+                                 data-bind="css: {'filter-element': !show_more_filters()}">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-building">
                                         <trans>booking:what</trans>
@@ -626,7 +651,8 @@ select2: {theme: 'select-v2 select-v2--main-search'}
                                 </div>
                             </div>
 
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border"
+                                 data-bind="css: {'filter-element': !show_more_filters()}">
                                 <div class="multisearch__inner__item">
                                     <label class="text-bold text-primary" for="search-booking-resource_categories">
                                         <trans>booking:type</trans>
@@ -641,7 +667,8 @@ select2: {theme: 'select-v2 select-v2--main-search'}
                                     </select>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border"
+                                 data-bind="css: {'filter-element': !show_more_filters()}">
                                 <div class="multisearch__inner__item">
                                     <label class="text-bold text-primary" for="search-booking-facilities">
                                         <trans>bookingfrontend:facilities</trans>
@@ -659,9 +686,17 @@ select2: {theme: 'select-v2 select-v2--main-search'}
                             </div>
                             <div class="d-flex d-md-none justify-content-end">
                                 <button id="js-toggle-filter"
-                                        class="pe-btn pe-btn-secondary align-self-end toggle-filter">
+                                        class="pe-btn pe-btn-secondary align-self-end gap-2 d-flex"
+                                        data-bind="click: () => show_more_filters(!show_more_filters())">
+                                    <!-- ko if: !show_more_filters() -->
                                     <trans>bookingfrontend:see_more_filters</trans>
-
+                                    <!-- /ko -->
+                                    <!-- ko if: show_more_filters() -->
+                                    <trans>bookingfrontend:see_less_filters</trans>
+                                    <!-- /ko -->
+                                    <i class="fa"
+                                       data-bind="css: {'fa-chevron-up': show_more_filters(), 'fa-chevron-down': !show_more_filters()}"></i>
+                                    
                                 </button>
                             </div>
                         </div>
