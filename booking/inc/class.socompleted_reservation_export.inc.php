@@ -1173,7 +1173,7 @@
 
 					$fakturalinje['lopenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 					$fakturalinje['pris']		 = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
-					$fakturalinje['grunnlag']	 = '000000100';//De 2 siste posisjoner er desimaler.
+					$fakturalinje['grunnlag']	 = '000000001';//De 2 siste posisjoner er desimaler.NB! Avvik i Kristiansand: ikke desimaler...
 					$fakturalinje['belop']		 = str_pad($reservation['cost'] * 100, 10, '0', STR_PAD_LEFT) . ' ';
 					#				$fakturalinje['saksnr'] = ;
 
