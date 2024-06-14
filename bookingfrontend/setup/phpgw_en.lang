@@ -603,6 +603,7 @@ why?	bookingfrontend	en	Why?
 you must accept to follow all terms and conditions of lease first	common	en	You must accept to follow all terms and conditions of lease first
 zip code	bookingfrontend	en	Zip code
 see_more_filters	bookingfrontend	en	See more filters
+see_less_filters	bookingfrontend	en	See less filters
 event_building	bookingfrontend	en	Event / Building
 enter_team_organization_name	bookingfrontend	en	Enter team/organization name
 show_only_available	bookingfrontend	en	Show only available
