@@ -107,7 +107,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr>
+		<tr class="row_off">
 			<td>{lang_from_email}: </td>
 			<td><input name="newsettings[from_email]" value="{value_from_email}" class="pure-u-1"/>
 			</td>
@@ -126,6 +126,21 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_start_inspection_card}</td>
+			<td>
+				<select name="newsettings[start_inspection_card]" class="pure-u-1">
+					<option value="" {selected_start_inspection_card_}>{lang_no}</option>
+					<option value="1" {selected_start_inspection_card_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>{lang_start_inspection_text}: </td>
+			<td><input name="newsettings[start_inspection_text]" value="{value_start_inspection_text}" class="pure-u-1"/>
+			</td>
+		</tr>
+
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

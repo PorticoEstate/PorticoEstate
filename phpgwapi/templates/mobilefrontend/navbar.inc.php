@@ -97,18 +97,20 @@ HTML;
 						</div>
 					 </div>
 HTML;
-/*
+			if(!empty($config_controller['start_inspection_card']))
+			{
+				$start_inspection_text = !empty($config_controller['start_inspection_text']) ? $config_controller['start_inspection_text'] : 'Kontroll av utstyr og lekeplasser';
 				$landing .= <<<HTML
 					 <div class="col">
 						<div class="mb-5 card" style="width: 18rem;">
 						  <div class="text-center card-body">
-							<h5 class="mx-auto card-title">Kontroll av utstyr og lekeplasser</h5>
+							<h5 class="mx-auto card-title">{$start_inspection_text}</h5>
 							<a href="{$controller_test_url}" class="btn btn-warning">Gå til kontroll</a>
 						  </div>
 						</div>
 					 </div>
 HTML;
-*/
+			}
 			if ('controller' == $GLOBALS['phpgw_info']['flags']['currentapp'])
 			{
 				$menu_gross = execMethod("controller.menu.get_menu");
