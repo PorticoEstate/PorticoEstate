@@ -1259,7 +1259,7 @@ a.pe-btn {
   box-shadow: var(--pe-btn-focus-shadow);
 }
 .pe-btn--transparent {
-  --pe-btn-text-color: black;
+  --pe-btn-text-color: #000000;
   --pe-btn-hover-text-color: #793C8A;
   --pe-btn-background-color: transparent;
   --pe-btn-border-color: transparent;
