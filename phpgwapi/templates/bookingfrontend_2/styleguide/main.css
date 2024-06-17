@@ -3144,8 +3144,13 @@ div#applications-cart-content {
   border-width: 1px;
   border-style: solid;
   padding: 1.5rem;
-  max-width: min(90vw, 840px);
+  max-width: min(90vw, 960px);
   width: max-content;
+}
+.dialog-container .article-table-wrapper .category-table {
+  box-shadow: none;
+  border: 1px solid #c2c2c2;
+  border-top: none;
 }
 .dialog-container .dialog-header {
   display: flex;

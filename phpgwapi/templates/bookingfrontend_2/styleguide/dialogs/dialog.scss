@@ -8,10 +8,15 @@
   //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   //max-width: 400px;
-  max-width: min(90vw, 840px);
+  max-width: min(90vw, 960px);
   width: max-content;
   //margin: auto;
+  .article-table-wrapper .category-table {
+    box-shadow: none;
 
+    border: 1px solid $black-24;
+    border-top: none;
+  }
   .dialog-header {
     display: flex;
     justify-content: space-between;
