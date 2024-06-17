@@ -113,7 +113,7 @@
                             <label class="mb-2 d-flex align-items-center" for="select-multiple">
                                 <h4 class="m-0">
                                     <xsl:value-of
-                                            select="php:function('lang', 'Chosen rent object')"/>
+                                            select="php:function('lang', 'add_rent_object')"/>
                                 </h4>    <!-- Button trigger modal -->
                                 <button type="button"
                                         class="pe-btn pe-btn--transparent navbar__section__language-selector p-0"
@@ -138,7 +138,7 @@
                                 <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
                                         id="select-multiple">
                                     <xsl:attribute name="data-placeholder">
-                                        <xsl:value-of select="php:function('lang', 'choose rent object')"/>
+                                        <xsl:value-of select="php:function('lang', 'add_rent_object')"/>
                                     </xsl:attribute>
                                     <option></option>
                                     <option data-bind="text: name,
@@ -222,7 +222,7 @@
                                                        id="standard-datepicker"
                                                        data-bind="textInput: bookingDate">
                                                                                                     <xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'Choose date')"/>
+                                                    <xsl:value-of select="php:function('lang', 'add_date')"/>
                                                                                                     </xsl:attribute>
 <!--                                                    Velg dato-->
 

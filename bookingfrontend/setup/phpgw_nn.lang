@@ -64,6 +64,7 @@ Choose another building	bookingfrontend	nn	Velg annet anlegg
 Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Choose categories	bookingfrontend	nn	Velg kategorier
 Choose date	bookingfrontend	nn	Velg dato
+add_date	bookingfrontend	nn	Legg til dato
 Choose date-range	bookingfrontend	nn	Velg dato-område
 Choose resources	bookingfrontend	nn	Velg lokaler
 Close	bookingfrontend	nn	Lukke
@@ -303,6 +304,7 @@ choose a date	bookingfrontend	nn	Vel ein dato
 choose file	bookingfrontend	nn	Vel fil du vil leggja til
 choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeperiode
 choose rent object	bookingfrontend	nn	Vel leigeobjekt
+add_rent_object	bookingfrontend	nn	Legg til leigeobjekt
 choose rent period	bookingfrontend	nn	Velg leigeperiode
 choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
 chosen rent object	bookingfrontend	nn	Valde ressursar
