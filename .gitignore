@@ -18,3 +18,4 @@ PorticoEstate.iml
 /docker-compose.override.yml
 /tmp/
 /bookingfrontend/js/bookingfrontend_2/node_modules/
+Dockerfile.local
