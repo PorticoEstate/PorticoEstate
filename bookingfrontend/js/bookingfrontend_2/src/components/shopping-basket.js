@@ -55,7 +55,7 @@ ko.components.register('shopping-basket', {
     },
     // language=HTML
     template: `
-        <button class="pe-btn menu__toggler" type="button" aria-expanded="false"
+        <button class="pe-btn pe-btn--transparent menu__toggler" type="button" aria-expanded="false"
                 data-bind="click: () => togglePopper()">
     <span class="text">
         <i class="fa-solid fa-basket-shopping"></i>

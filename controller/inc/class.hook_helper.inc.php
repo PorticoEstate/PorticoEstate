@@ -48,6 +48,7 @@
 			$config					 = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
 			$this->home_alternative	 = isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'] == 1 ? true : false;
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'controller';
 		}
 
 		/**
@@ -242,6 +243,13 @@ HTML;
 
 				$from_date_ts = mktime(0, 0, 0, date("n"), date("j"), date("Y"));
 
+				$lang_repeat_types = array(
+					controller_control::REPEAT_TYPE_DAY => lang('REPEAT_TYPE_DAY'),
+					controller_control::REPEAT_TYPE_WEEK => lang('REPEAT_TYPE_WEEK'),
+					controller_control::REPEAT_TYPE_MONTH => lang('REPEAT_TYPE_MONTH'),
+					controller_control::REPEAT_TYPE_YEAR => lang('REPEAT_TYPE_YEAR'),
+				);
+
 				// Generates an array with undone controls
 				foreach ($my_controls as $container_arr)
 				{
@@ -334,6 +342,7 @@ HTML;
 								<th>Fristdato</th>
 								<th>Tittel på kontroll</th>
 								<th>Lokasjonsnavn</th>
+								<th>Frekvens</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -397,7 +406,7 @@ HTML;
 									. "<td>{$date_str}</td>"
 									. "<td>" . strip_tags($my_control['description']). "</td>"
 									. "<td>{$location_name}</td>"
-						//			. "<td>{$control_area_name}</td>"
+									. "<td>{$lang_repeat_types[$my_control['repeat_type']]}</td>"
 									. "";
 							}
 							else if ($check_list_type == "component")
@@ -438,7 +447,7 @@ HTML;
 									. "<td>$date_str</td>"
 									. "<td>" . strip_tags($my_control['description']). "</td>"
 									. "<td>{$location_name}</td>"
-							//		. "<td>{$control_area_name}</td>"
+									. "<td>{$lang_repeat_types[$my_control['repeat_type']]}</td>"
 									. "";
 							}
 						}
@@ -457,7 +466,7 @@ HTML;
 								. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
 								. "<td>" . strip_tags($my_control['description']). "</td>"
 								. "<td>{$location_name}</td>"
-								. "<td>{$control_area_name}</td>";
+								. "<td>{$lang_repeat_types[$my_control['repeat_type']]}</td>";
 						}
 
 						$my_assigned_controls_HTML .= "</tr>";
