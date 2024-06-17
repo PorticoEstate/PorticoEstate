@@ -1,10 +1,11 @@
 :root {
-  --pe-btn-text-color: $purple;
-  --pe-btn-background-color: $white;
-  --pe-btn-border-color: $purple;
-  --pe-btn-hover-text-color: $white;
-  --pe-btn-hover-background-color: $purple;
-  --pe-btn-focus-shadow: $box-focus-shadow;
+  --pe-btn-text-color: #{$purple};
+  --pe-btn-background-color: #{$white};
+  --pe-btn-border-color: #{$purple};
+  --pe-btn-hover-text-color: #{$white};
+  --pe-btn-hover-background-color: #{$purple};
+  --pe-btn-hover-border-color: #{$purple};
+  --pe-btn-focus-shadow: #{$box-focus-shadow};
 }
 
 
@@ -17,20 +18,24 @@ a.pe-btn {
   justify-content: center;
   align-items: center;
   padding: 0.875rem 0.625rem;
-  border: 2px solid $purple;
+  border: 2px solid var(--pe-btn-border-color);
   border-radius: $rounded-mini;
   @include applyFontProperties('label');
   font-weight: $text-bold;
-
+  background: var(--pe-btn-background-color);
+  color: var(--pe-btn-text-color);
 
 
   &:first-child:active:focus-visible {
-    box-shadow: $box-focus-shadow;
+    box-shadow: var(--pe-btn-focus-shadow);
+
   }
 
   &:hover,
   &:active {
-    border-color: $purple;
+    border-color: var(--pe-btn-hover-border-color);
+    background: var(--pe-btn-hover-background-color);
+    color: var(--pe-btn-hover-text-color);
   }
 
   &:focus {
@@ -38,8 +43,21 @@ a.pe-btn {
   }
 
   &:focus-visible {
-    border-color: $purple;
-    box-shadow: $box-focus-shadow;
+    border-color: var(--pe-btn-border-color);
+    box-shadow: var(--pe-btn-focus-shadow);
+  }
+
+  &--transparent {
+    --pe-btn-text-color: #{black};
+    --pe-btn-hover-text-color: #{$purple};
+    --pe-btn-background-color: #{transparent};
+    --pe-btn-border-color: #{transparent};
+    --pe-btn-hover-border-color: #{transparent};
+    --pe-btn-hover-background-color: #{transparent};
+
+
+    padding: 0.5rem;
+    min-width: 2.5rem;
   }
 
   &-text {
@@ -55,37 +73,28 @@ a.pe-btn {
 
     &-primary {
       --bs-btn-close-color: #{$purple};
-      color: $purple;
+      --pe-btn-text-color: #{$purple};
+      --pe-btn-hover-text-color: #{$blue};
 
-      &:hover {
-        color: $blue;
-      }
     }
 
     &-secondary {
-      color: $blue;
-
-      &:hover {
-        color: $purple;
-
-      }
+      --pe-btn-text-color: #{$blue};
+      --pe-btn-hover-text-color: #{$purple};
     }
 
     &-white {
-      color: $white;
+      --pe-btn-text-color: #{$white};
     }
 
   }
 
   &-primary {
-    background: $purple;
-    color: $white;
+    --pe-btn-text-color: #{$white};
+    --pe-btn-background-color: #{$purple};
+    --pe-btn-hover-text-color: #{$purple};
+    --pe-btn-hover-background-color: #{$white};
 
-    &:hover,
-    &:active {
-      background: $white;
-      color: $purple;
-    }
 
     &:focus-visible {
       background: $purple;
@@ -95,14 +104,11 @@ a.pe-btn {
   }
 
   &-secondary {
-    color: $purple;
-    background: $white;
+    --pe-btn-text-color: #{$purple};
+    --pe-btn-background-color: #{$white};
+    --pe-btn-hover-text-color: #{$white};
+    --pe-btn-hover-background-color: #{$purple};
 
-    &:hover,
-    &:active {
-      background: $purple;
-      color: $white;
-    }
 
     &:focus-visible {
       border-color: $purple;
@@ -117,17 +123,12 @@ a.pe-btn {
 
   &-colour {
     &-secondary {
-      border: 2px solid $blue;
-
-      color: $blue;
-      background: $white;
-
-      &:hover,
-      &:active {
-        background: $blue !important;
-        color: $white !important;
-        border: 2px solid $blue;
-      }
+      --pe-btn-text-color: #{$blue};
+      --pe-btn-background-color: #{$white};
+      --pe-btn-border-color: #{$blue};
+      --pe-btn-hover-text-color: #{$white};
+      --pe-btn-hover-background-color: #{$blue};
+      --pe-btn-hover-border-color: #{$blue};
 
       &:focus-visible {
         border-color: $blue;
@@ -161,17 +162,7 @@ a.pe-btn {
     pointer-events: none;
   }
 
-  &--transparent {
-    background-color: transparent;
-    border: 2px solid transparent;
-    padding: 0.5rem;
-    min-width: 2.5rem;
 
-    &:hover,
-    &:active {
-      border: 2px solid transparent;
-    }
-  }
 
   &--small-circle {
     display: flex;
@@ -200,10 +191,10 @@ a.pe-btn {
 
     }
 
+    --pe-btn-hover-text-color: #{$purple};
+    --pe-btn-hover-background-color: #{$purple-16};
     &:hover,
     &:active {
-      background: $purple-16;
-      color: $purple;
       fill: $purple;
     }
 
@@ -215,14 +206,14 @@ a.pe-btn {
     }
 
     &.pe-btn-secondary {
-      color: $black;
+      --pe-btn-text-color: #{$black};
+      --pe-btn-background-color: #{$purple-16};
+      --pe-btn-hover-text-color: #{$white};
+      --pe-btn-hover-background-color: #{$purple};
       fill: $black;
-      background: $purple-16;
 
       &:hover,
       &:active {
-        background: $purple;
-        color: $white;
         fill: $white;
       }
 

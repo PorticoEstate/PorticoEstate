@@ -27,9 +27,9 @@ RUN wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/debian/$(cat /etc/debian_version | cut -d. -f1)/prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/mssql-release.list
 RUN apt-get update
 
-RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
+RUN #ACCEPT_EULA=Y apt-get install -y msodbcsql17
 # optional: for bcp and sqlcmd
-RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+RUN #ACCEPT_EULA=Y apt-get install -y mssql-tools18
 
 # Install sqlsrv
 RUN apt-get install -y unixodbc
@@ -63,11 +63,11 @@ RUN a2enmod ssl
 # PHP
 ENV PHP_INI ""
 ENV XDEBUG_REMOTE_PORT ""
-RUN echo 'xdebug.mode=debug,develop' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo 'xdebug.discover_client_host=1' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo 'xdebug.client_host=""' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo 'xdebug.start_with_request=yes' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo 'xdebug.idekey=netbeans-xdebug' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN echo 'xdebug.mode=debug,develop' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo 'xdebug.discover_client_host=1' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo 'xdebug.client_host=""' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo 'xdebug.start_with_request=yes' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo 'xdebug.idekey=netbeans-xdebug' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN echo 'session.cookie_secure=Off' >> /usr/local/etc/php/php.ini
 RUN echo 'session.use_cookies=On' >> /usr/local/etc/php/php.ini
@@ -84,3 +84,6 @@ RUN echo 'upload_max_filesize = 8M' >> /usr/local/etc/php/php.ini
 
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN mkdir -p /var/public/files
+RUN chmod 777 /var/public/files

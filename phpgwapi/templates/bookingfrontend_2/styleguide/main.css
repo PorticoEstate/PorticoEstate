@@ -1211,12 +1211,13 @@ a:not(.pe-btn).link-button--transparent {
 }
 
 :root {
-  --pe-btn-text-color: $purple;
-  --pe-btn-background-color: $white;
-  --pe-btn-border-color: $purple;
-  --pe-btn-hover-text-color: $white;
-  --pe-btn-hover-background-color: $purple;
-  --pe-btn-focus-shadow: $box-focus-shadow;
+  --pe-btn-text-color: #793C8A;
+  --pe-btn-background-color: #FFFFFF;
+  --pe-btn-border-color: #793C8A;
+  --pe-btn-hover-text-color: #FFFFFF;
+  --pe-btn-hover-background-color: #793C8A;
+  --pe-btn-hover-border-color: #793C8A;
+  --pe-btn-focus-shadow: 0 0 0 0.25rem #946da8;
 }
 
 a.pe-btn {
@@ -1228,11 +1229,13 @@ a.pe-btn {
   justify-content: center;
   align-items: center;
   padding: 0.875rem 0.625rem;
-  border: 2px solid #793C8A;
+  border: 2px solid var(--pe-btn-border-color);
   border-radius: 0.5rem;
   font-size: 1rem;
   line-height: 1.25rem;
   font-weight: 700;
+  background: var(--pe-btn-background-color);
+  color: var(--pe-btn-text-color);
 }
 @media (max-width: 1024px) {
   .pe-btn {
@@ -1241,17 +1244,29 @@ a.pe-btn {
   }
 }
 .pe-btn:first-child:active:focus-visible {
-  box-shadow: 0 0 0 0.25rem #946da8;
+  box-shadow: var(--pe-btn-focus-shadow);
 }
 .pe-btn:hover, .pe-btn:active {
-  border-color: #793C8A;
+  border-color: var(--pe-btn-hover-border-color);
+  background: var(--pe-btn-hover-background-color);
+  color: var(--pe-btn-hover-text-color);
 }
 .pe-btn:focus {
   outline: none;
 }
 .pe-btn:focus-visible {
-  border-color: #793C8A;
-  box-shadow: 0 0 0 0.25rem #946da8;
+  border-color: var(--pe-btn-border-color);
+  box-shadow: var(--pe-btn-focus-shadow);
+}
+.pe-btn--transparent {
+  --pe-btn-text-color: black;
+  --pe-btn-hover-text-color: #793C8A;
+  --pe-btn-background-color: transparent;
+  --pe-btn-border-color: transparent;
+  --pe-btn-hover-border-color: transparent;
+  --pe-btn-hover-background-color: transparent;
+  padding: 0.5rem;
+  min-width: 2.5rem;
 }
 .pe-btn-text {
   text-decoration: none;
@@ -1265,39 +1280,31 @@ a.pe-btn {
 }
 .pe-btn-text-primary {
   --bs-btn-close-color: #793C8A;
-  color: #793C8A;
-}
-.pe-btn-text-primary:hover {
-  color: #28358B;
+  --pe-btn-text-color: #793C8A;
+  --pe-btn-hover-text-color: #28358B;
 }
 .pe-btn-text-secondary {
-  color: #28358B;
-}
-.pe-btn-text-secondary:hover {
-  color: #793C8A;
+  --pe-btn-text-color: #28358B;
+  --pe-btn-hover-text-color: #793C8A;
 }
 .pe-btn-text-white {
-  color: #FFFFFF;
+  --pe-btn-text-color: #FFFFFF;
 }
 .pe-btn-primary {
-  background: #793C8A;
-  color: #FFFFFF;
-}
-.pe-btn-primary:hover, .pe-btn-primary:active {
-  background: #FFFFFF;
-  color: #793C8A;
+  --pe-btn-text-color: #FFFFFF;
+  --pe-btn-background-color: #793C8A;
+  --pe-btn-hover-text-color: #793C8A;
+  --pe-btn-hover-background-color: #FFFFFF;
 }
 .pe-btn-primary:focus-visible {
   background: #793C8A;
   color: #FFFFFF;
 }
 .pe-btn-secondary {
-  color: #793C8A;
-  background: #FFFFFF;
-}
-.pe-btn-secondary:hover, .pe-btn-secondary:active {
-  background: #793C8A;
-  color: #FFFFFF;
+  --pe-btn-text-color: #793C8A;
+  --pe-btn-background-color: #FFFFFF;
+  --pe-btn-hover-text-color: #FFFFFF;
+  --pe-btn-hover-background-color: #793C8A;
 }
 .pe-btn-secondary:focus-visible {
   border-color: #793C8A;
@@ -1308,14 +1315,12 @@ a.pe-btn {
   font-size: 1.5rem;
 }
 .pe-btn-colour-secondary {
-  border: 2px solid #28358B;
-  color: #28358B;
-  background: #FFFFFF;
-}
-.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
-  background: #28358B !important;
-  color: #FFFFFF !important;
-  border: 2px solid #28358B;
+  --pe-btn-text-color: #28358B;
+  --pe-btn-background-color: #FFFFFF;
+  --pe-btn-border-color: #28358B;
+  --pe-btn-hover-text-color: #FFFFFF;
+  --pe-btn-hover-background-color: #28358B;
+  --pe-btn-hover-border-color: #28358B;
 }
 .pe-btn-colour-secondary:focus-visible {
   border-color: #28358B;
@@ -1346,15 +1351,6 @@ a.pe-btn {
   opacity: 1;
   pointer-events: none;
 }
-.pe-btn--transparent {
-  background-color: transparent;
-  border: 2px solid transparent;
-  padding: 0.5rem;
-  min-width: 2.5rem;
-}
-.pe-btn--transparent:hover, .pe-btn--transparent:active {
-  border: 2px solid transparent;
-}
 .pe-btn--small-circle {
   display: flex;
   align-items: center;
@@ -1367,6 +1363,8 @@ a.pe-btn {
   font-size: 12px;
   cursor: pointer;
   transition: background-color 0.3s;
+  --pe-btn-hover-text-color: #793C8A;
+  --pe-btn-hover-background-color: #e9e0ec;
 }
 .pe-btn--small-circle i {
   display: flex; /* Ensure the icon itself is also flex */
@@ -1380,8 +1378,6 @@ a.pe-btn {
   width: 100%; /* Ensures the pseudo-element covers the flex item's area */
 }
 .pe-btn--small-circle:hover, .pe-btn--small-circle:active {
-  background: #e9e0ec;
-  color: #793C8A;
   fill: #793C8A;
 }
 .pe-btn--small-circle:focus-visible {
@@ -1391,13 +1387,13 @@ a.pe-btn {
   fill: #793C8A;
 }
 .pe-btn--small-circle.pe-btn-secondary {
-  color: #000000;
+  --pe-btn-text-color: #000000;
+  --pe-btn-background-color: #e9e0ec;
+  --pe-btn-hover-text-color: #FFFFFF;
+  --pe-btn-hover-background-color: #793C8A;
   fill: #000000;
-  background: #e9e0ec;
 }
 .pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
-  background: #793C8A;
-  color: #FFFFFF;
   fill: #FFFFFF;
 }
 .pe-btn--small-circle.pe-btn-secondary:focus-visible {
