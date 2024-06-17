@@ -1048,23 +1048,23 @@ h4, .h4 {
   word-break: break-all; /* Breaks long words at any character */
 }
 
-a, a:link, a:visited {
+a:not(.pe-btn), a:not(.pe-btn):link, a:not(.pe-btn):visited {
   color: #000000;
   text-decoration: underline;
 }
-a:hover, a:focus, a:active {
+a:not(.pe-btn):hover, a:not(.pe-btn):focus, a:not(.pe-btn):active {
   color: #793C8A;
 }
-a:focus-visible {
+a:not(.pe-btn):focus-visible {
   outline: none;
   box-shadow: 0 0 0 0.25rem #946da8;
 }
-a.arrow {
+a:not(.pe-btn).arrow {
   text-decoration: none;
   position: relative;
   padding-right: 1.25rem;
 }
-a.arrow::after {
+a:not(.pe-btn).arrow::after {
   content: "\f04b";
   font-size: 0.625em;
   color: #793C8A;
@@ -1075,35 +1075,35 @@ a.arrow::after {
   right: 0;
   top: -0.1rem;
 }
-a.link-text {
+a:not(.pe-btn).link-text {
   text-decoration: none;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-a.link-text.normal {
+a:not(.pe-btn).link-text.normal {
   font-weight: 400;
 }
-a.link-text.underline {
+a:not(.pe-btn).link-text.underline {
   text-decoration: underline;
 }
-a.link-text-primary {
+a:not(.pe-btn).link-text-primary {
   color: #793C8A;
 }
-a.link-text-primary:hover {
+a:not(.pe-btn).link-text-primary:hover {
   color: #28358B;
 }
-a.link-text-secondary {
+a:not(.pe-btn).link-text-secondary {
   color: #28358B;
 }
-a.link-text-secondary:hover {
+a:not(.pe-btn).link-text-secondary:hover {
   color: #793C8A;
 }
-a.link-text-white {
+a:not(.pe-btn).link-text-white {
   color: #FFFFFF;
 }
-a.link-button {
+a:not(.pe-btn).link-button {
   padding: 0.713rem 1.5rem;
   border: 1px solid #D6D6D6;
   border-radius: 3.125rem;
@@ -1120,20 +1120,20 @@ a.link-button {
   padding-top: 0.963rem;
   padding-bottom: 0.963rem;
 }
-a.link-button:focus {
+a:not(.pe-btn).link-button:focus {
   outline: none;
 }
-a.link-button:focus-visible {
+a:not(.pe-btn).link-button:focus-visible {
   outline: none;
   border-color: transparent;
   box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15), 0 0 0 0.25rem #946da8;
 }
-a.link-button:hover {
+a:not(.pe-btn).link-button:hover {
   border-color: transparent;
   color: #000000;
   box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15), 0 0 0 2px #793c8a;
 }
-a.link-button::after {
+a:not(.pe-btn).link-button::after {
   content: "\f054";
   padding-left: 1rem;
   font-size: 1em;
@@ -1141,73 +1141,86 @@ a.link-button::after {
   font-weight: 700;
   font-family: "Font Awesome 5 Free";
 }
-a.link-button:first-child:active:focus-visible {
+a:not(.pe-btn).link-button:first-child:active:focus-visible {
   box-shadow: 0 0 0 0.25rem #946da8;
 }
-a.link-button:hover, a.link-button:active {
+a:not(.pe-btn).link-button:hover, a:not(.pe-btn).link-button:active {
   border-color: #793C8A;
 }
-a.link-button:focus {
+a:not(.pe-btn).link-button:focus {
   outline: none;
 }
-a.link-button:focus-visible {
+a:not(.pe-btn).link-button:focus-visible {
   border-color: #793C8A;
   box-shadow: 0 0 0 0.25rem #946da8;
 }
-a.link-button-primary {
+a:not(.pe-btn).link-button-primary {
   background-color: #793C8A;
   color: #FFFFFF;
 }
-a.link-button-primary::after {
+a:not(.pe-btn).link-button-primary::after {
   color: #FFFFFF;
 }
-a.link-button-primary:hover, a.link-button-primary:active {
+a:not(.pe-btn).link-button-primary:hover, a:not(.pe-btn).link-button-primary:active {
   background-color: #FFFFFF;
   color: #793C8A;
 }
-a.link-button-primary:hover::after, a.link-button-primary:active::after {
+a:not(.pe-btn).link-button-primary:hover::after, a:not(.pe-btn).link-button-primary:active::after {
   color: #793C8A;
 }
-a.link-button-primary:focus-visible {
+a:not(.pe-btn).link-button-primary:focus-visible {
   background-color: #793C8A;
   color: #FFFFFF;
 }
-a.link-button-secondary {
+a:not(.pe-btn).link-button-secondary {
   color: #793C8A;
   background-color: #FFFFFF;
 }
-a.link-button-secondary:hover, a.link-button-secondary:active {
+a:not(.pe-btn).link-button-secondary:hover, a:not(.pe-btn).link-button-secondary:active {
   background-color: #793C8A;
   color: #FFFFFF;
 }
-a.link-button-secondary:focus-visible {
+a:not(.pe-btn).link-button-secondary:focus-visible {
   border-color: #793C8A;
   background-color: #FFFFFF;
   color: #793C8A;
 }
-a.link-button--small {
+a:not(.pe-btn).link-button--small {
   font-size: 0.875rem;
   padding: 0.344rem 1.25rem;
 }
-a.link-button--large {
+a:not(.pe-btn).link-button--large {
   padding: 0.657rem 1.25rem;
   font-size: 1.125rem;
 }
-a.link-button--circle {
+a:not(.pe-btn).link-button--circle {
   padding: 1rem;
 }
-a.link-button:disabled, a.link-button[disabled] {
+a:not(.pe-btn).link-button:disabled, a:not(.pe-btn).link-button[disabled] {
   background-color: #F5F5F5;
   color: #D6D6D6;
   border-color: #D6D6D6;
   opacity: 1;
   pointer-events: none;
 }
-a.link-button--transparent {
+a:not(.pe-btn).link-button--transparent {
   background-color: transparent;
   border: 0;
   padding: 0.5rem;
   min-width: 2.5rem;
+}
+
+:root {
+  --pe-btn-text-color: $purple;
+  --pe-btn-background-color: $white;
+  --pe-btn-border-color: $purple;
+  --pe-btn-hover-text-color: $white;
+  --pe-btn-hover-background-color: $purple;
+  --pe-btn-focus-shadow: $box-focus-shadow;
+}
+
+a.pe-btn {
+  text-decoration: none;
 }
 
 .pe-btn {
@@ -1340,7 +1353,7 @@ a.link-button--transparent {
   min-width: 2.5rem;
 }
 .pe-btn--transparent:hover, .pe-btn--transparent:active {
-  border: 2px solid;
+  border: 2px solid transparent;
 }
 .pe-btn--small-circle {
   display: flex;

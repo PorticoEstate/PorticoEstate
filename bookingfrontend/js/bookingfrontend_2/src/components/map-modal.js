@@ -47,7 +47,7 @@ ko.components.register('map-modal', {
     },
     // language=HTML
     template: `
-        <button type="button" class="pe-btn pe-btn--transparent link-text link-text-secondary p-0"
+        <button type="button" class="pe-btn pe-btn--transparent pe-btn-primary  p-0"
                 data-bind="click: function() { openModal() }">
             <div class="text-primary d-flex gap-1 align-items-center">
                 <i class="fa-solid fa-map-pin" style="font-size: 1rem"></i>

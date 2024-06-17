@@ -550,7 +550,7 @@
                             </button>
                         </div>
                         <div class="d-flex gap-4 justify-content-end">
-                            <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2"
+                            <a class="pe-btn pe-btn-secondary  d-flex align-items-center gap-2"
                                style="width: fit-content" href="{application/frontpage_link}">
                                 <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'exit to homepage')"/>

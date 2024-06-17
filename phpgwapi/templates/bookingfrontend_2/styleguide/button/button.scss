@@ -1,13 +1,27 @@
+:root {
+  --pe-btn-text-color: $purple;
+  --pe-btn-background-color: $white;
+  --pe-btn-border-color: $purple;
+  --pe-btn-hover-text-color: $white;
+  --pe-btn-hover-background-color: $purple;
+  --pe-btn-focus-shadow: $box-focus-shadow;
+}
+
+
+a.pe-btn {
+  text-decoration: none;
+}
 
 .pe-btn {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.875rem 0.625rem;
-  border:2px solid $purple;
+  border: 2px solid $purple;
   border-radius: $rounded-mini;
   @include applyFontProperties('label');
   font-weight: $text-bold;
+
 
 
   &:first-child:active:focus-visible {
@@ -27,18 +41,22 @@
     border-color: $purple;
     box-shadow: $box-focus-shadow;
   }
+
   &-text {
     text-decoration: none;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     &.underline {
       text-decoration: underline;
     }
+
     &-primary {
       --bs-btn-close-color: #{$purple};
       color: $purple;
+
       &:hover {
         color: $blue;
       }
@@ -46,11 +64,13 @@
 
     &-secondary {
       color: $blue;
+
       &:hover {
         color: $purple;
 
       }
     }
+
     &-white {
       color: $white;
     }
@@ -83,13 +103,14 @@
       background: $purple;
       color: $white;
     }
-    
+
     &:focus-visible {
       border-color: $purple;
       background: $white;
       color: $purple;
     }
   }
+
   i.fa-solid {
     font-size: 1.5rem;
   }
@@ -103,8 +124,8 @@
 
       &:hover,
       &:active {
-        background: $blue!important;
-        color: $white!important;
+        background: $blue !important;
+        color: $white !important;
         border: 2px solid $blue;
       }
 
@@ -127,7 +148,7 @@
   }
 
   &--circle {
-    border-radius:$rounded-large;
+    border-radius: $rounded-large;
     padding: 1rem;
   }
 
@@ -145,9 +166,10 @@
     border: 2px solid transparent;
     padding: 0.5rem;
     min-width: 2.5rem;
+
     &:hover,
     &:active {
-      border: 2px solid;
+      border: 2px solid transparent;
     }
   }
 
@@ -177,6 +199,7 @@
       }
 
     }
+
     &:hover,
     &:active {
       background: $purple-16;
@@ -190,6 +213,7 @@
       color: $purple;
       fill: $purple;
     }
+
     &.pe-btn-secondary {
       color: $black;
       fill: $black;
