@@ -1948,14 +1948,14 @@ if (globalThis['ko']) {
                                         <!-- ko if: infoData.info_show_link && infoData.info_participant_limit > 0 -->
 
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
-                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
+                                           class="pe-btn  pe-btn--transparent pe-btn-text-primary">
                                             <trans>booking:register participants</trans>
                                         </a>
                                         <!-- /ko -->
                                         <!-- Edit Link -->
                                         <!-- ko if: infoData.info_edit_link && $component.userCanEdit($parent.event) -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
-                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
+                                           class="pe-btn  pe-btn--transparent pe-btn-text-primary">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:edit booking</trans>
@@ -1971,7 +1971,7 @@ if (globalThis['ko']) {
                                         <!-- Cancel Link -->
                                         <!-- ko if: $component.userCanEdit($parent.event) && infoData.info_cancel_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank' },click: $component.clickBubbler, clickBubble: false"
-                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
+                                           class="pe-btn  pe-btn--transparent pe-btn-text-primary">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:cancel booking</trans>
@@ -1987,7 +1987,7 @@ if (globalThis['ko']) {
                                         <!-- iCal Link -->
                                         <!-- ko if: infoData.info_ical_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank' }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
-                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary"></a>
+                                           class="pe-btn  pe-btn--transparent pe-btn-text-primary"></a>
                                         <!-- /ko -->
                                         <!-- Additional Actions for Allocations -->
                                         <!-- ko if: $parent.event.type === 'allocation' -->
