@@ -185,7 +185,10 @@ $opacities: (
   '8' : 0.08,
   '4' : 0.04,
   );
-
+// Function to get the opacity value
+@function get-opacity($key) {
+  @return map-get($opacities, $key);
+}
 .text {
   &-primary {
     color: $primary-color !important;
