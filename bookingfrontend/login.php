@@ -82,13 +82,13 @@
 		}
 
 		phpgwapi_cache::session_clear('bookingfrontend', 'redirect');
-		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
+		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $redirect_data);
 	}
 
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'raw')));
 	if (!$after)
 	{
-		$after = array('menuaction' => 'bookingfrontend.uisearch.index');
+		$after = array();
 	}
-	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $after);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $after);
 	exit;

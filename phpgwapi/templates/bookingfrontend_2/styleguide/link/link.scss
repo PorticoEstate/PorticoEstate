@@ -33,7 +33,7 @@
   }
 }
 
-a {
+a:not(.pe-btn) {
   &,
   &:link,
   &:visited {

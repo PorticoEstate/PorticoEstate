@@ -40,5 +40,5 @@
 	{
 		$after = array('menuaction' => 'bookingfrontend.uisearch.index');
 	}
-	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $after);
+	$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $after);
 	exit;
