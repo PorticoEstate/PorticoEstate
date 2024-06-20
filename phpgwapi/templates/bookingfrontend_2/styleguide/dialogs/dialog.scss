@@ -1,3 +1,35 @@
+.options-dialog{
+  background-color: $purple-16;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: none;
+  max-width: 400px;
+  &::backdrop {
+    background-color: rgba($black, get-opacity('56')); /* Change this to your desired color */
+  }
+
+  .options-dialog-title{
+    font-weight: $text-bold;
+    @include applyFontProperties('title');
+  }
+
+  .options-dialog-body{
+
+  }
+  .options-dialog-options{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+  }
+}
+
+
+
+
+
 
 .dialog-container {
   background-color: $white;

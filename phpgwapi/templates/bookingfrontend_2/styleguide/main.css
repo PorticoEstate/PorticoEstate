@@ -3137,6 +3137,35 @@ div#applications-cart-content {
   min-width: 480px;
 }
 
+.options-dialog {
+  background-color: #e9e0ec;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: none;
+  max-width: 400px;
+}
+.options-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.56); /* Change this to your desired color */
+}
+.options-dialog .options-dialog-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+}
+@media (max-width: 1024px) {
+  .options-dialog .options-dialog-title {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+}
+.options-dialog .options-dialog-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 .dialog-container {
   background-color: #FFFFFF;
   border-radius: 0.5rem;

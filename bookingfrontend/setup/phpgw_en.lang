@@ -631,4 +631,6 @@ your_applications	bookingfrontend	en	Your applications
 billing_information_contact_person	bookingfrontend	en	Billing information for contact person
 billing_information	bookingfrontend	en	Billing information
 submit_application	bookingfrontend	en	Submit application
-
+delete	bookingfrontend	en	Delete
+delete_rentobject	bookingfrontend	en	Delete rent object
+delete_rentobject_body	bookingfrontend	en	Are you sure you want to delete this rent object from your basket?

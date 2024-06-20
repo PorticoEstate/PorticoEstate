@@ -1,5 +1,6 @@
 import {onDocumentReady, phpGWLink} from '../helpers/util.js';
 import './shopping-basket';
+import {showDialogue} from "./dialog-box";
 
 class ApplicationsCartModel {
     constructor() {
@@ -14,18 +15,30 @@ class ApplicationsCartModel {
     }
 
 
-
     deleteItem(item) {
         console.log("got delete request", this, item)
-        const requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
-        if (confirm('Do you want to delete this application?')) {
-            fetch(requestUrl, {
-                method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: item.id})
-            })
-                .then(response => response.json())
-                .then(() => this.getApplicationsCartItems())
-                .catch(error => console.error('Error:', error));
-        }
+        showDialogue(
+            trans('bookingfrontend', 'delete_rentobject'),
+            trans('bookingfrontend', 'delete_rentobject_body'),
+            [trans('bookingfrontend', 'cancel'), trans('bookingfrontend', 'delete')])
+            .then((res) => {
+                if (+res === 1) {
+                    const requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
+
+                    fetch(requestUrl, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: item.id})
+                    })
+                        .then(response => response.json())
+                        .then(() => this.getApplicationsCartItems())
+                        .catch(error => console.error('Error:', error));
+                }
+            }).catch((e) => {
+        })
+        // if (confirm('Do you want to delete this application?')) {
+
+        // }
     }
 
     getApplicationsCartItems() {

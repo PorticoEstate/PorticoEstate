@@ -631,3 +631,6 @@ your_applications	bookingfrontend	nn	Dine søknader
 billing_information_contact_person	bookingfrontend	nn	Fakturainformasjon til kontaktperson
 billing_information	bookingfrontend	nn	Fakturainformasjon
 submit_application	bookingfrontend	nn	Send inn søknad
+delete	bookingfrontend	nn	Slett
+delete_rentobject	bookingfrontend	nn	Slette leigeobjekt
+delete_rentobject_body	bookingfrontend	nn	Er du sikker på du vil slette dette utleigeobjektet frå handlekurva?
