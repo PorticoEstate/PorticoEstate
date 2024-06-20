@@ -1,30 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <style>
-
-
-<!--        .modal-body {-->
-<!--        /* 100% = dialog height, 120px = header + footer */-->
-<!--        max-height: calc(100vh - 210px);-->
-<!--        overflow-y: auto;-->
-<!--        }-->
-<!--        /*-->
-<!--        .modal {-->
-<!--        max-height: 100vh;-->
-<!--        .modal-dialog {-->
-<!--        .modal-content {-->
-<!--        .modal-body {-->
-<!--        max-height: calc(80vh - 140px);-->
-<!--        overflow-y: auto;-->
-<!--        }-->
-<!--        }-->
-<!--        }-->
-<!--        }-->
-
-<!--        */-->
-    </style>
     <div id="building-page-content">
         <div class="container mx-3">
-            <div class="row">
+            <div class="row  pb-3">
                 <div class="col-md-2">
                     <a class="link-text link-text-primary">
                         <xsl:attribute name="href">
@@ -34,8 +11,8 @@
                         <xsl:value-of select="php:function('lang', 'home_page')"/>
                     </a>
                 </div>
-
             </div>
+
             <div class="row gx-3">
                 <div class="col d-flex flex-column">
                     <div class="font-weight-bold gap-2 d-flex align-items-center mb-1">
@@ -59,6 +36,10 @@
                     </div>
                 </div>
             </div>
+
+
+
+
             <div class="row">
                 <div class="col-md d-flex gap-3">
 <!--                    <span class="d-flex gap-1">-->

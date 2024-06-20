@@ -1,3 +1,35 @@
+.options-dialog{
+  background-color: $purple-16;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: none;
+  max-width: 400px;
+  &::backdrop {
+    background-color: rgba($black, get-opacity('56')); /* Change this to your desired color */
+  }
+
+  .options-dialog-title{
+    font-weight: $text-bold;
+    @include applyFontProperties('title');
+  }
+
+  .options-dialog-body{
+
+  }
+  .options-dialog-options{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+  }
+}
+
+
+
+
+
 
 .dialog-container {
   background-color: $white;
@@ -8,10 +40,15 @@
   //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   //max-width: 400px;
-  max-width: min(90vw, 840px);
+  max-width: min(90vw, 960px);
   width: max-content;
   //margin: auto;
+  .article-table-wrapper .category-table {
+    box-shadow: none;
 
+    border: 1px solid $black-24;
+    border-top: none;
+  }
   .dialog-header {
     display: flex;
     justify-content: space-between;
