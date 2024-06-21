@@ -439,7 +439,7 @@ HTML;
           </div>
         </div>
       </div>
-      <ul class="list-unstyled navbar__section__links">
+      <ul class="list-unstyled navbar__section__links d-flex align-items-center">
         <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
         <li><a href="{$faq}">FAQ</a></li>
         <li>

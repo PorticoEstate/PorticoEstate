@@ -554,14 +554,14 @@ HTML;
 					$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 				}
 
-				$GLOBALS['phpgw']->redirect_link("/index.php", $redirect_data);
+				$GLOBALS['phpgw']->redirect_link("/", $redirect_data);
 			}
 
 			$redirect_arr = explode('.',$redirect);
 
 			if (count($redirect_arr) == 3 && isset($GLOBALS['phpgw_info']['user']['apps'][$redirect_arr[0]]))
 			{
-				$GLOBALS['phpgw']->redirect_link("/index.php", array('menuaction' => $redirect));
+				$GLOBALS['phpgw']->redirect_link("/", array('menuaction' => $redirect));
 			}
 			else
 			{

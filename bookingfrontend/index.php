@@ -139,7 +139,7 @@ HTML;
 		}
 
 		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
-		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
+		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/', $redirect_data);
 		unset($redirect);
 		unset($redirect_data);
 		unset($sessid);
@@ -170,6 +170,7 @@ HTML;
      */
     $availableMenuActions = (object) [
         'bookingfrontend.uiapplication.add' => true,
+        'bookingfrontend.uisearch.index' => true,
         'bookingfrontend.uiapplication.add_contact' => true,
         'bookingfrontend.uiresource.show' => true,
         'bookingfrontend.uibuilding.show' => true,

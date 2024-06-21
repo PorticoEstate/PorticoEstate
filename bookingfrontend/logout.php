@@ -97,7 +97,7 @@
 
 	if (!isset($extra_vars['menuaction']))
 	{
-		$extra_vars['menuaction'] = 'bookingfrontend.uisearch.index';
+        // $extra_vars['menuaction'] = 'bookingfrontend.uisearch.index';
 	}
 
 	if (!$external_logout)

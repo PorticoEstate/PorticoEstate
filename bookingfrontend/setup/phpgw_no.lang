@@ -64,6 +64,7 @@ Choose another building	bookingfrontend	no	Velg annet anlegg
 Choose atleast one object	bookingfrontend	no	Velg minst ett leieobjekt
 Choose categories	bookingfrontend	no	Velg kategorier
 Choose date	bookingfrontend	no	Velg dato
+add_date	bookingfrontend	no	Legg til dato
 Choose date-range	bookingfrontend	no	Velg dato
 Choose resources	bookingfrontend	no	Velg lokaler
 Close	bookingfrontend	no	Lukke
@@ -302,6 +303,7 @@ choose a date	bookingfrontend	no	Velg dato
 choose file	bookingfrontend	no	Velg dokument
 choose rent object and rentperiod	bookingfrontend	no	Velg leieobjekt og leieperiode
 choose rent object	bookingfrontend	no	Velg leieobjekt
+add_rent_object	bookingfrontend	no	Legg til leieobjekt
 choose rent period	bookingfrontend	no	Velg leieperiode
 choose target audience	bookingfrontend	no	Velg målgruppe for arrangement / aktiviteten
 chosen rent object	bookingfrontend	no	Valgte ressurser
@@ -628,3 +630,6 @@ your_applications	bookingfrontend	no	Dine søknader
 billing_information_contact_person	bookingfrontend	no	Fakturainformasjon til kontaktperson
 billing_information	bookingfrontend	no	Fakturainformasjon
 submit_application	bookingfrontend	no	Send inn søknad
+delete	bookingfrontend	no	Slett
+delete_rentobject	bookingfrontend	no	Slette leieobjekt
+delete_rentobject_body	bookingfrontend	no	Er du sikker på du vil slette dette utleieobjektet fra handlekurven?
