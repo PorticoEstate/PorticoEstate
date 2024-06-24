@@ -781,6 +781,11 @@
 		 */
 		private function send_sms_notification( $receiver, $subject, $body )
 		{
+			if(empty($GLOBALS['phpgw_info']['apps']['sms']))
+			{
+				return false;
+			}
+
 			$sms_service = CreateObject('sms.sms');
 			//html -> text..
 			$html2text			 = createObject('phpgwapi.html2text', "{$subject}<br/>{$body}");
@@ -870,6 +875,12 @@
 
 		public function send_sms_participants()
 		{
+			if(empty($GLOBALS['phpgw_info']['apps']['sms']))
+			{
+				phpgwapi_cache::message_set('SMS er deaktivert', 'error');
+				return false;
+			}
+
 			$type = 'event';;
 			$id = phpgw::get_var('id', 'int');
 			$send_sms = phpgw::get_var('send_sms', 'bool');
@@ -1218,12 +1229,19 @@
 									//implement validation
 								}
 
-								 $sms_res = CreateObject('sms.sms')->websend2pv($this->account, $phone_number, $newArray['text']);
-
-								if($sms_res[0][0])
+								if (empty($GLOBALS['phpgw_info']['apps']['sms']))
 								{
-									$comment = $rool . '<br />Denne er sendt til ' . $phone_number;
-									$this->add_comment($event, $comment);
+									phpgwapi_cache::message_set('SMS er deaktivert', 'error');
+								}
+								else
+								{
+									$sms_res = CreateObject('sms.sms')->websend2pv($this->account, $phone_number, $newArray['text']);
+
+									if($sms_res[0][0])
+									{
+										$comment = $rool . '<br />Denne er sendt til ' . $phone_number;
+										$this->add_comment($event, $comment);
+									}
 								}
 							}
 
