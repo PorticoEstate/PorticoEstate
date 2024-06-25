@@ -11,10 +11,6 @@ function ResourceInfoCardViewModel(params) {
     this.lang = params.lang;
     this.expanded = ko.observable(false);
     this.slideDownTarget = ko.observable();
-    this.getTownFromBuilding = function (buildings) {
-        const ids = buildings.map(b => b.id);
-        return params.towns_data.filter(t => ids.includes(t.b_id));
-    };
 
     this.dateString = getDateFromSearch(this.date());
     this.cleanTownName = function (townName) {

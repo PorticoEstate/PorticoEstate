@@ -131,7 +131,9 @@
                                     <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
                                     <!--                            <div class="pill-divider"></div>-->
                                     <div class="pill-label" data-bind="text: $data.name"></div>
-                                    <button class="pill-icon" data-bind="click: $parent.removeRessource"><i class="pill-cross"></i></button>
+                                    <button class="pill-icon" data-bind="click: $parent.removeRessource">
+                                        <i class="pill-cross"></i>
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-md-6 resource-select">
@@ -221,10 +223,10 @@
                                                        class="js-basic-datepicker bookingDate"
                                                        id="standard-datepicker"
                                                        data-bind="textInput: bookingDate">
-                                                                                                    <xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'add_date')"/>
-                                                                                                    </xsl:attribute>
-<!--                                                    Velg dato-->
+                                                    <xsl:attribute name="placeholder">
+                                                        <xsl:value-of select="php:function('lang', 'add_date')"/>
+                                                    </xsl:attribute>
+                                                    <!--                                                    Velg dato-->
 
                                                 </input>
                                             </label>
