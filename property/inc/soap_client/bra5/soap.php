@@ -157,6 +157,14 @@
 	$wdsl	 = "{$location_url}?WSDL";
 	$options = array();
 
+	$context = stream_context_create([
+		'ssl' => [
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+		],
+	]);
+
+	$options[Bra5WsdlClass::WSDL_STREAM_CONTEXT] = $context;
 	$options[Bra5WsdlClass::WSDL_URL]			 = $wdsl;
 	$options[Bra5WsdlClass::WSDL_ENCODING]		 = 'UTF-8';
 	//$options[Bra5WsdlClass::WSDL_CACHE_WSDL] = WSDL_CACHE_NONE;
