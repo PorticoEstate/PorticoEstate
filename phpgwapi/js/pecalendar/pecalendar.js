@@ -199,15 +199,19 @@ class PECalendar {
 
     instance = undefined;
 
+    disableInteraction = false;
+
     constructor({
                     building_id,
                     resource_id = null,
                     dateString = null,
                     disableResourceSwap = true,
-                    instance = undefined
+                    instance = undefined,
+                    nointeraction = false
                 }) {
         luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
         this.instance = instance;
+        this.disableInteraction = nointeraction;
 
         // Initialize the date of the instance
         if (dateString) {
@@ -1082,6 +1086,10 @@ class PECalendar {
 
         }
 
+        if(this.disableInteraction) {
+            return;
+        }
+
         if (event.target.classList.contains('event-temporary')) {
             const threshold = 10;
             const rect = event.target.getBoundingClientRect();
@@ -1701,12 +1709,12 @@ if (globalThis['ko']) {
                 <div class="header">
                     <!-- ko ifnot: combinedTempEvents().length -->
                     <!-- SPACING PLACEHOLDER-->
-                    <div class="pending-row">
+                    <div class="pending-row" data-bind="hidden: disableInteraction">
                         <div id="tempEventPills" class="pills">
                         </div>
                     </div>
                     <!-- /ko -->
-                    <div class="select_building_resource">
+                    <div class="select_building_resource"  data-bind="hidden: disableInteraction">
                         <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
@@ -1717,7 +1725,7 @@ if (globalThis['ko']) {
                             <!-- /ko -->
 
                         </div>
-                        <!-- ko ifnot: hasTimeSlots() -->
+                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
                         <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
                            data-bind="attr: { href: applicationURL }">
                             <trans>bookingfrontend:application</trans>
