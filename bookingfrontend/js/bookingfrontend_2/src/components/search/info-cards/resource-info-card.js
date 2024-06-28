@@ -14,6 +14,8 @@ function ResourceInfoCardViewModel(params) {
     this.slideDownTarget = ko.observable();
     this.static = params.static || false;
 
+    this.filterGroups = params.filterGroups ||undefined
+
     this.dateString = getDateFromSearch(this.date());
     this.cleanTownName = function (townName) {
         return townName.split('\n').map(line => {
@@ -117,7 +119,7 @@ ko.components.register('resource-info-card', {
                     <!-- /ko -->
                     
                     <!-- ko if: expanded -->
-                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: dateString, nointeraction: static"></pe-calendar>
+                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: dateString, nointeraction: static, filterGroups: filterGroups"></pe-calendar>
                     <!-- /ko -->
                 </div>
             </div>

@@ -276,7 +276,7 @@
             <div id="search-result" class="pt-3">
                 <div data-bind="foreach: {{ data: resources, as: 'resource' }}">
                     <resource-info-card
-                            params="{{ resource: resource, buildings: $parent.getBuildingsFromResource(resource.id), towns: $parent.getTownFromBuilding($parent.getBuildingsFromResource(resource.id)), lang: null, towns_data: $parent.towns_data, date: $parent.searchDate, disableText: true, static: true }}"></resource-info-card>
+                            params="{{ resource: resource, buildings: $parent.getBuildingsFromResource(resource.id), towns: $parent.getTownFromBuilding($parent.getBuildingsFromResource(resource.id)), lang: null, towns_data: $parent.towns_data, date: $parent.searchDate, disableText: true, static: true, filterGroups: $parent.groupIds }}"></resource-info-card>
                 </div>
                 <!--                <button data-bind="visible: result_shown() < result().length, click: showMoreResults"-->
                 <!--                        class="btn btn-primary mt-3">Show More-->

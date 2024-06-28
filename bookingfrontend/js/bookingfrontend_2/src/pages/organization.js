@@ -38,6 +38,7 @@ ko.bindingHandlers.groupsDisplay = {
 };
 
 class OrganizationModel {
+    organization_id = organization_id;
     buildings = ko.observableArray([]);
     groups = ko.observableArray();
     delegates = ko.observableArray();
@@ -64,7 +65,12 @@ class OrganizationModel {
         }
         this.fetchCalendarEvents();
         this.searchDate.subscribe(() => this.fetchCalendarEvents())
+
     }
+
+    groupIds = ko.computed(() => {
+        return this.groups().map(group => group.id);
+    })
 
     toggleBuildingsExpanded() {
         this.buildingsExpanded(!this.buildingsExpanded())
@@ -81,7 +87,7 @@ class OrganizationModel {
 
 
     getTownFromBuilding = (buildings) => {
-        console.log(this.towns())
+        // console.log(this.towns())
         const ids = buildings.map(b => b.id)
         return this.towns().filter(t => ids.includes(t.b_id));
     }
@@ -119,7 +125,7 @@ class OrganizationModel {
             .then(data => {
                 if ('data' in data) {
                     this.delegates(data.data);
-                    console.log("Delegates:", data.data);
+                    // console.log("Delegates:", data.data);
                 }
             })
             .catch(error => {
@@ -145,7 +151,7 @@ class OrganizationModel {
             .then(data => {
                 if ('data' in data) {
                     this.groups(data.data);
-                    console.log("Groups:", data.data);
+                    // console.log("Groups:", data.data);
                 }
             })
             .catch(error => {
@@ -172,7 +178,7 @@ class OrganizationModel {
                 if ('ResultSet' in data && 'Result' in data.ResultSet) {
                     // Assuming the data is returned as an array of building objects
                     this.buildings(data.ResultSet.Result);
-                    console.log(data.ResultSet.Result);
+                    // console.log(data.ResultSet.Result);
                 }
 
             })
@@ -184,7 +190,7 @@ class OrganizationModel {
 
     async fetchCalendarEvents() {
         const date =luxon.DateTime.fromFormat( this.searchDate(), "dd.MM.yyyy");
-        console.log(date);
+        // console.log(date);
         const url = phpGWLink('bookingfrontend/', {
             menuaction: "bookingfrontend.uibooking.organization_schedule",
             length: -1,
@@ -206,7 +212,7 @@ class OrganizationModel {
             }
 
             const result = await response.json();
-            console.log('res', result)
+            // console.log('res', result)
 
             const resources = result.resources
 
@@ -214,7 +220,7 @@ class OrganizationModel {
             this.towns(result.towns);
 
 
-            console.log("Die greate resulten!", resources);
+            // console.log("Die greate resulten!", resources);
 
         } catch (error) {
             console.error(error);
