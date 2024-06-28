@@ -9,8 +9,12 @@ function ResourceInfoCardViewModel(params) {
     this.towns = params.towns;
     this.date = params.date;
     this.lang = params.lang;
+    this.disableText = params.disableText || false;
     this.expanded = ko.observable(false);
     this.slideDownTarget = ko.observable();
+    this.static = params.static || false;
+
+    this.filterGroups = params.filterGroups ||undefined
 
     this.dateString = getDateFromSearch(this.date());
     this.cleanTownName = function (townName) {
@@ -26,9 +30,12 @@ function ResourceInfoCardViewModel(params) {
     };
 
     this.description_text = ko.computed(() => {
+        if(this.disableText) {
+            return ''
+        }
         const description_json = JSON.parse(this.resource.description_json);
         return new DOMParser()
-            .parseFromString(description_json[this.lang] || description_json['no'], "text/html")
+            .parseFromString(this.lang && description_json[this.lang] || description_json['no'], "text/html")
             .documentElement.textContent;
     })
 
@@ -104,11 +111,15 @@ ko.components.register('resource-info-card', {
                     <span class="slidedown__toggler__info" data-bind="html: infoText"></span>
                 </button>
                 <div class="js-slidedown-content slidedown__content" data-bind="withAfterRender: { afterRender: addSlideDown}">
+                    <!-- ko ifnot: disableText -->
+                
                     <div>
                         <p data-bind="html: description_text"></p>
                     </div>
+                    <!-- /ko -->
+                    
                     <!-- ko if: expanded -->
-                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: dateString"></pe-calendar>
+                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: dateString, nointeraction: static, filterGroups: filterGroups"></pe-calendar>
                     <!-- /ko -->
                 </div>
             </div>

@@ -199,16 +199,23 @@ class PECalendar {
 
     instance = undefined;
 
+    disableInteraction = false;
+
+    filterGroups = undefined;
+
     constructor({
                     building_id,
                     resource_id = null,
                     dateString = null,
                     disableResourceSwap = true,
-                    instance = undefined
+                    instance = undefined,
+                    nointeraction = false,
+                    filterGroups = undefined
                 }) {
         luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
         this.instance = instance;
-
+        this.disableInteraction = nointeraction;
+        this.filterGroups = filterGroups;
         // Initialize the date of the instance
         if (dateString) {
             this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale(luxon.Settings.defaultLocale));
@@ -659,7 +666,12 @@ class PECalendar {
         // Filter events where any of the associated resources has an id that matches this.resource_id
         const allocationIds = this.events().map(event => event.allocation_id); // comment out this to test overlaps
         // const allocationIds = [];
-        const filteredEvents = this.events().filter(event => !allocationIds.includes(event.id));
+        let filteredEvents = this.events().filter(event => !allocationIds.includes(event.id));
+
+        if(this.filterGroups !== undefined && this.filterGroups() !== undefined) {
+            // console.log('fiiiiilter', filteredEvents, this.filterGroups());
+            filteredEvents = filteredEvents.filter((a) => this.filterGroups().includes(a.group_id))
+        }
 
         return filteredEvents.filter(event => event?.resources.some(resource => resource?.id === this.resource_id()));
     });
@@ -1080,6 +1092,10 @@ class PECalendar {
             }
             this.currentPopper(null);
 
+        }
+
+        if(this.disableInteraction) {
+            return;
         }
 
         if (event.target.classList.contains('event-temporary')) {
@@ -1701,12 +1717,12 @@ if (globalThis['ko']) {
                 <div class="header">
                     <!-- ko ifnot: combinedTempEvents().length -->
                     <!-- SPACING PLACEHOLDER-->
-                    <div class="pending-row">
+                    <div class="pending-row" data-bind="hidden: disableInteraction">
                         <div id="tempEventPills" class="pills">
                         </div>
                     </div>
                     <!-- /ko -->
-                    <div class="select_building_resource">
+                    <div class="select_building_resource"  data-bind="hidden: disableInteraction">
                         <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
@@ -1717,7 +1733,7 @@ if (globalThis['ko']) {
                             <!-- /ko -->
 
                         </div>
-                        <!-- ko ifnot: hasTimeSlots() -->
+                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
                         <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
                            data-bind="attr: { href: applicationURL }">
                             <trans>bookingfrontend:application</trans>
