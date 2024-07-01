@@ -639,3 +639,8 @@ please_correct_errors_before_proceeding	bookingfrontend	no	Vennligst rett feilen
 selected_time_must_be_in_future	bookingfrontend	no	Det valgte tidspunktet må være i fremtiden
 start_time_must_be_before_end_time	bookingfrontend	no	Starttiden må være tidligere enn sluttiden
 please_fill_all_date_and_time_fields	bookingfrontend	no	Vennligst fyll ut alle dato- og tidsfelt
+please_select_target_audience	bookingfrontend	no	Vennligst velg en målgruppe
+please_enter_event_name	bookingfrontend	no	Vennligst skriv inn navnet på arrangementet/aktiviteten
+please_enter_organizer	bookingfrontend	no	Vennligst skriv inn arrangør/ansvarlig søker
+please_enter_participants	bookingfrontend	no	Vennligst skriv inn estimert antall deltakere
+please_accept_terms	bookingfrontend	no	Vennligst godta vilkårene

@@ -640,3 +640,8 @@ please_correct_errors_before_proceeding	bookingfrontend	en	Please correct the er
 selected_time_must_be_in_future	bookingfrontend	en	The selected time must be in the future
 start_time_must_be_before_end_time	bookingfrontend	en	Start time must be earlier than end time
 please_fill_all_date_and_time_fields	bookingfrontend	en	Please fill in all date and time fields
+please_select_target_audience	bookingfrontend	en	Please select a target audience
+please_enter_event_name	bookingfrontend	en	Please enter the name for the event/activity
+please_enter_organizer	bookingfrontend	en	Please enter the organizer/responsible seeker
+please_enter_participants	bookingfrontend	en	Please enter the estimated number of participants
+please_accept_terms	bookingfrontend	en	Please accept the terms and conditions
