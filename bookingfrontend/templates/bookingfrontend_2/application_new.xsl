@@ -350,6 +350,7 @@
                             </select>
                             <!--                        <input class="form-control" id="inputTargetAudience" required="true" type="text"-->
                             <!--                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>-->
+                            <div id="audienceDropdown-error" class="invalid-feedback"></div>
                         </div>
 
 
@@ -364,6 +365,7 @@
                                     <xsl:value-of select="config/application_description"/>
                                 </xsl:attribute>
                             </input>
+                            <div id="inputEventName-error" class="invalid-feedback"></div>
                         </div>
 
                         <!-- Organizer -->
@@ -377,6 +379,7 @@
                                     <xsl:value-of select="php:function('lang', 'organizer/responsible seeker')"/>
                                 </xsl:attribute>
                             </input>
+                            <div id="inputOrganizerName-error" class="invalid-feedback"></div>
                         </div>
 
                         <!-- Homepage -->
@@ -423,7 +426,7 @@
 
 
                         <!-- Estimated Number of Participants -->
-                        <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4">
+                        <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4" id="participants-container">
                             <div class="row pt-2 pb-2">
                                 <h2>
                                     <xsl:value-of select="php:function('lang', 'Estimated number of participants')"/>
@@ -458,6 +461,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div id="participants-container-error" class="invalid-feedback"></div>
+
                             </div>
                         </div>
 
@@ -520,10 +527,13 @@
                                             <span class="validationMessage" style="display: none">
                                                 <!-- Additional validation message here if needed -->
                                             </span>
+                                            <div id="regulation_documents-error" class="invalid-feedback"></div>
+
                                         </div>
                                     </div>
                                 </fieldset>
                             </div>
+
                         </div>
                         <!-- END STEP 2 -->
                     </div>
@@ -563,19 +573,19 @@
                                     <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                                 </div>
                             </a>
-                            <button id="submitBtn"
-                                    class=" pe-btn pe-btn-primary  align-items-center gap-2"
-                                    type="submit" data-bind="visible: formStep() === 1">
-                                <div class="text-bold">
-                                    <xsl:value-of select="php:function('lang', 'Next step')"/>
-                                </div>
-                                <div class="text-bold d-flex align-items-center">
-                                    <i class="fa-solid fa-arrow-right-long"></i>
-                                </div>
-                            </button>
+<!--                            <button id="submitBtn"-->
+<!--                                    class=" pe-btn pe-btn-primary  align-items-center gap-2"-->
+<!--                                    type="submit" data-bind="visible: formStep() === 1">-->
+<!--                                <div class="text-bold">-->
+<!--                                    <xsl:value-of select="php:function('lang', 'Next step')"/>-->
+<!--                                </div>-->
+<!--                                <div class="text-bold d-flex align-items-center">-->
+<!--                                    <i class="fa-solid fa-arrow-right-long"></i>-->
+<!--                                </div>-->
+<!--                            </button>-->
                             <button id="nextBTN"
                                     class=" pe-btn pe-btn-primary align-items-center gap-2"
-                                    data-bind="visible: formStep() !== 1, click: () => goNext()">
+                                    data-bind="click: () => goNext()">
                                 <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>
                                 </div>
