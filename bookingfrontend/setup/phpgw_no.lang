@@ -633,3 +633,9 @@ submit_application	bookingfrontend	no	Send inn søknad
 delete	bookingfrontend	no	Slett
 delete_rentobject	bookingfrontend	no	Slette leieobjekt
 delete_rentobject_body	bookingfrontend	no	Er du sikker på du vil slette dette utleieobjektet fra handlekurven?
+please_select_at_least_one_resource	bookingfrontend	no	Vennligst velg minst én ressurs
+please_select_at_least_one_date_and_time	bookingfrontend	no	Vennligst velg minst én dato og tidspunkt
+please_correct_errors_before_proceeding	bookingfrontend	no	Vennligst rett feilene nedenfor før du går videre til neste trinn
+selected_time_must_be_in_future	bookingfrontend	no	Det valgte tidspunktet må være i fremtiden
+start_time_must_be_before_end_time	bookingfrontend	no	Starttiden må være tidligere enn sluttiden
+please_fill_all_date_and_time_fields	bookingfrontend	no	Vennligst fyll ut alle dato- og tidsfelt

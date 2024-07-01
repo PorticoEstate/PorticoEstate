@@ -634,3 +634,9 @@ submit_application	bookingfrontend	nn	Send inn søknad
 delete	bookingfrontend	nn	Slett
 delete_rentobject	bookingfrontend	nn	Slette leigeobjekt
 delete_rentobject_body	bookingfrontend	nn	Er du sikker på du vil slette dette utleigeobjektet frå handlekurva?
+please_select_at_least_one_resource	bookingfrontend	nn	Ver venleg og vel minst éin ressurs
+please_select_at_least_one_date_and_time	bookingfrontend	nn	Ver venleg og vel minst éin dato og tidspunkt
+please_correct_errors_before_proceeding	bookingfrontend	nn	Ver venleg og rett feila nedanfor før du går vidare til neste steg
+selected_time_must_be_in_future	bookingfrontend	nn	Det valde tidspunktet må vere i framtida
+start_time_must_be_before_end_time	bookingfrontend	nn	Starttida må vere tidlegare enn sluttida
+please_fill_all_date_and_time_fields	bookingfrontend	nn	Ver venleg og fyll ut alle dato- og tidsfelt

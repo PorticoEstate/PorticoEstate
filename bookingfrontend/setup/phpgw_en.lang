@@ -634,3 +634,9 @@ submit_application	bookingfrontend	en	Submit application
 delete	bookingfrontend	en	Delete
 delete_rentobject	bookingfrontend	en	Delete rent object
 delete_rentobject_body	bookingfrontend	en	Are you sure you want to delete this rent object from your basket?
+please_select_at_least_one_resource	bookingfrontend	en	Please select at least one resource
+please_select_at_least_one_date_and_time	bookingfrontend	en	Please select at least one date and time slot
+please_correct_errors_before_proceeding	bookingfrontend	en	Please correct the errors below before proceeding to the next step
+selected_time_must_be_in_future	bookingfrontend	en	The selected time must be in the future
+start_time_must_be_before_end_time	bookingfrontend	en	Start time must be earlier than end time
+please_fill_all_date_and_time_fields	bookingfrontend	en	Please fill in all date and time fields

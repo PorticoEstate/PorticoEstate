@@ -124,31 +124,33 @@
                                     </svg>
                                 </button>
                             </label>
-
-                            <div data-bind="foreach: bookableResource"
-                                 class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
-                                <div class="pill pill--secondary" data-bind="visible: $data.selected">
-                                    <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
-                                    <!--                            <div class="pill-divider"></div>-->
-                                    <div class="pill-label" data-bind="text: $data.name"></div>
-                                    <button class="pill-icon" data-bind="click: $parent.removeRessource">
-                                        <i class="pill-cross"></i>
-                                    </button>
+                            <div id="select-multiple-container">
+                                <div data-bind="foreach: bookableResource"
+                                     class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
+                                    <div class="pill pill--secondary" data-bind="visible: $data.selected">
+                                        <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
+                                        <!--                            <div class="pill-divider"></div>-->
+                                        <div class="pill-label" data-bind="text: $data.name"></div>
+                                        <button class="pill-icon" data-bind="click: $parent.removeRessource">
+                                            <i class="pill-cross"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 resource-select">
-                                <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
-                                        id="select-multiple">
-                                    <xsl:attribute name="data-placeholder">
-                                        <xsl:value-of select="php:function('lang', 'add_rent_object')"/>
-                                    </xsl:attribute>
-                                    <option></option>
-                                    <option data-bind="text: name,
+                                <div class="col-md-6 resource-select">
+                                    <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
+                                            id="select-multiple">
+                                        <xsl:attribute name="data-placeholder">
+                                            <xsl:value-of select="php:function('lang', 'add_rent_object')"/>
+                                        </xsl:attribute>
+                                        <option></option>
+                                        <option data-bind="text: name,
                        value: id,
                        attr: {{ 'aria-selected': selected }}
                        "/>
-                                </select>
+                                    </select>
+                                </div>
                             </div>
+                            <div id="select-multiple-error" class="invalid-feedback"></div>
                         </div>
                         <div class=".selected-items-display"></div>
 
@@ -177,7 +179,7 @@
                         </div>
 
 
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-3" id="date-time-selection">
 
                             <div class="form-group">
                                 <div class="font-weight-bold gap-3 d-flex align-items-center">
@@ -274,6 +276,9 @@
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="date-time-selection-error" class="invalid-feedback"></div>
                                     </div>
 
                                 </div>
