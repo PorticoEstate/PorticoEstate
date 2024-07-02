@@ -85,7 +85,14 @@
 			 */
 			$yesterday = date('Y-m-d H:i:s', time() -  4 * 3600);
 
-			$sql = "SELECT id FROM bb_application WHERE status = 'NEWPARTIAL1' AND created < '$yesterday'";
+//			$sql = "SELECT id FROM bb_application WHERE status = 'NEWPARTIAL1' AND created < '$yesterday'";
+
+			$sql = "SELECT bb_application.id FROM bb_application"
+				. " LEFT JOIN bb_event ON bb_application.id = bb_event.application_id"
+				. " WHERE bb_application.status = 'NEWPARTIAL1'"
+				. " AND bb_event.id IS NULL AND created < '$yesterday'"
+				. " ORDER by bb_application.id";
+
 			$this->db->query($sql, __LINE__, __FILE__);
 			$applications = array(-1,-2,-3);
 			while($this->db->next_record())
