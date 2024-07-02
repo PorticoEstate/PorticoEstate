@@ -79,6 +79,29 @@
 				'description_json' => json_decode($this->db->f('description_json'),true));
 		}
 
+        public function get_towns_for_buildings($building_ids)
+        {
+            $values = array();
+            $building_ids_str = implode(',', $building_ids);
+            $sql = "SELECT DISTINCT bb_building.id as b_id, bb_building.name as b_name, fm_part_of_town.id, fm_part_of_town.name 
+            FROM bb_building 
+            {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code
+            {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1
+            {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id
+            WHERE bb_building.active=1 AND bb_building.id IN ($building_ids_str)";
+
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record()) {
+                $values[] = array(
+                    'b_id' => $this->db->f('b_id'),
+                    'b_name' => $this->db->f('b_name'),
+                    'id' => $this->db->f('id'),
+                    'name' => $this->db->f('name', true)
+                );
+            }
+            return $values;
+        }
+
 		/**
 		 * Returns buildings used by the organization with the specified id
 		 * within the last 300 days.

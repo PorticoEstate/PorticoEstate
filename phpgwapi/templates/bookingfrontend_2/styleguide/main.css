@@ -1402,6 +1402,88 @@ a.pe-btn {
   color: #793C8A;
   fill: #793C8A;
 }
+.pe-btn-text-small {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-small {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+  }
+}
+.pe-btn-text-overline {
+  font-size: 0.75rem;
+  line-height: 1.375rem;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-overline {
+    font-size: 0.625rem;
+    line-height: 1.25rem;
+  }
+}
+.pe-btn-text-body, .pe-btn-text-normal, .pe-btn-text-medium, .pe-btn-text-lg {
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-body, .pe-btn-text-normal, .pe-btn-text-medium, .pe-btn-text-lg {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+}
+.pe-btn-text-label {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-label {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+}
+.pe-btn-text-xl {
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-xl {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+}
+.pe-btn-text-2xl {
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-2xl {
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+  }
+}
+.pe-btn-text-3xl, .pe-btn-text-4xl {
+  font-size: 3.5rem;
+  line-height: 4.25rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn-text-3xl, .pe-btn-text-4xl {
+    font-size: 2.125rem;
+    line-height: 2.75rem;
+  }
+}
+.pe-btn-text-normal {
+  font-weight: 400;
+}
+.pe-btn-text-bold {
+  font-weight: 700;
+}
+.pe-btn-text-bolder {
+  font-weight: 900;
+}
 
 .choice {
   display: flex;
@@ -3202,6 +3284,35 @@ div#applications-cart-content {
   text-align: center;
   display: flex;
   justify-content: flex-end;
+}
+
+/* Style for the accordion button */
+.accordion {
+  --bs-accordion-btn-padding-x: 0.5rem;
+  --bs-accordion-btn-padding-y: 0.5rem;
+  --bs-accordion-active-color: #28358B;
+  --bs-accordion-btn-icon-pe: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2328358B' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2328358B' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+}
+.accordion .accordion-button {
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+@media (max-width: 1024px) {
+  .accordion .accordion-button {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+}
+.accordion .accordion-button:not(.collapsed)::after {
+  background-image: var(--bs-accordion-btn-active-icon);
+}
+.accordion .accordion-button::after {
+  background-image: var(--bs-accordion-btn-icon-pe);
+}
+.accordion .accordion-button.collapsed {
+  color: #28358B;
+  background-color: transparent;
 }
 
 /*# sourceMappingURL=main.css.map */

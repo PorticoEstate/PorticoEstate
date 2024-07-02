@@ -672,7 +672,7 @@ season show	booking	no	Vis sesong
 application edit	booking	no	Rediger søknad
 delegates	booking	no	Delegater
 delegate	booking	no	Delegert til
-new delegate	booking	no	Ny delegert
+new delegate	booking	no	Ny delegat
 please enter a delegate	booking	no	Angi navn på delegert til
 please enter an email	booking	no	Angi en epost
 ssn is invalid	booking	no	Fødselsnummeret er ikke gyldig

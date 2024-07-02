@@ -682,7 +682,7 @@ season show	booking	nn	Vis sesong
 application edit	booking	nn	Rediger søknad
 delegates	booking	nn	Delegater
 delegate	booking	nn	Delegert til
-new delegate	booking	nn	Ny delegert
+new delegate	booking	nn	Ny delegat
 please enter a delegate	booking	nn	Angi namn på delegert til
 please enter an email	booking	nn	Angi en epost
 ssn is invalid	booking	nn	Fødselsnummeret er ikkje gyldig

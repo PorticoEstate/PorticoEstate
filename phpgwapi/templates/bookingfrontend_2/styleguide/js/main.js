@@ -117,7 +117,7 @@ const updateDateBasic = () => {
     //Datepicker
     //Datepicker
     $(".js-basic-datepicker").datepicker({
-        dateFormat: "d.m.yy",
+        dateFormat: "dd.mm.yy",
         changeMonth: true,
         changeYear: true,
         dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],

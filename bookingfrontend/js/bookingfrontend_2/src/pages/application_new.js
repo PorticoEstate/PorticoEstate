@@ -41,15 +41,21 @@ function applicationModel() {
     self.bookingEndTime = ko.observable('');
 
     self.goNext = () => {
-
-        // If user forgets to click add button, handle it automagically
-        if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
-            self.addDate();
+        if (am.formStep() === 0) {
+            if (validateStep1()) {
+                clearGlobalError();
+                self.formStep(self.formStep() + 1);
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            } else {
+                showStep1Errors();
+            }
+        } else if (am.formStep() === 1) {
+            if (validateStep2()) {
+                // If this is the last step, you might want to submit the form here
+                document.getElementById('application_form').submit();
+            }
         }
-
-        self.formStep(self.formStep() + 1);
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
+    };
 
     self.goPrev = () => {
         self.formStep(self.formStep() - 1);
@@ -124,6 +130,7 @@ function applicationModel() {
     self.audiences = ko.observableArray();
     self.audienceSelectedValue = ko.observable();
 
+
     self.activityId = ko.observable();
     self.date = ko.observableArray();
     self.addDate = function () {
@@ -149,10 +156,12 @@ function applicationModel() {
             var now = luxon.DateTime.local();
 
             if (start < now || end < now) {
-                $(".applicationSelectedDates").html("Tidspunktet må være i fremtiden");
+                showError('date-time-selection', trans('bookingfrontend', 'selected_time_must_be_in_future'));
             } else if (start >= end) {
-                $(".applicationSelectedDates").html("Starttid må være tidligere enn sluttid");
+                showError('date-time-selection', trans('bookingfrontend', 'start_time_must_be_before_end_time'));
             } else {
+                hideError('date-time-selection');
+                clearGlobalError();
                 var match = ko.utils.arrayFirst(self.date(), function (item) {
                     return item.id === [start.toISO(), end.toISO()].join("");
                 });
@@ -177,7 +186,10 @@ function applicationModel() {
                     }, 500);
                 }
             }
+        } else {
+            showError('date-time-selection', trans('bookingfrontend', 'please_fill_all_date_and_time_fields'));
         }
+
     };
 
     self.removeDate = function (data) {
@@ -242,6 +254,15 @@ function applicationModel() {
         });
 
     })
+
+    self.selectedResources.subscribe(function(newValue) {
+        if (newValue.length > 0) {
+            hideError('select-multiple');
+            clearGlobalError();
+        } else {
+            showError('select-multiple', trans('bookingfrontend', 'please_select_at_least_one_resource'));
+        }
+    });
 
 
     self.selectedResourcesWithFacilities = ko.computed(function () {
@@ -332,6 +353,159 @@ function applicationModel() {
         $select.on('select2:select', handleSelectUnselect);
         $select.on('select2:unselect', handleSelectUnselect);
     });
+
+
+    function validateStep1() {
+        let isValid = true;
+
+        // Validate resource selection
+        if (self.selectedResources().length === 0) {
+            isValid = false;
+            showError('select-multiple', trans('bookingfrontend', 'please_select_at_least_one_resource'));
+        } else {
+            hideError('select-multiple');
+        }
+
+        // Validate date and time selection
+        if (self.date().length === 0) {
+            isValid = false;
+            showError('date-time-selection', trans('bookingfrontend', 'please_select_at_least_one_date_and_time'));
+        } else {
+            hideError('date-time-selection');
+        }
+
+        if (isValid) {
+            clearGlobalError();
+        }
+
+        return isValid;
+    }
+
+    function showError(elementId, message) {
+        let element = document.getElementById(elementId);
+        // console.log("err", elementId, message, element)
+
+        if (element) {
+            element.classList.add('is-invalid');
+            let errorElement = document.getElementById(elementId + '-error');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.id = elementId + '-error';
+                errorElement.className = 'invalid-feedback';
+                element.parentNode.insertBefore(errorElement, element.nextSibling);
+            }
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+    }
+
+    function hideError(elementId) {
+        let element = document.getElementById(elementId);
+        if (element) {
+            element.classList.remove('is-invalid');
+            let errorElement = document.getElementById(elementId + '-error');
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }
+    }
+
+    function clearGlobalError() {
+        let generalError = document.getElementById('step1-general-error');
+        if (generalError) {
+            generalError.style.display = 'none';
+            generalError.textContent = '';
+        }
+    }
+
+    function showStep1Errors() {
+        // Show a general error message at the top of the form
+        let generalError = document.getElementById('step1-general-error');
+        if (!generalError) {
+            generalError = document.createElement('div');
+            generalError.id = 'step1-general-error';
+            generalError.className = 'alert alert-danger mt-3';
+            document.querySelector('.new-application-page').insertBefore(generalError, document.querySelector('.new-application-page').firstChild);
+        }
+        generalError.textContent = trans('bookingfrontend', 'please_correct_errors_before_proceeding');
+        generalError.style.display = 'block';
+
+        // Scroll to the top of the form to ensure the error message is visible
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function validateStep2() {
+        let isValid = true;
+
+        // Validate Target audience
+        if (!self.audienceSelectedValue()) {
+            isValid = false;
+            showError('audienceDropdown', trans('bookingfrontend', 'please_select_target_audience'));
+        } else {
+            hideError('audienceDropdown');
+        }
+
+        // Validate Name for event/activity
+        if (!document.getElementById('inputEventName').value.trim()) {
+            isValid = false;
+            showError('inputEventName', trans('bookingfrontend', 'please_enter_event_name'));
+        } else {
+            hideError('inputEventName');
+        }
+
+        // Validate organizer/responsible seeker
+        if (!document.getElementById('inputOrganizerName').value.trim()) {
+            isValid = false;
+            showError('inputOrganizerName', trans('bookingfrontend', 'please_enter_organizer'));
+        } else {
+            hideError('inputOrganizerName');
+        }
+
+        // Validate Estimated number of participants
+        let participantsValid = false;
+        self.agegroupList().forEach(function(agegroup) {
+            if (agegroup.inputCountMale() || agegroup.inputCountFemale()) {
+                participantsValid = true;
+            }
+        });
+        if (!participantsValid) {
+            isValid = false;
+            showError('participants-container', trans('bookingfrontend', 'please_enter_participants'));
+        } else {
+            hideError('participants-container');
+        }
+
+        // Validate legal condition
+        if (!document.querySelector('#regulation_documents input[name="accepted_documents[]"]:checked')) {
+            isValid = false;
+            showError('regulation_documents', trans('bookingfrontend', 'please_accept_terms'));
+        } else {
+            hideError('regulation_documents');
+        }
+
+        if (isValid) {
+            clearGlobalError();
+        } else {
+            showStep2Errors();
+        }
+
+        return isValid;
+    }
+
+    function showStep2Errors() {
+        let generalError = document.getElementById('step2-general-error');
+        if (!generalError) {
+            generalError = document.createElement('div');
+            generalError.id = 'step2-general-error';
+            generalError.className = 'alert alert-danger mt-3';
+            document.querySelector('.new-application-page').insertBefore(generalError, document.querySelector('.new-application-page').firstChild);
+        }
+        generalError.textContent = trans('bookingfrontend', 'please_correct_errors_before_proceeding');
+        generalError.style.display = 'block';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
 
 }
 
@@ -463,12 +637,27 @@ $(document).ready(function () {
         $(this).parent().toggleClass('show');
     });
 
-    $("#application_form").submit(function (event) {
-        var allowSubmit = validate_documents();
-        if (!allowSubmit) {
-            alert(errorAcceptedDocs);
-            event.preventDefault();
-        }
+    // $("#application_form").submit(function (event) {
+    //     var allowSubmit = validate_documents();
+    //     if (!allowSubmit) {
+    //         alert(errorAcceptedDocs);
+    //         event.preventDefault();
+    //     }
+    // });
+
+    $("#application_form").submit(function(event) {
+        // if (am.formStep() === 1) {
+            if (!am.validateStep2()) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                var allowSubmit = validate_documents();
+                if (!allowSubmit) {
+                    alert(errorAcceptedDocs);
+                    event.preventDefault();
+                }
+            }
+        // }
     });
 
 });

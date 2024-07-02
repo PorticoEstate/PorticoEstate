@@ -229,6 +229,9 @@ a.pe-btn {
     //  background-color: $color-y; /* Color Y on hover */
     //}
   }
+  &-text {
+    @include text-styles;
+  }
 
 }
 

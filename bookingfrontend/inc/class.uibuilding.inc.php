@@ -386,6 +386,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
 
         $template = 'building';
         self::add_external_css_with_search($template . '.css', false);
+//            _debug_array(array('building' => $building, 'config_data' => $config->config_data));die();
 
         self::render_template_xsl($template, array('building' => $building, 'config_data' => $config->config_data));
     }
