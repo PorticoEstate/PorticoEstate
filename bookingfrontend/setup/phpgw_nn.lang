@@ -645,3 +645,5 @@ please_enter_event_name	bookingfrontend	nn	Ver venleg og skriv inn namnet på ar
 please_enter_organizer	bookingfrontend	nn	Ver venleg og skriv inn arrangør/ansvarleg søkjar
 please_enter_participants	bookingfrontend	nn	Ver venleg og skriv inn estimert tal på deltakarar
 please_accept_terms	bookingfrontend	nn	Ver venleg og godta vilkåra
+organization_calendar	bookingfrontend	nn	Organisasjonskalender
+no_resources_found	bookingfrontend	nn	Ingen ressursar funne for den valde datoen
