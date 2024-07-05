@@ -124,29 +124,33 @@
                                     </svg>
                                 </button>
                             </label>
-
-                            <div data-bind="foreach: bookableResource"
-                                 class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
-                                <div class="pill pill--secondary" data-bind="visible: $data.selected">
-                                    <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
-                                    <!--                            <div class="pill-divider"></div>-->
-                                    <div class="pill-label" data-bind="text: $data.name"></div>
-                                    <button class="pill-icon" data-bind="click: $parent.removeRessource"><i class="pill-cross"></i></button>
+                            <div id="select-multiple-container">
+                                <div data-bind="foreach: bookableResource"
+                                     class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
+                                    <div class="pill pill--secondary" data-bind="visible: $data.selected">
+                                        <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
+                                        <!--                            <div class="pill-divider"></div>-->
+                                        <div class="pill-label" data-bind="text: $data.name"></div>
+                                        <button class="pill-icon" data-bind="click: $parent.removeRessource">
+                                            <i class="pill-cross"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 resource-select">
-                                <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
-                                        id="select-multiple">
-                                    <xsl:attribute name="data-placeholder">
-                                        <xsl:value-of select="php:function('lang', 'add_rent_object')"/>
-                                    </xsl:attribute>
-                                    <option></option>
-                                    <option data-bind="text: name,
+                                <div class="col-md-6 resource-select">
+                                    <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
+                                            id="select-multiple">
+                                        <xsl:attribute name="data-placeholder">
+                                            <xsl:value-of select="php:function('lang', 'add_rent_object')"/>
+                                        </xsl:attribute>
+                                        <option></option>
+                                        <option data-bind="text: name,
                        value: id,
                        attr: {{ 'aria-selected': selected }}
                        "/>
-                                </select>
+                                    </select>
+                                </div>
                             </div>
+                            <div id="select-multiple-error" class="invalid-feedback"></div>
                         </div>
                         <div class=".selected-items-display"></div>
 
@@ -175,7 +179,7 @@
                         </div>
 
 
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-3" id="date-time-selection">
 
                             <div class="form-group">
                                 <div class="font-weight-bold gap-3 d-flex align-items-center">
@@ -221,10 +225,10 @@
                                                        class="js-basic-datepicker bookingDate"
                                                        id="standard-datepicker"
                                                        data-bind="textInput: bookingDate">
-                                                                                                    <xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'add_date')"/>
-                                                                                                    </xsl:attribute>
-<!--                                                    Velg dato-->
+                                                    <xsl:attribute name="placeholder">
+                                                        <xsl:value-of select="php:function('lang', 'add_date')"/>
+                                                    </xsl:attribute>
+                                                    <!--                                                    Velg dato-->
 
                                                 </input>
                                             </label>
@@ -272,6 +276,9 @@
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="date-time-selection-error" class="invalid-feedback"></div>
                                     </div>
 
                                 </div>
@@ -343,6 +350,7 @@
                             </select>
                             <!--                        <input class="form-control" id="inputTargetAudience" required="true" type="text"-->
                             <!--                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>-->
+                            <div id="audienceDropdown-error" class="invalid-feedback"></div>
                         </div>
 
 
@@ -357,6 +365,7 @@
                                     <xsl:value-of select="config/application_description"/>
                                 </xsl:attribute>
                             </input>
+                            <div id="inputEventName-error" class="invalid-feedback"></div>
                         </div>
 
                         <!-- Organizer -->
@@ -370,6 +379,7 @@
                                     <xsl:value-of select="php:function('lang', 'organizer/responsible seeker')"/>
                                 </xsl:attribute>
                             </input>
+                            <div id="inputOrganizerName-error" class="invalid-feedback"></div>
                         </div>
 
                         <!-- Homepage -->
@@ -416,7 +426,7 @@
 
 
                         <!-- Estimated Number of Participants -->
-                        <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4">
+                        <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4" id="participants-container">
                             <div class="row pt-2 pb-2">
                                 <h2>
                                     <xsl:value-of select="php:function('lang', 'Estimated number of participants')"/>
@@ -451,6 +461,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div id="participants-container-error" class="invalid-feedback"></div>
+
                             </div>
                         </div>
 
@@ -513,10 +527,13 @@
                                             <span class="validationMessage" style="display: none">
                                                 <!-- Additional validation message here if needed -->
                                             </span>
+                                            <div id="regulation_documents-error" class="invalid-feedback"></div>
+
                                         </div>
                                     </div>
                                 </fieldset>
                             </div>
+
                         </div>
                         <!-- END STEP 2 -->
                     </div>
@@ -556,19 +573,19 @@
                                     <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                                 </div>
                             </a>
-                            <button id="submitBtn"
-                                    class=" pe-btn pe-btn-primary  align-items-center gap-2"
-                                    type="submit" data-bind="visible: formStep() === 1">
-                                <div class="text-bold">
-                                    <xsl:value-of select="php:function('lang', 'Next step')"/>
-                                </div>
-                                <div class="text-bold d-flex align-items-center">
-                                    <i class="fa-solid fa-arrow-right-long"></i>
-                                </div>
-                            </button>
+<!--                            <button id="submitBtn"-->
+<!--                                    class=" pe-btn pe-btn-primary  align-items-center gap-2"-->
+<!--                                    type="submit" data-bind="visible: formStep() === 1">-->
+<!--                                <div class="text-bold">-->
+<!--                                    <xsl:value-of select="php:function('lang', 'Next step')"/>-->
+<!--                                </div>-->
+<!--                                <div class="text-bold d-flex align-items-center">-->
+<!--                                    <i class="fa-solid fa-arrow-right-long"></i>-->
+<!--                                </div>-->
+<!--                            </button>-->
                             <button id="nextBTN"
                                     class=" pe-btn pe-btn-primary align-items-center gap-2"
-                                    data-bind="visible: formStep() !== 1, click: () => goNext()">
+                                    data-bind="click: () => goNext()">
                                 <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>
                                 </div>

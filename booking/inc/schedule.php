@@ -294,6 +294,7 @@ function build_organization_schedule_table( $bookings, $resources )
 				{
 					$building_name = (new booking_sobuilding)->get_building_names(array($res['building_id']));
 					$row['building_name'] = $building_name[$res['building_id']]['name'];
+					$row['building_id'] = $res['building_id'];
 					$data[] = $row;
 					$first_row = false;
 				}
