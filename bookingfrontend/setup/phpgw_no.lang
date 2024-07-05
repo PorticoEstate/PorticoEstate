@@ -644,3 +644,5 @@ please_enter_event_name	bookingfrontend	no	Vennligst skriv inn navnet på arrang
 please_enter_organizer	bookingfrontend	no	Vennligst skriv inn arrangør/ansvarlig søker
 please_enter_participants	bookingfrontend	no	Vennligst skriv inn estimert antall deltakere
 please_accept_terms	bookingfrontend	no	Vennligst godta vilkårene
+organization_calendar	bookingfrontend	no	Organisasjonskalender
+no_resources_found	bookingfrontend	no	Ingen ressurser funnet for den valgte datoen
