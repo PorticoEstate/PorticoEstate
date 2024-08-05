@@ -279,11 +279,10 @@
 
 			$_building_ids = $this->building_bo->find_buildings_used_by($organization_id)['results'];
 
-			$building_ids = array();
-			foreach ($_building_ids as $building_id)
-			{
-				$building_ids[] = $building_id['id'];
-			}
+            $building_ids = array();
+            foreach ($_building_ids as $building) {
+                $building_ids[] = $building['id'];
+            }
 
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $organization_id,
 				'active' => 1), 'results' => -1));
@@ -297,6 +296,7 @@
 			$bookings = $this->bo->organization_schedule($date, $organization_id, $building_ids, $group_ids);
 
 			$results = array();
+            $resources = array();
 
 			foreach ($bookings['results'] as &$booking)
 			{
@@ -305,14 +305,29 @@
 				array_walk($booking, array($this, 'item_link'));
 
 				$results[] = $booking;
+                if (isset($booking['resource_id']) && !isset($resources[$booking['resource_id']])) {
+                    $resources[$booking['resource_id']] = array(
+                        'id' => $booking['resource_id'],
+                        'name' => $booking['resource'],
+                        'building_name' => $booking['building_name'],
+                        'building_id' => $booking['building_id']
+                    );
+                }
 			}
-
-			$data = array
+            if (!empty($resources)) {
+                $towns = $this->building_bo->get_towns_for_buildings(array_column($resources, 'building_id'));
+            } else {
+                $towns = array();
+            }
+            $data = array
 			(
 				'ResultSet' => array(
 					"totalResultsAvailable" =>  count($results),
 					"Result" => $results
-				)
+				),
+                'resources' => array_values($resources),
+                'towns' => $towns
+
 			);
 
 			return $data;

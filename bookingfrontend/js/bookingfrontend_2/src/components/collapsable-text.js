@@ -2,6 +2,7 @@ import '../helpers/withAfterRender'
 
 ko.components.register('collapsable-text', {
     viewModel: function (params) {
+        const self = this;
         self.content = params.content
         self.descriptionExpanded = ko.observable(false);
 
@@ -21,6 +22,7 @@ ko.components.register('collapsable-text', {
             const elem = self.contentElement();
             if (!elem) {
                 return true;
+
             }
             console.log("setting active", elem.parentElement.scrollHeight, elem.parentElement.clientHeight)
             return (elem.parentElement.scrollHeight > elem.parentElement.clientHeight || elem.parentElement.scrollWidth > elem.parentElement.clientWidth)
@@ -41,7 +43,7 @@ ko.components.register('collapsable-text', {
         </div>
         <div class="col-sm-12 " data-bind="visible: isActive">
             <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
-                    data-bind="click: toggleDescription">
+                    data-bind="click: () => toggleDescription()">
                 <!-- ko if: descriptionExpanded() -->
                 <span><trans params="group: 'bookingfrontend',tag: 'show_less'"></span>
                 <!-- /ko -->
