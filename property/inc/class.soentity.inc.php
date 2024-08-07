@@ -3440,6 +3440,8 @@
 
 		function get_checklist_data($type_location_id, $item_id )
 		{
+			$type_location_id = (int) $type_location_id;
+			$item_id = (int) $item_id;
 			$sql = "SELECT DISTINCT stage_id, json_representation FROM fm_bim_item_checklist_data"
 			. " WHERE item_id = {$item_id} AND type_location_id = {$type_location_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
