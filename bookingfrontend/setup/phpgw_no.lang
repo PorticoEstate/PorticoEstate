@@ -646,3 +646,4 @@ please_enter_participants	bookingfrontend	no	Vennligst skriv inn estimert antall
 please_accept_terms	bookingfrontend	no	Vennligst godta vilkårene
 organization_calendar	bookingfrontend	no	Organisasjonskalender
 no_resources_found	bookingfrontend	no	Ingen ressurser funnet for den valgte datoen
+no_documents_to_accept	bookingfrontend	no	Det er ingen dokumenter å godkjenne for denne søknaden.
