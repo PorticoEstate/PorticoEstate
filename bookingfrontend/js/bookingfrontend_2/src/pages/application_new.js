@@ -475,10 +475,17 @@ function applicationModel() {
         }
 
         // Validate legal condition
-        if (!document.querySelector('#regulation_documents input[name="accepted_documents[]"]:checked')) {
-            isValid = false;
-            showError('regulation_documents', trans('bookingfrontend', 'please_accept_terms'));
+        const documentInputs = document.querySelectorAll('#regulation_documents input[name="accepted_documents[]"]');
+        console.log(`found documents`, documentInputs)
+        if (documentInputs.length > 0) {
+            if (!document.querySelector('#regulation_documents input[name="accepted_documents[]"]:checked')) {
+                isValid = false;
+                showError('regulation_documents', trans('bookingfrontend', 'please_accept_terms'));
+            } else {
+                hideError('regulation_documents');
+            }
         } else {
+            // No documents to accept, so this check passes
             hideError('regulation_documents');
         }
 
@@ -663,14 +670,19 @@ $(document).ready(function () {
 });
 
 function validate_documents() {
+    const documentInputs = $('#regulation_documents input[name="accepted_documents[]"]');
+    if (documentInputs.length === 0) {
+        // No documents to validate, so return true
+        return true;
+    }
+
     var n = 0;
-    $('#regulation_documents input[name="accepted_documents[]"]').each(function () {
+    documentInputs.each(function () {
         if (!$(this).is(':checked')) {
             n++;
         }
     });
-    var v = (n == 0) ? true : false;
-    return v;
+    return n === 0;
 }
 
 function getDoc(checkedResources) {
@@ -689,46 +701,31 @@ function getDoc(checkedResources) {
     });
 }
 
+// Modified setDoc function
 function setDoc(data) {
+    if (!Array.isArray(data) || data.length === 0) {
+        // No documents to display
+        $("#regulation_documents").html('<p>' + trans('bookingfrontend', 'no_documents_to_accept') + '</p>');
+        return;
+    }
+
     var child = '';
-    var checked;
-    var value;
     for (var i = 0; i < data.length; i++) {
-        checked = '';
-        if (initialAcceptedDocs != null) {
-            if (initialAcceptedDocs[i] == data[i].id) {
-                checked = ' checked= "checked"';
-            }
+        var checked = '';
+        if (initialAcceptedDocs != null && initialAcceptedDocs[i] == data[i].id) {
+            checked = ' checked="checked"';
         }
 
-        value = data[i].id;
-
-        // OLD Checkbox
-        // child += "<div>";
-        // child += '<label class="check-box-label d-inline"><input name="accepted_documents[]" value="' + value + '" class="form-check-input" type="checkbox"' + checked + '><span class="label-text">';
-        // child += '</span></label>';
-        // child += '<a class="d-inline termAcceptDocsUrl" target="_blank"  href="' + RemoveCharacterFromURL(data[i].link, 'amp;') + '">' + data[i].name + '</a>';
-        // child += '<i class="fas fa-external-link-alt"></i>';
-        // child += "</div>";
+        var value = data[i].id;
 
         child += '<div class="col-12 mb-4">';
         child += '<label class="choice">';
         child += '<input name="accepted_documents[]" value="' + value + '" type="checkbox"' + checked + '>';
-        child += '<a class="d-inline termAcceptDocsUrl" target="_blank"  href="' + RemoveCharacterFromURL(data[i].link, 'amp;') + '">' + data[i].name + '</a>';
+        child += '<a class="d-inline termAcceptDocsUrl" target="_blank" href="' + RemoveCharacterFromURL(data[i].link, 'amp;') + '">' + data[i].name + '</a>';
         child += '<span class="choice__check">';
         child += '</span>';
         child += '</label>';
-        // child += '<i class="fas fa-external-link-alt"></i>';
         child += "</div>";
-
-        // <div className="col-12 mb-4">
-        // 	<label className="choice">
-        // 		<input type="checkbox" name="multiHall"/>
-        // 		Leiepriser
-        // 		<span className="choice__check"></span>
-        // 	</label>
-        // </div>
-
     }
     $("#regulation_documents").html(child);
 }
