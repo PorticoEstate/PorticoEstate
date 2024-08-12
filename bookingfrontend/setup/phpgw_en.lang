@@ -647,3 +647,4 @@ please_enter_participants	bookingfrontend	en	Please enter the estimated number o
 please_accept_terms	bookingfrontend	en	Please accept the terms and conditions
 organization_calendar	bookingfrontend	en	Organization Calendar
 no_resources_found	bookingfrontend	en	No resources found for the given date
+no_documents_to_accept	bookingfrontend	en	There are no documents to accept for this application.
