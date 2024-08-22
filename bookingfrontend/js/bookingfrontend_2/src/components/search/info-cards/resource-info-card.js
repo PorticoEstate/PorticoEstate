@@ -1,7 +1,6 @@
 // resource-info-card.js
 
 
-import {getDateFromSearch} from "../search-util";
 
 function ResourceInfoCardViewModel(params) {
     this.resource = params.resource;
@@ -16,7 +15,7 @@ function ResourceInfoCardViewModel(params) {
 
     this.filterGroups = params.filterGroups ||undefined
 
-    this.dateString = getDateFromSearch(this.date());
+
     this.cleanTownName = function (townName) {
         return townName.split('\n').map(line => {
             // Check if 'Bydel' is in the line
@@ -112,14 +111,14 @@ ko.components.register('resource-info-card', {
                 </button>
                 <div class="js-slidedown-content slidedown__content" data-bind="withAfterRender: { afterRender: addSlideDown}">
                     <!-- ko ifnot: disableText -->
-                
+
                     <div>
                         <p data-bind="html: description_text"></p>
                     </div>
                     <!-- /ko -->
-                    
-                    <!-- ko if: expanded -->
-                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: dateString, nointeraction: static, filterGroups: filterGroups"></pe-calendar>
+
+                    <!-- ko if: expanded && date -->
+                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: date, nointeraction: static, filterGroups: filterGroups"></pe-calendar>
                     <!-- /ko -->
                 </div>
             </div>
