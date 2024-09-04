@@ -218,7 +218,14 @@ class PECalendar {
         this.filterGroups = filterGroups;
         // Initialize the date of the instance
         if (dateString) {
-            this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale(luxon.Settings.defaultLocale));
+            if (ko.isObservable(dateString)) {
+                dateString.subscribe((v) => this.currentDate(DateTime.fromJSDate(new Date(getDateFromSearch(v))).setLocale(luxon.Settings.defaultLocale)) )
+                this.currentDate(DateTime.fromJSDate(new Date(getDateFromSearch(dateString()))).setLocale(luxon.Settings.defaultLocale));
+
+            } else {
+
+                this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale(luxon.Settings.defaultLocale));
+            }
         } else {
             this.currentDate(DateTime.now().setLocale(luxon.Settings.defaultLocale));
         }
@@ -668,7 +675,7 @@ class PECalendar {
         // const allocationIds = [];
         let filteredEvents = this.events().filter(event => !allocationIds.includes(event.id));
 
-        if(this.filterGroups !== undefined && this.filterGroups() !== undefined) {
+        if (this.filterGroups !== undefined && this.filterGroups() !== undefined) {
             // console.log('fiiiiilter', filteredEvents, this.filterGroups());
             filteredEvents = filteredEvents.filter((a) => this.filterGroups().includes(a.group_id))
         }
@@ -1094,7 +1101,7 @@ class PECalendar {
 
         }
 
-        if(this.disableInteraction) {
+        if (this.disableInteraction) {
             return;
         }
 
@@ -1722,13 +1729,13 @@ if (globalThis['ko']) {
                         </div>
                     </div>
                     <!-- /ko -->
-                    <div class="select_building_resource"  data-bind="hidden: disableInteraction">
+                    <div class="select_building_resource" data-bind="hidden: disableInteraction">
                         <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
                             <select
-                                    class="js-select-basic"
-                                    data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
+                                class="js-select-basic"
+                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
                             </select>
                             <!-- /ko -->
 
@@ -1750,7 +1757,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                        class="pill-cross"></i></button>
+                                    class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -1865,13 +1872,13 @@ if (globalThis['ko']) {
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
                              data-bind="
-                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}), 
+                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}),
                                  style: {
                                         gridRow: $parent.getGridRow($data.date, $data.event),
                                         gridColumn: $parent.getGridColumn($data.date, $data)
-                                 }, 
-                                 attr: { 'data-id': $data.event.id }, 
-                                 assignHeight: $data.heightREM, 
+                                 },
+                                 attr: { 'data-id': $data.event.id },
+                                 assignHeight: $data.heightREM,
                                  click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? (e,c) => $parent.togglePopper(e,c) : undefined
                             ">
                             <div class="event-text">
@@ -2156,4 +2163,18 @@ function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
         newURL += '&phpgw_return_as=json';
     }
     return newURL;
+}
+
+
+function getDateFromSearch(dateString) {
+    // Normalize the divider to a hyphen
+    const normalizedDateStr = dateString.replace(/[.\/]/g, '-');
+
+    // Split the date into its components
+    const [day, month, year] = normalizedDateStr.split('-').map(num => parseInt(num, 10));
+
+    // Create a DateTime object
+    const dt = luxon.DateTime.local(year, month, day);
+
+    return dt.toJSDate();
 }

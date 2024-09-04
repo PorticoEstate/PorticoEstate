@@ -2155,8 +2155,17 @@
 								$direct_booking = true;
 							}
 						}
-
-						if($direct_booking)
+						/**
+						 * End Direct booking, check for collision
+						 */
+						if($collision_dates && $direct_booking)
+						{
+							phpgwapi_cache::message_set('Det er desverre opptatt', 'error');
+							$GLOBALS['phpgw']->db->transaction_abort();
+							$this->delete_partial($application['id']);
+							self::redirect(array());
+						}
+						else if($direct_booking)
 						{
 							$application['status'] = 'ACCEPTED';
 							$receipt = $this->bo->update($application);
@@ -2220,16 +2229,6 @@
 									phpgwapi_cache::message_set($error_values, 'error');
 								}
 							}
-						}
-						/**
-						 * End Direct booking, check for collision
-						 */
-						else if($collision_dates)
-						{
-							phpgwapi_cache::message_set('Det er desverre opptatt', 'error');
-							$GLOBALS['phpgw']->db->transaction_abort();
-							$this->delete_partial($application['id']);
-							self::redirect(array());
 						}
 						else
 						{
