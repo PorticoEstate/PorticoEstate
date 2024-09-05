@@ -341,7 +341,7 @@
 			<label>
 				<xsl:value-of select="lang_to"/>
 			</label>
-			<input type="text" size="20" maxlength="20" name="p_num_text" value="{value_p_num}">
+			<input type="text" name="p_num_text" value="{value_p_num}" class= "pure-input-3-4">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_to_status_text"/>
 				</xsl:attribute>
@@ -351,7 +351,7 @@
 			<label>
 				<xsl:value-of select="lang_message"/>
 			</label>
-			<textarea cols="39" rows="5" name="message" id="ta_sms_content" onKeyUp="javascript: SmsCountKeyUp({value_max_length});" onKeyDown="javascript: SmsCountKeyDown({value_max_length});" wrap="virtual">
+			<textarea class="pure-input-3-4" cols="39" rows="5" name="message" id="ta_sms_content" onKeyUp="javascript: SmsCountKeyUp({value_max_length});" onKeyDown="javascript: SmsCountKeyDown({value_max_length});" wrap="virtual">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_message_status_text"/>
 				</xsl:attribute>

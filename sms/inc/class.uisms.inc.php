@@ -414,7 +414,7 @@
 
 			if (is_array($values))
 			{
-				$values['p_num_text'] = get_var('p_num_text', array('POST'));
+				$values['p_num_text'] = phpgw::get_var('p_num_text','string', 'POST');
 				$values['message'] = phpgw::get_var('message');
 				$values['msg_flash'] = phpgw::get_var('msg_flash', 'bool', 'POST');
 				$values['msg_unicode'] = phpgw::get_var('msg_unicode', 'bool', 'POST');
@@ -436,14 +436,12 @@
 					if (!$receipt['error'])
 					{
 						$from = 'outbox';
+						$values['p_num_text'] = explode(',', $p_num);
 						$receipt = $this->bo->send_sms($values);
 						$sms_id = $receipt['sms_id'];
 
-						if ($values['save'])
-						{
-							$GLOBALS['phpgw']->session->appsession('session_data', 'sms_send_receipt', $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'sms.uisms.' . $from));
-						}
+						$GLOBALS['phpgw']->session->appsession('session_data', 'sms_send_receipt', $receipt);
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'sms.uisms.' . $from));
 					}
 				}
 				else
