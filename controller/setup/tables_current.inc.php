@@ -101,6 +101,7 @@
 				'assigned_to' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
 				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'dispatched' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
