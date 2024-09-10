@@ -1665,3 +1665,19 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.73';
+	function controller_upgrade0_1_73()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list', 'dispatched', array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => True
+		));
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.74';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
