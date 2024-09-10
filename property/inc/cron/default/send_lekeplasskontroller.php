@@ -52,7 +52,7 @@ class send_lekeplasskontroller extends property_cron_parent
 		$this->uicheck_list	 = CreateObject('controller.uicheck_list');
 		$this->socheck_list = CreateObject('controller.socheck_list');
 		$this->config		 = createObject('phpgwapi.config', 'controller')->read();
-		$this->recipient =	'Sigurd.Nes@Bergen.kommune.no';//$this->config['report_email'];
+		$this->recipient =	$this->config['report_email'];
 		$this->date_from =	(int)strtotime('2024-08-30'); //strtotime(date('Y-m-d', strtotime('-1 month')));
 		$this->send			 = CreateObject('phpgwapi.send');
 	}
@@ -117,6 +117,11 @@ class send_lekeplasskontroller extends property_cron_parent
 
 	function process_checklist($checlists)
 	{
+		if (!$this->recipient)
+		{
+			phpgwapi_cache::message_set("Missing recipient email address", 'error');
+			return false;
+		}
 		foreach ($checlists as $check_list_id)
 		{
 			if ($this->send_report($check_list_id))
@@ -163,7 +168,12 @@ class send_lekeplasskontroller extends property_cron_parent
 		$check_list = $this->socheck_list->get_single($check_list_id);
 		$company_name = $this->get_org_unit($check_list->get_location_code());
 
-		if($this->debug)
+		if (!$company_name)
+		{
+			return false;
+		}
+
+		if ($this->debug)
 		{
 			_debug_array("Sending report for {$company_name} for checklist {$check_list_id} to $this->recipient");
 			return false;
