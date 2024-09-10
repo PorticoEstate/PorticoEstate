@@ -61,7 +61,7 @@ class send_lekeplasskontroller extends property_cron_parent
 	{
 		$start = time();
 
-		set_time_limit(120);
+		set_time_limit(0);
 
 
 		$checlists = $this->get_checlists();
