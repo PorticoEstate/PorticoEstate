@@ -45,16 +45,16 @@ RUN if [ "${INSTALL_MSSQL}" = "true" ]; then \
 
 # Configure locales
 RUN locale-gen --purge en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 
 
 # Apache2
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APP_DOCUMENT_ROOT /var/www/html
+ENV APACHE_RUN_USER=www-data
+ENV APACHE_RUN_GROUP=www-data
+ENV APACHE_LOG_DIR=/var/log/apache2
+ENV APP_DOCUMENT_ROOT=/var/www/html
 
 EXPOSE 80
 
@@ -66,8 +66,8 @@ RUN a2enmod ssl
 #RUN a2ensite default-ssl.conf
 
 # PHP
-ENV PHP_INI ""
-ENV XDEBUG_REMOTE_PORT ""
+ENV PHP_INI=""
+ENV XDEBUG_REMOTE_PORT=9003
 
 RUN if [ "${INSTALL_XDEBUG}" = "true" ]; then \
  echo 'xdebug.mode=debug,develop' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
