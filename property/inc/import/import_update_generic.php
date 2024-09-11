@@ -179,7 +179,7 @@
 //---------produce data_set
 
 			$location_id = $this->location_id;
-			$sql		 = "SELECT fm_bim_item.id FROM fm_bim_item WHERE {$filtermethod}";
+			$sql		 = "SELECT id, json_representation FROM fm_bim_item WHERE {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$type = (int)$this->bim_type_id;
@@ -190,10 +190,15 @@
 			{
 				$this->warnings[] = "ID finnes fra før: {$id}, oppdaterer";
 
+				$json_representation = $this->db->f('json_representation');
+				$original_values		 = json_decode($json_representation, true);
+
 				foreach ($remove_keys as $remove_key)
 				{
 					unset($value_set[$remove_key]);
 				}
+
+				$value_set = array_merge($original_values, $value_set);
 
 //				phpgw::import_class('phpgwapi.xmlhelper');
 //
