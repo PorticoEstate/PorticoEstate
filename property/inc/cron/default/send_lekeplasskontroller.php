@@ -208,16 +208,36 @@ class send_lekeplasskontroller extends property_cron_parent
 			);
 		}
 
-		$to			 = 	$this->recipient;
-		$subject	 = 'Avviksrapport::' . $company_name;
-		$body		 = 'Sjå vedlegg';
+
+		$component = $this->get_component((int)$check_list->get_location_id(), (int)$check_list->get_component_id());
+		$to			 = 	!empty($component['postmottak']) ? $component['postmottak'] : $this->recipient;
+		$saksnr_bk360	 = 	!empty($component['saksnr_bk360']) ? $component['saksnr_bk360'] : '';
+
+		if ($saksnr_bk360)
+		{
+			$subject	 = 'Avviksrapport::' . $company_name . '::Saksnummer ' . $saksnr_bk360;
+			$body		 = <<<HTML
+		<p>Vedlegget hører til sak {$saksnr_bk360}.</p>
+		<p>Det jobbes med en integrasjon for direkte levering, men inntil videre kommer rapporten som et vedlegg til denne eposten.</p>
+		<p>Link til sak i BK360: <a href="https://bk360.adm.bgo/locator/Common/Search/Everything?searchstring={$saksnr_bk360}">{$saksnr_bk360}</a></p>
+		<p>Med vennlig hilsen</p>
+		<p>Bymiljøetaten</p>
+HTML;
+		}
+		else
+		{
+			$subject	 = 'Avviksrapport::' . $company_name;
+			$body		 = 'Sjå vedlegg';
+		}
+
 		$from_email	 = isset($this->config['email_sender']) && $this->config['email_sender'] ? $this->config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 		$from_name	 = 'Bymiljøetaten';
 
+		$bcc = 'Sigurd.Nes@Bergen.kommune.no';
 		$error = false;
 		try
 		{
-			$rcpt = $this->send->msg('email', $to, $subject, $body, '', $cc = '', $bcc	 = '', $from_email, $from_name, 'html', '', $attachments);
+			$rcpt = $this->send->msg('email', $to, $subject, $body, '', $cc = '', $bcc, $from_email, $from_name, 'html', '', $attachments);
 			if (!$rcpt)
 			{
 				$error = true;
@@ -243,5 +263,13 @@ class send_lekeplasskontroller extends property_cron_parent
 		{
 			return false;
 		}
+	}
+
+	function get_component($location_id, $component_id)
+	{
+		$sql = "SELECT json_representation FROM fm_bim_item WHERE location_id = $location_id AND id = $component_id";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$this->db->next_record();
+		return json_decode($this->db->f('json_representation'), true);
 	}
 }
