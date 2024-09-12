@@ -167,15 +167,16 @@ class send_lekeplasskontroller extends property_cron_parent
 	{
 		$check_list = $this->socheck_list->get_single($check_list_id);
 		$company_name = $this->get_org_unit($check_list->get_location_code());
+		$component = $this->get_component((int)$check_list->get_location_id(), (int)$check_list->get_component_id());
 
-		if (!$company_name)
+		if (empty($component['postmottak']))
 		{
 			return false;
 		}
 
 		if ($this->debug)
 		{
-			_debug_array("Sending report for {$company_name} for checklist {$check_list_id} to $this->recipient");
+			_debug_array("Sending report for {$company_name} for checklist {$check_list_id} to {$component['postmottak']}");
 			return false;
 		}
 
@@ -209,7 +210,6 @@ class send_lekeplasskontroller extends property_cron_parent
 		}
 
 
-		$component = $this->get_component((int)$check_list->get_location_id(), (int)$check_list->get_component_id());
 		$to			 = 	!empty($component['postmottak']) ? $component['postmottak'] : $this->recipient;
 		$saksnr_bk360	 = 	!empty($component['saksnr_bk360']) ? $component['saksnr_bk360'] : '';
 
@@ -224,10 +224,18 @@ class send_lekeplasskontroller extends property_cron_parent
 		<p>Bymiljøetaten</p>
 HTML;
 		}
-		else
+		else if($company_name)
 		{
 			$subject	 = 'Avviksrapport::' . $company_name;
 			$body		 = 'Sjå vedlegg';
+		}
+		else
+		{
+			$subject	 = 'Avviksrapport::Lekeplass ' . $component['navn'];
+			$body		 = <<<HTML
+				<p>Kontroll av lekeplass utført av Bymiljøetaten.</p>
+				<p>Sjå vedlegg</p>
+				HTML;
 		}
 
 		$from_email	 = isset($this->config['email_sender']) && $this->config['email_sender'] ? $this->config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
