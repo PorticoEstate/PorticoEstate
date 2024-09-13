@@ -363,6 +363,9 @@
 								<th>
 									<h5>Siste rapportdato</h5>
 								</th>
+								<th>
+									<h5>Avlevert</h5>
+								</th>
 
 								<xsl:choose>
 									<xsl:when test="condition_degree =1">
@@ -446,6 +449,8 @@
 								</td>
 								<td class="text-center">
 									<xsl:value-of select="php:function('lang', 'sum')"/>
+								</td>
+								<td>
 								</td>
 								<td>
 								</td>
@@ -1173,6 +1178,9 @@
 		</td>
 		<td>
 			<xsl:value-of select="php:function('date', $date_format, number($completed_date))"/>
+		</td>
+		<td>
+			<xsl:value-of select="dispatched_date"/>
 		</td>
 		<xsl:for-each select="findings_options">
 			<td class="text-center">
