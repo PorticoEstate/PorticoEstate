@@ -436,6 +436,11 @@
 
 			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows, null, null, $limit_date, $selected_inspectors);
 
+			foreach ($historic_check_lists as &$check_list)
+			{
+				$check_list['dispatched_date'] = $GLOBALS['phpgw']->common->show_date($check_list['dispatched_date_ts'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			}
+
 			return $historic_check_lists;
 		}
 

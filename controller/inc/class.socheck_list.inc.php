@@ -1197,7 +1197,7 @@
 
 			$sql = "SELECT DISTINCT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment,"
 				. " deadline, original_deadline, planned_date, completed_date, cl.assigned_to,";
-			$sql .= " cl.component_id as cl_component_id, cl.location_id as cl_location_id,"
+			$sql .= " cl.component_id as cl_component_id, cl.location_id as cl_location_id,dispatched as dispatched_date_ts,"
 				. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases,num_corrected_cases,"
 				. " cl.serie_id, cl.billable_hours, cs.repeat_type, fm_location1.loc1_name";
 			$sql .= " FROM controller_check_list cl";
@@ -1290,7 +1290,8 @@
 					'assigned_to'		 => $this->db->f('assigned_to'),
 					'serie_id'			 => $this->db->f('serie_id'),
 					'repeat_type'		 => $this->db->f('repeat_type'),
-					'billable_hours'	 => (float) $this->db->f('billable_hours')
+					'billable_hours'	 => (float) $this->db->f('billable_hours'),
+					'dispatched_date_ts' => $this->db->f('dispatched_date_ts'),
 				);
 			}
 
