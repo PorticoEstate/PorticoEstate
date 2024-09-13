@@ -268,9 +268,11 @@
 				$db->query($sql);
 				while ($db->next_record())
 				{
+					$wday = $db->f('wday');
+
 					$candidates[$check_date][] = array(
 						'date' => $check_date,
-						'wday' => $db->f('wday'),
+						'wday' => $wday == 7 ? 0 : $wday,
 						'timespan' => $db->f('timespan'),
 						'boundary_from' => $db->f('boundary_from'),
 						'boundary_to' => $db->f('boundary_to'),
@@ -290,7 +292,7 @@
 				foreach ($data_set as &$entry)
 				{
 
-					$sql = "SELECT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (bo.to_ - bo.from_)) as timespan,
+					$sql = "SELECT DISTINCT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (bo.to_ - bo.from_)) as timespan,
 						EXTRACT(EPOCH FROM (bo.from_)) as from_, EXTRACT(EPOCH FROM (bo.to_)) as to_
 					FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu, bb_booking_resource br, bb_resource re
 					WHERE ba.agegroup_id = ag.id
@@ -307,7 +309,7 @@
 					AND EXTRACT(DOW FROM bo.from_) = {$entry['wday']}
 					AND (ba.male > 0 OR ba.female > 0)
 					UNION
-					SELECT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (ev.to_ - ev.from_)) as timespan,
+					SELECT DISTINCT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (ev.to_ - ev.from_)) as timespan,
 						EXTRACT(EPOCH FROM (ev.from_)) as from_, EXTRACT(EPOCH FROM (ev.to_)) as to_
 					FROM bb_event ev
 					INNER JOIN bb_event_agegroup ea ON ea.event_id = ev.id
