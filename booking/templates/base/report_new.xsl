@@ -1,8 +1,9 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <style type="text/css">
+<xsl:template match="data"
+	xmlns:php="http://php.net/xsl">
+	<style type="text/css">
         #agegroup td {padding: 0 0.3em;}
-    </style>
-    <!--div id="content">
+	</style>
+	<!--div id="content">
 
 	<dl class="form">
 		<dt class="heading"><xsl:value-of select="php:function('lang', 'New report')"/></dt>
@@ -22,9 +23,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'what')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'what')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -91,9 +92,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Where')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Where')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -105,7 +106,7 @@
 								<ul id= "variable_vertical" style="display:inline-block;list-style:none;padding:0px;margin:0px;">
 									<li>
 										<label>
-											<input id="check_all_buildings" type="checkbox" value="1" name="all_buildings" >
+											<input id="check_all_buildings" type="checkbox" value="1" name="all_buildings">
 											</input>
 											<xsl:value-of select="php:function('lang', 'All')" />
 										</label>
@@ -141,9 +142,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'When?')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'When?')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-g">
@@ -181,8 +182,8 @@
 										</div>
 									</div>
 
-									<div class="pure-g" >
-										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1" >
+									<div class="pure-g">
+										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1">
 											<h4>
 												<xsl:value-of select="php:function('lang', 'start time')" />
 											</h4>
@@ -194,8 +195,11 @@
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
 											:
 										</div>
-										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" id="start_minute" name="start_minute" type="text"  value="00" readonly="true"></input>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
+											<select id="start_minute" name="start_minute">
+												<option value="00">00</option>
+												<option value="30">30</option>
+											</select>
 										</div>
 
 										<div class="pure-u-lg-5-5 pure-u-md-1-1 pure-u-sm-1-1">
@@ -204,14 +208,17 @@
 											</h4>
 										</div>
 
-										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text"  value="23"></input>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
+											<input maxlength="2" size="2" class="pure-input" id="end_hour" name="end_hour" type="text" value="23"></input>
 										</div>
 										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" style="text-align:center;">
 											:
 										</div>
-										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12" >
-											<input maxlength="2" size="2" class="pure-input" id="end_minute" name="end_minute" type="text"  value="00" readonly="true"></input>
+										<div class="pure-u-lg-1-24 pure-u-md-1-12 pure-u-sm-1-12">
+											<select class="pure-input" id="end_minute" name="end_minute">
+												<option value="00">00</option>
+												<option value="30">30</option>
+											</select>
 										</div>
 									</div>
 
@@ -227,7 +234,7 @@
 									<xsl:for-each select="report/days">
 										<li>
 											<label>
-												<input type="checkbox" value="{id}" name="weekdays[]" >
+												<input type="checkbox" value="{id}" name="weekdays[]">
 													<xsl:attribute name="data-validation">checkbox_group</xsl:attribute>
 													<xsl:attribute name="data-validation-qty">min1</xsl:attribute>
 													<!--xsl:if test="selected = 1"-->
@@ -248,9 +255,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'variables')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'variables')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-g">
@@ -264,7 +271,7 @@
 										<xsl:for-each select="report/variables_horizontal">
 											<li>
 												<label>
-													<input type="radio" value="{id}" name="variable_horizontal" >
+													<input type="radio" value="{id}" name="variable_horizontal">
 														<xsl:if test="selected = 1">
 															<xsl:attribute name="checked">checked</xsl:attribute>
 														</xsl:if>
@@ -286,7 +293,7 @@
 										<xsl:for-each select="report/variables_vertical">
 											<li>
 												<label>
-													<input type="radio" value="{id}" name="variable_vertical" >
+													<input type="radio" value="{id}" name="variable_vertical">
 														<xsl:if test="selected = 1">
 															<xsl:attribute name="checked">checked</xsl:attribute>
 														</xsl:if>
@@ -319,5 +326,5 @@
 	<script type="text/javascript">
 		var initialSelection = <xsl:value-of select="report/resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type', 'Select a building first')"/>;
-	</script>
+</script>
 </xsl:template>
