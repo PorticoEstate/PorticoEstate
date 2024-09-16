@@ -189,10 +189,10 @@ class send_lekeplasskontroller extends property_cron_parent
 		$check_list = $this->socheck_list->get_single($check_list_id);
 		$company_name = $this->get_org_unit($check_list->get_location_code());
 		$component = $this->get_component((int)$check_list->get_location_id(), (int)$check_list->get_component_id());
-
+		$component_id = $check_list->get_component_id();
 		if (empty($component['postmottak']))
 		{
-			phpgwapi_cache::message_set("Missing recipient email address for checklist {$check_list_id}", 'error');
+			phpgwapi_cache::message_set("Missing recipient email address for {$component['navn']}, id {$component_id}", 'error');
 			return false;
 		}
 
