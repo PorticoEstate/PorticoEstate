@@ -292,22 +292,18 @@
 				foreach ($data_set as &$entry)
 				{
 
-					$sql = "SELECT DISTINCT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (bo.to_ - bo.from_)) as timespan,
-						EXTRACT(EPOCH FROM (bo.from_)) as from_, EXTRACT(EPOCH FROM (bo.to_)) as to_
-					FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu, bb_booking_resource br, bb_resource re
-					WHERE ba.agegroup_id = ag.id
-					AND ba.booking_id = bo.id
-					AND br.booking_id = bo.id
+					$sql = "SELECT DISTINCT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (al.to_ - al.from_)) as timespan,
+						EXTRACT(EPOCH FROM (al.from_)) as from_, EXTRACT(EPOCH FROM (al.to_)) as to_
+					FROM bb_allocation al, bb_season se, bb_building bu, bb_allocation_resource br, bb_resource re
+					WHERE br.allocation_id = al.id
 					AND br.resource_id = re.id
-					AND bo.allocation_id = al.id
 					AND al.season_id = se.id
 					AND se.building_id = bu.id
-					AND ag.active = 1
-					AND date_trunc('day' ,bo.from_) >= to_date('{$check_date}' ,'YYYY-MM-DD')
-					AND date_trunc('day' ,bo.from_) <= to_date('$check_date', 'YYYY-MM-DD')
+					AND al.active = 1
+					AND date_trunc('day' ,al.from_) >= to_date('{$check_date}' ,'YYYY-MM-DD')
+					AND date_trunc('day' ,al.from_) <= to_date('$check_date', 'YYYY-MM-DD')
 					AND re.id = {$entry['resource_id']}
-					AND EXTRACT(DOW FROM bo.from_) = {$entry['wday']}
-					AND (ba.male > 0 OR ba.female > 0)
+					AND EXTRACT(DOW FROM al.from_) = {$entry['wday']}
 					UNION
 					SELECT DISTINCT bu.id as building_id, bu.name, re.id AS resource_id, re.name AS resource_name, EXTRACT(EPOCH FROM (ev.to_ - ev.from_)) as timespan,
 						EXTRACT(EPOCH FROM (ev.from_)) as from_, EXTRACT(EPOCH FROM (ev.to_)) as to_
