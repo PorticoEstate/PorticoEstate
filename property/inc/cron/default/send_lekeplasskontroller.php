@@ -94,34 +94,55 @@ class send_lekeplasskontroller extends property_cron_parent
 	function get_checlists()
 	{
 		$completed_date = $this->date_from;
-		$sql = "SELECT id, to_char(to_timestamp(completed_date),'YYYY-MM-DD') as ferdig_dato FROM controller_check_list 
-		WHERE control_id = 9 AND completed_date IS NOT NULL AND (num_open_cases IS NOT NULL AND num_open_cases > 0)
+		$sql = "SELECT id, to_char(to_timestamp(completed_date),'YYYY-MM-DD') as ferdig_dato, component_id FROM controller_check_list 
+		WHERE control_id = 9 AND completed_date IS NOT NULL 
 		AND completed_date > {$completed_date}
 		AND dispatched IS NULL
 		ORDER by completed_date ASC";
 
 		$this->db->query($sql, __LINE__, __FILE__);
 
-		$checlists = array();
-		$this->db->query($sql, __LINE__, __FILE__);
 		$this->db->next_record();
 
+		$values = array();
 		while ($this->db->next_record())
 		{
-			$checlists[] = (int)$this->db->f('id');
+			$values[] = array(
+				'id' => (int)$this->db->f('id'),
+				'componenet_id' => (int)$this->db->f('component_id')
+			);
 		}
 
+		$so_check_item = createObject('controller.socheck_item');
+
+		$checlists = array();
+
+		foreach ($values as $entry)
+		{
+			$open_check_items_and_cases	 = $so_check_item->get_check_items_with_cases($entry['id'], $_type = null, '', null, '');
+			$open_old_cases				 = $so_check_item->get_check_items_with_cases($entry['id'], $_type = null, 'open_or_waiting_old', null, '', $entry['component_id']);
+			$open_check_items_and_cases	 = array_merge($open_check_items_and_cases, $open_old_cases);
+
+			foreach ($open_check_items_and_cases as $check_item)
+			{
+				$cases_array = $check_item->get_cases_array();
+
+				foreach ($cases_array as $case)
+				{
+					if ($case->get_status() === 0)
+					{
+						$checlists[] = $entry['id'];
+						break 2; // Break out of two levels of nested loops
+					}
+				}
+			}
+		}
 		return $checlists;
 	}
 
 
 	function process_checklist($checlists)
 	{
-		if (!$this->recipient)
-		{
-			phpgwapi_cache::message_set("Missing recipient email address", 'error');
-			return false;
-		}
 		foreach ($checlists as $check_list_id)
 		{
 			if ($this->send_report($check_list_id))
@@ -171,6 +192,7 @@ class send_lekeplasskontroller extends property_cron_parent
 
 		if (empty($component['postmottak']))
 		{
+			phpgwapi_cache::message_set("Missing recipient email address for checklist {$check_list_id}", 'error');
 			return false;
 		}
 
