@@ -59,7 +59,7 @@
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 			}
-			else
+			else if(!phpgw::get_var('OIDC_pid', 'bool', 'SERVER'))
 			{
 				echo lang('Access denied');
 				$GLOBALS['phpgw']->common->phpgw_exit();
