@@ -173,4 +173,41 @@
 					return $hash === sha1($passwd . $salt);
 			}
 		}
+
+		function update_hash($account_id, $ssn)
+		{
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+
+			$sql = "SELECT phpgw_accounts.account_id, account_lid FROM phpgw_accounts"
+				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
+				. " WHERE account_data->>'ssn_hash' = '{$hash_safe}'";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$old_account_id = $GLOBALS['phpgw']->db->f('account_id');
+			$old_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
+
+			if($old_account_id && $old_account_id != $account_id)
+			{
+				$GLOBALS['phpgw']->db->query("SELECT account_lid FROM phpgw_accounts WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->next_record();
+				$new_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
+
+				$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, attempt to register duplicate ssn for old: %1, new: %2',
+					'p1' => $old_account_lid,
+					'p2' => $new_account_lid,
+					));
+
+				return;
+			}
+
+			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+			if (!$GLOBALS['phpgw']->db->next_record())
+			{
+				$data = json_encode(array('ssn_hash' => $hash_safe,'updated' => date('Y-m-d H:i:s')));
+				$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			}
+		}
+
 	}

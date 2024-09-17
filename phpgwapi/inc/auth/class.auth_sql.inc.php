@@ -53,7 +53,7 @@
 		{
 			$username = $GLOBALS['phpgw']->db->db_addslashes($username);
 
-			$sql = 'SELECT account_pwd FROM phpgw_accounts'
+			$sql = 'SELECT account_id, account_pwd FROM phpgw_accounts'
 				. " WHERE account_lid = '{$username}'"
 					. " AND account_status = 'A'";
 
@@ -63,8 +63,19 @@
 				return false;
 			}
 
+			$account_id = (int)$GLOBALS['phpgw']->db->f('account_id');
 			$hash = $GLOBALS['phpgw']->db->f('account_pwd', true);
-			return $this->verify_hash($passwd, $hash);
+			$authenticated =  $this->verify_hash($passwd, $hash);
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+
+			// skip anonymous users
+			if (!empty($_REQUEST['skip_remote']) && !$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
+			{
+				$this->update_hash($account_id, $ssn);
+				
+			}
+			return $authenticated;
 		}
 
 		/**
