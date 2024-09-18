@@ -19,7 +19,7 @@
 			$c = CreateObject('admin.soconfig', $location_id);
 
 			$section		 = 'braArkiv';
-			$location_url	 = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
+			$location_url	 = $c->config_data[$section]['location_url'];//'https://braarkiv.adm.bgo/service/services.asmx';
 			$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
 
@@ -41,6 +41,14 @@
 			$wdsl	 = "{$location_url}?WSDL";
 			$options = array();
 
+			$context	  = stream_context_create([
+				'ssl' => [
+					'verify_peer'	   => false,
+					'verify_peer_name' => false,
+				],
+			]);
+
+			$options[\Bra5WsdlClass::WSDL_STREAM_CONTEXT] = $context;
 			$options[Bra5WsdlClass::WSDL_URL]			 = $wdsl;
 			$options[Bra5WsdlClass::WSDL_ENCODING]		 = 'UTF-8';
 			$options[Bra5WsdlClass::WSDL_TRACE]			 = $this->debug;

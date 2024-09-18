@@ -49,7 +49,7 @@
 			$classname,
 			$input_file,
 			$file_map,
-			$all_files,$join;
+			$all_files, $join;
 
 		public function __construct()
 		{
@@ -65,10 +65,10 @@
 
 			$c = CreateObject('admin.soconfig', $location_id);
 
-			$section		 = 'braArkiv';
-			$location_url	 = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
-			$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
-			$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
+			$section	   = 'braArkiv';
+			$location_url  = $c->config_data[$section]['location_url'];//'https://braarkiv.adm.bgo/service/services.asmx';
+			$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
+			$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
 
 			$this->classname	 = "FDV EBF";
 			$this->baseclassname = "Eiendomsarkiver";
@@ -88,10 +88,19 @@
 			$wdsl	 = "{$location_url}?WSDL";
 			$options = array();
 
-			$options[Bra5WsdlClass::WSDL_URL]			 = $wdsl;
-			$options[Bra5WsdlClass::WSDL_ENCODING]		 = 'UTF-8';
-			$options[Bra5WsdlClass::WSDL_TRACE]			 = $this->debug;
-			$options[Bra5WsdlClass::WSDL_SOAP_VERSION]	 = SOAP_1_2;
+			$context	  = stream_context_create([
+				'ssl' => [
+					'verify_peer'	   => false,
+					'verify_peer_name' => false,
+				],
+			]);
+
+			$options[\Bra5WsdlClass::WSDL_STREAM_CONTEXT] = $context;
+
+			$options[Bra5WsdlClass::WSDL_URL]		   = $wdsl;
+			$options[Bra5WsdlClass::WSDL_ENCODING]	   = 'UTF-8';
+			$options[Bra5WsdlClass::WSDL_TRACE]		   = $this->debug;
+			$options[Bra5WsdlClass::WSDL_SOAP_VERSION] = SOAP_1_2;
 
 			try
 			{
@@ -123,8 +132,8 @@
 		{
 			$receipt_section = $this->config->add_section(array
 				(
-				'name'	 => 'braArkiv',
-				'descr'	 => 'braArkiv'
+				'name'	=> 'braArkiv',
+				'descr' => 'braArkiv'
 				)
 			);
 
@@ -164,9 +173,9 @@
 			);
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', array(
-				'menuaction'	 => 'admin.uiconfig2.list_attrib',
-				'section_id'	 => $receipt_section['section_id'],
-				'location_id'	 => $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata')
+				'menuaction'  => 'admin.uiconfig2.list_attrib',
+				'section_id'  => $receipt_section['section_id'],
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata')
 				)
 			);
 		}
@@ -240,7 +249,6 @@
 				}
 				fclose($fp);
 
-
 				if ($this->all_files)
 				{
 					foreach ($this->all_files as $_file => $dummy)
@@ -257,10 +265,10 @@
 				}
 			}
 
-			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$msg						= 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
-			$this->receipt['message'][]	 = array('msg' => $msg);
+			$this->receipt['message'][] = array('msg' => $msg);
 		}
 
 		function get_document_test()
@@ -299,14 +307,14 @@
 		{
 			$path = rtrim($this->config->config_data['braArkiv']['pickup_catalog'], '/');
 
-			$data	 = $this->get_data($path);
-			$files	 = array();
+			$data  = $this->get_data($path);
+			$files = array();
 
 			foreach ($data as $entry)
 			{
-				$relative_file	 = ltrim($entry[7], '/');
-				$matrikkel_info	 = explode('/', $entry[0]);
-				$file			 = str_replace('\\', '/', "{$path}/{$relative_file}");//filnavn inkl fil-sti
+				$relative_file	= ltrim($entry[7], '/');
+				$matrikkel_info = explode('/', $entry[0]);
+				$file			= str_replace('\\', '/', "{$path}/{$relative_file}");//filnavn inkl fil-sti
 
 				$dokument_title = str_replace("{$path}/", '', $file);
 
@@ -343,9 +351,9 @@
 
 			$accepted_file_formats = array('xls', 'xlsx', 'ods', 'csv');
 
-			$dir_handle	 = opendir($path);
+			$dir_handle = opendir($path);
 			$input_file = '';
-			while ($file		 = readdir($dir_handle))
+			while ($file		= readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file("{$path}/{$file}"))
 				{
@@ -384,15 +392,14 @@
 			/** Load $inputFileName to a Spreadsheet Object  * */
 			$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($input_file);
 
-
 			$spreadsheet->setActiveSheetIndex(0);
 
 			$result = array();
 
-			$highestColumm		 = $spreadsheet->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumm);
-			$rows				 = $spreadsheet->getActiveSheet()->getHighestDataRow();
-			$first_cell_value	 = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($highestColumnIndex, 1)->getCalculatedValue();
+			$highestColumm		= $spreadsheet->getActiveSheet()->getHighestDataColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumm);
+			$rows				= $spreadsheet->getActiveSheet()->getHighestDataRow();
+			$first_cell_value	= $spreadsheet->getActiveSheet()->getCellByColumnAndRow($highestColumnIndex, 1)->getCalculatedValue();
 
 			$start = $first_cell_value ? 1 : 2; // Read the first line to get the headers out of the way
 
@@ -410,8 +417,8 @@
 
 				for ($j = 1; $j <= $highestColumnIndex; $j++)
 				{
-					$value		 = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
-					$_result[]	 = $value;
+					$value	   = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
+					$_result[] = $value;
 				}
 
 				if ($value)
@@ -431,21 +438,21 @@
 		 */
 		function process_file( $file_info )
 		{
-			$gnr				 = $file_info['gnr'];
-			$bnr				 = $file_info['bnr'];
-			$byggNummer			 = $file_info['byggNummer'];
-			$lokasjonskode		 = $file_info['Lokasjonskode'];
-			$file				 = str_replace('\\', '/', $file_info['file']);
-			$fileDokumentTittel	 = $file_info['fileDokumentTittel'];
-			$fileKategorier		 = $file_info['fileKategorier'];
-			$fileBygningsdeler	 = $file_info['fileBygningsdeler'];
-			$fileFag			 = $file_info['fileFag'];
-			$remark				 = $file_info['merknad'];
+			$gnr				= $file_info['gnr'];
+			$bnr				= $file_info['bnr'];
+			$byggNummer			= $file_info['byggNummer'];
+			$lokasjonskode		= $file_info['Lokasjonskode'];
+			$file				= str_replace('\\', '/', $file_info['file']);
+			$fileDokumentTittel = $file_info['fileDokumentTittel'];
+			$fileKategorier		= $file_info['fileKategorier'];
+			$fileBygningsdeler	= $file_info['fileBygningsdeler'];
+			$fileFag			= $file_info['fileFag'];
+			$remark				= $file_info['merknad'];
 
-			$path_parts	 = pathinfo($file);
-			$extension	 = $path_parts['extension'];
-			$path		 = $path_parts['dirname'];
-			$lock		 = basename($file) . '.lck';
+			$path_parts = pathinfo($file);
+			$extension	= $path_parts['extension'];
+			$path		= $path_parts['dirname'];
+			$lock		= basename($file) . '.lck';
 
 			if (is_file($file))
 			{
@@ -483,7 +490,7 @@
 		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $remark = '' )
 		{
 
-			$accepted_file_formats	 = array(
+			$accepted_file_formats = array(
 				'dwg',
 				'dxf',
 				'jpg',
@@ -496,7 +503,7 @@
 				'gif',
 //				'txt'
 			);
-			$extension				 = pathinfo($file, PATHINFO_EXTENSION);
+			$extension			   = pathinfo($file, PATHINFO_EXTENSION);
 
 			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
 			{
@@ -504,11 +511,11 @@
 				return false;
 			}
 
-			$file_date	 = date('Y-m-d', filemtime($file));
-			$document	 = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark);
+			$file_date = date('Y-m-d', filemtime($file));
+			$document  = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark);
 
-			$bra5ServiceCreate	 = new Bra5ServiceCreate();
-			$bra5CreateDocument	 = new Bra5StructCreateDocument($_assignDocKey		 = false, $this->secKey, $document);
+			$bra5ServiceCreate	= new Bra5ServiceCreate();
+			$bra5CreateDocument = new Bra5StructCreateDocument($_assignDocKey		= false, $this->secKey, $document);
 
 			if (!$bra5ServiceCreate->createDocument($bra5CreateDocument))
 			{
@@ -540,8 +547,8 @@
 		 */
 		public function write( $file, $document_id = 0 )
 		{
-			$ok			 = false;
-			$filename	 = basename($file);
+			$ok		  = false;
+			$filename = basename($file);
 
 			$bra5ServiceFile = new Bra5ServiceFile();
 
@@ -627,11 +634,11 @@
 			$dato->setDateValue($file_date);
 			$attribute_arr[] = $dato->build();
 
-			$dokumentkategorier	 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$dokumentkategorier = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 			$dokumentkategorier->setUsesLookupValues(true);
 			$dokumentkategorier->setName("Dokumentkategori");
 			$dokumentkategorier->setStringArrayValue(explode(";", $kategorier));
-			$attribute_arr[]	 = $dokumentkategorier->build();
+			$attribute_arr[]	= $dokumentkategorier->build();
 
 			$fagAttrib		 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 			$fagAttrib->setUsesLookupValues(true);
@@ -639,13 +646,13 @@
 			$fagAttrib->setStringArrayValue(explode(";", $fag));
 			$attribute_arr[] = $fagAttrib->build();
 
-			$bygningsdelAttrib	 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$bygningsdelAttrib = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 			$bygningsdelAttrib->setUsesLookupValues(true);
 			$bygningsdelAttrib->setName("Bygningsdel");
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
-			$attribute_arr[]	 = $bygningsdelAttrib->build();
+			$attribute_arr[]   = $bygningsdelAttrib->build();
 
-			if($remark)
+			if ($remark)
 			{
 				$merknad		 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 				$merknad->setName("Merknad");
@@ -672,7 +679,7 @@
 
 		function __construct( $_attribType )
 		{
-			$this->attribute	 = new Bra5StructAttribute($_usesLookupValues	 = false, $_attribType);
+			$this->attribute   = new Bra5StructAttribute($_usesLookupValues = false, $_attribType);
 		}
 
 		public function setUsesLookupValues( $_usesLookupValues )
@@ -730,8 +737,8 @@
 
 		public function setDateValue( $date )
 		{
-			$datoValue	 = new Bra5StructArrayOfAnyType();
-			$value		 = new SoapVar($date, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
+			$datoValue = new Bra5StructArrayOfAnyType();
+			$value	   = new SoapVar($date, XSD_STRING, "string", "http://www.w3.org/2001/XMLSchema");
 			$datoValue->setAnyType($value);
 			$this->attribute->setValue($datoValue);
 			return $this;

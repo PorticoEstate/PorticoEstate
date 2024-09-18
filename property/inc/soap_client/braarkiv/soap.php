@@ -88,7 +88,7 @@
 
 	$login			 = $c->config_data[$section]['anonymous_user'];
 	$passwd			 = $c->config_data[$section]['anonymous_pass'];
-	$location_url	 = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
+	$location_url	 = $c->config_data[$section]['location_url'];//'https://braarkiv.adm.bgo/service/services.asmx';
 	$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
 	$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
 	$classname		 = $c->config_data[$section]['arkd'];
