@@ -95,7 +95,7 @@
 				],
 			]);
 
-			$options[\Bra5WsdlClass::WSDL_STREAM_CONTEXT] = $context;
+			$options[Bra5WsdlClass::WSDL_STREAM_CONTEXT] = $context;
 
 			$options[Bra5WsdlClass::WSDL_URL]		   = $wdsl;
 			$options[Bra5WsdlClass::WSDL_ENCODING]	   = 'UTF-8';
