@@ -3337,7 +3337,7 @@ JS;
 
 				try
 				{
-					$this->bo->edit_field($data);
+					$ret = $this->bo->edit_field($data);
 				}
 				catch (Exception $e)
 				{
@@ -3347,7 +3347,7 @@ JS;
 					}
 				}
 
-				return;
+				return $ret ? "OK" : "ERROR";
 
 			}
 			else
