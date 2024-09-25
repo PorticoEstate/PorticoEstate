@@ -140,7 +140,8 @@
 								<!-- BEGIN login_additional_info -->
 								<div class="pure-control-group">
 									<label for="firstname">{lang_firstname}</label>
-									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" required="required"/>
+									<input type="hidden"/>
+									<input type="text" value="{firstname}" name="firstname" id="firstname" maxlength="100" required="required"/>
 								</div>
 								<div class="pure-control-group">
 									<label for="lastname">{lang_lastname}</label>
