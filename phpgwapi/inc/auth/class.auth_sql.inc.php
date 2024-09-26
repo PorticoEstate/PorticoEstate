@@ -68,9 +68,12 @@
 			$authenticated =  $this->verify_hash($passwd, $hash);
 
 			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+			$headers = getallheaders();
+			$ssn = !empty($headers['uid']) ? $headers['uid'] : $ssn;
+			$ssn = !empty($_SERVER['HTTP_UID']) ? $_SERVER['HTTP_UID'] : $ssn;
 
 			// skip anonymous users
-			if (!empty($_REQUEST['skip_remote']) && !$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
+			if (!$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
 			{
 				$this->update_hash($account_id, $ssn);
 				
