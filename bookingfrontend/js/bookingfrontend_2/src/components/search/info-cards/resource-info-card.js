@@ -1,5 +1,13 @@
 // resource-info-card.js
 
+ko.bindingHandlers.slidedownTarget = {
+    init: function(element, valueAccessor) {
+        var callback = valueAccessor();
+        if (typeof callback === 'function') {
+            callback(element);
+        }
+    }
+};
 
 
 function ResourceInfoCardViewModel(params) {
@@ -10,7 +18,6 @@ function ResourceInfoCardViewModel(params) {
     this.lang = params.lang;
     this.disableText = params.disableText || false;
     this.expanded = ko.observable(false);
-    this.slideDownTarget = ko.observable();
     this.static = params.static || false;
 
     this.filterGroups = params.filterGroups ||undefined
@@ -84,16 +91,15 @@ function ResourceInfoCardViewModel(params) {
         return [remoteInstance, `<span class="text-overline">${towns}</span>`, buildings].filter(Boolean).join(' • ');
     });
 
-    this.addSlideDown = (target)  => {
-        this.slideDownTarget(target)
-    }
+
     this.toggle = (data,clickEvent)  => {
         if(clickEvent.target?.tagName === 'A') {
             return true;
         }
+        const target = clickEvent.target.closest('.js-slidedown.slidedown').querySelector('.js-slidedown-content.slidedown__content');
         const expanded = !this.expanded();
 
-        expanded ? $(this.slideDownTarget()).slideDown(): $(this.slideDownTarget()).slideUp();
+        expanded ? $(target).slideDown(): $(target).slideUp();
 
         this.expanded(expanded);
         return false;
@@ -104,24 +110,38 @@ ko.components.register('resource-info-card', {
     viewModel: ResourceInfoCardViewModel,
     template: `
         <div class="col-12 mb-4">
-            <div class="js-slidedown slidedown">
-                <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false" data-bind="click: toggle">
-                    <span><div class="fa-solid fa-layer-group"></div> <span data-bind="text: resource.name"></span></span>
-                    <span class="slidedown__toggler__info" data-bind="html: infoText"></span>
-                </button>
-                <div class="js-slidedown-content slidedown__content" data-bind="withAfterRender: { afterRender: addSlideDown}">
-                    <!-- ko ifnot: disableText -->
+    <div class="js-slidedown slidedown">
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false" data-bind="click: toggle">
+            <span><div class="fa-solid fa-layer-group"></div> <span data-bind="text: resource.name"></span></span>
+            <span class="slidedown__toggler__info" data-bind="html: infoText"></span>
+        </button>
 
+            <div class="js-slidedown-content slidedown__content">
+                <!-- ko ifnot: disableText -->
                     <div>
                         <p data-bind="html: description_text"></p>
                     </div>
-                    <!-- /ko -->
+                <!-- /ko -->
 
-                    <!-- ko if: expanded && date -->
-                    <pe-calendar params="building_id: buildings[0].original_id || buildings[0].id, resource_id: resource.original_id || resource.id, instance: resource.remoteInstance?.webservicehost || '', dateString: date, nointeraction: static, filterGroups: filterGroups"></pe-calendar>
+                <!-- ko if: expanded -->
+                <!-- ko if: date -->
+                    <!-- ko component: {
+                        name: 'pe-calendar',
+                        params: {
+                            building_id: buildings[0].original_id || buildings[0].id,
+                            resource_id: resource.original_id || resource.id,
+                            instance: resource.remoteInstance?.webservicehost || '',
+                            dateString: date,
+                            nointeraction: static,
+                            filterGroups: filterGroups
+                        }
+                    } -->
                     <!-- /ko -->
-                </div>
+                    <!-- /ko -->
+                <!-- /ko -->
             </div>
-        </div>
+    </div>
+</div>
+
     `
 });
