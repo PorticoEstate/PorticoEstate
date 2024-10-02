@@ -171,7 +171,7 @@ class PECalendar {
     /**
      * @type {KnockoutObservable<number>} - Number of parts an hour is divided into. Represents time intervals.
      */
-    hourParts = ko.observable(1); // 1 = 1 per hour, 4 = 15 minutes intervals
+    hourParts = ko.observable(2); // 1 = 1 per hour, 4 = 15 minutes intervals
 
     /**
      * @type {KnockoutObservable<number>} - Number of css grid column parts for a given day.
@@ -649,6 +649,7 @@ class PECalendar {
         return intervals;
     }
 
+
     /**
      * Derives dates associated with an event.
      *
@@ -656,18 +657,22 @@ class PECalendar {
      * @returns {Array<{from: luxon.DateTime, to: luxon.DateTime}>} - An array of objects, each containing a "from" and "to" luxon.DateTime.
      */
     getEventDates(event) {
-        // Construct DateTime objects for event's start and end times
-        const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
-        const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-
-        // Check if the event has a "dates" property
-        return event?.dates
-            ? this.getIntervals(event.dates, this.startHour(), this.endHour())
-            : [{
+        if (event?.dates && event.dates.length > 0) {
+            return event.dates.map(date => ({
+                from: DateTime.fromISO(date.from_.replace(" ", "T")),
+                to: DateTime.fromISO(date.to_.replace(" ", "T"))
+            }));
+        } else {
+            // Construct DateTime objects for event's start and end times
+            const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
+            const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
+            return [{
                 from: dateFrom,
                 to: dateTo
             }];
+        }
     }
+
 
     resourceEvents = ko.computed(() => {
         // Filter events where any of the associated resources has an id that matches this.resource_id
@@ -743,8 +748,11 @@ class PECalendar {
         }
         const DBG = events[0].date.from.toISODate() === '2024-05-28';
 
-        // Assuming the day starts at 00:00 and ends at 24:00, creating intervals based on hourParts
-        let intervals = new Array(24 * this.hourParts()).fill(null).map(() => []);
+        // Calculate total intervals in a day based on hourParts
+        const totalIntervals = 24 * this.hourParts();
+
+        // Create intervals based on hourParts
+        let intervals = new Array(totalIntervals).fill(null).map(() => []);
 
         // Populate intervals with events
         events.forEach(event => {
@@ -755,9 +763,8 @@ class PECalendar {
             }
         });
 
-
         const occupiedColumns = new Map();
-        for (let i = 0; i < intervals.length; i++) {
+        for (let i = 0; i < totalIntervals; i++) {
             occupiedColumns.set(i, new Array(12).fill(false));
         }
 
@@ -795,8 +802,10 @@ class PECalendar {
         });
 
         if (DBG) {
-            console.log(intervals);
+            console.log('Intervals:', intervals);
+            console.log('Allocated events:', events);
         }
+
         return events;
     }
 
@@ -909,30 +918,22 @@ class PECalendar {
      * @returns {string} - Grid row span.
      */
     getGridRow(date, event) {
-        // Assuming hourParts = 1 for simplicity, but the logic can be adapted for different values
+        const startHour = date.from.hour;
+        const startMinute = date.from.minute;
+        const endHour = date.to.hour;
+        const endMinute = date.to.minute;
 
-        // Calculate the starting hour and adjust the start time to the beginning of the hour
-        const startHour = date.from.toFormat("H");
-        // Start minute fraction is always rounded down to the nearest hour
-        const startMinuteFraction = 0; // No rounding necessary with hourParts = 1, always start at the hour
+        const minutesPerPart = 60 / this.hourParts();
 
-        // Calculate the end time and adjust to cover until the end of the hour if there are any minutes past
-        const endHour = date.to.toFormat("H");
-        const endMinute = date.to.toFormat("m");
-        // If there are any minutes past the hour in the end time, round up to the next hour
-        const endMinuteFraction = (endMinute > 0) ? 1 : 0;
+        // Calculate start and end positions based on hourParts
+        const startPosition = (startHour - this.startHour()) * this.hourParts() + Math.floor(startMinute / minutesPerPart);
+        const endPosition = (endHour - this.startHour()) * this.hourParts() + Math.ceil(endMinute / minutesPerPart);
 
-        // Calculate grid row start, considering the calendar's starting hour
-        const calendarStartHour = this.startHour(); // Assuming this.startHour() is defined and returns the first hour displayed on the calendar
-        const gridRowStart = (startHour - calendarStartHour) * this.hourParts() + startMinuteFraction + 1; // "+ 1" because CSS grid rows start at 1
+        // Calculate the span
+        const span = endPosition - startPosition;
 
-        // Calculate grid row end
-        const gridRowEnd = ((endHour - calendarStartHour) + endMinuteFraction) * this.hourParts() + 1; // Adjust end position for partial hours
-
-        // Span is simply the difference
-        const gridRowSpan = gridRowEnd - gridRowStart;
-
-        return `${gridRowStart} / span ${gridRowSpan}`;
+        // Grid rows start at 1, so we add 1 to startPosition
+        return `${startPosition + 1} / span ${span}`;
     }
 
 
@@ -1070,19 +1071,19 @@ class PECalendar {
     handleTouchEvent = (_props, event) => {
         if (event.type === 'touchstart') {
             this.touchMoving(false);
-            console.log("touchStart", event);
+            // console.log("touchStart", event);
 
         }
         if (event.type === 'touchmove') {
             this.touchMoving(true);
-            console.log("touchMove", event);
+            // console.log("touchMove", event);
         }
     }
 
     handleMouseDown = (_allProps, event) => {
 
         if (this.touchMoving()) {
-            console.log("touchMoving");
+            // console.log("touchMoving");
             return;
         }
 
@@ -1159,7 +1160,7 @@ class PECalendar {
             }
 
             endTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds}`;
-            console.log(endTime)
+            // console.log(endTime)
         }
 
         const resource = this.resources()[this.resource_id()];
@@ -1406,7 +1407,7 @@ class PECalendar {
 
         let popperInfo;
         if (clickEvent.currentTarget.className.includes('dots-container')) {
-            console.log('gotDots', clickEvent);
+            // console.log('gotDots', clickEvent);
             popperInfo = clickEvent.currentTarget.nextElementSibling;
         } else if (clickEvent.currentTarget.className.includes('info')) {
             popperInfo = clickEvent.currentTarget;
@@ -1670,6 +1671,13 @@ class PECalendar {
         return name;
     }
 
+    formatEventTime(data) {
+        // console.log(data)
+        const fromTime = data.date.from.toFormat('HH:mm');
+        const toTime = data.date.to.toFormat('HH:mm');
+        return `${fromTime} - ${toTime}`;
+    }
+
     /**
      * Helper method to escape special characters for iCal format
      * @param {string} text
@@ -1685,7 +1693,7 @@ class PECalendar {
     generateICal() {
         const events = this.calendarEvents();
         let icalContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Your Product//EN\n';
-        console.log(events);
+        // console.log(events);
         events.forEach(eventData => {
             const event = eventData.event;
             const eventStart = DateTime.fromISO(`${event.date}T${event.from}`).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
@@ -1734,8 +1742,8 @@ if (globalThis['ko']) {
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
                             <select
-                                    class="js-select-basic"
-                                    data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
+                                class="js-select-basic"
+                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
                             </select>
                             <!-- /ko -->
 
@@ -1757,7 +1765,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                        class="pill-cross"></i></button>
+                                    class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -1948,7 +1956,7 @@ if (globalThis['ko']) {
                                     <!-- Event/Booking/Allocation Time -->
                                     <div>
                                         <span class="text-bold"><trans>bookingfrontend:clock_short</trans>:</span>
-                                        <span data-bind="text: $component.formatPillTimeInterval($parent.event)"></span>
+                                        <span data-bind="text: $component.formatEventTime($parent)"></span>
                                     </div>
                                     <!-- Place and Building Name, common for all types -->
                                     <div>
