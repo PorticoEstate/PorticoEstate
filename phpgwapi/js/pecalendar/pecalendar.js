@@ -1114,12 +1114,14 @@ class PECalendar {
             if (event.clientY < topBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
-                this.dragStart(targetEvent.to);
+                this.dragStart(targetEvent.from);
+                this.dragEnd(targetEvent.to); // Add this line
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
             } else if (event.clientY > bottomBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
-                this.dragStart(targetEvent.from);
+                this.dragStart(targetEvent.from); // Keep this as 'from'
+                this.dragEnd(targetEvent.to); // Add this line
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
             }
             return;
@@ -1219,7 +1221,9 @@ class PECalendar {
 
         const currentTime = event.target.dataset.time;
         const startTime = this.dragStart();
-        let endTime = currentTime;
+        const endTime = this.dragEnd();
+        let newStartTime = startTime;
+        let newEndTime = endTime;
 
         // Calculate minute interval based on hourParts
         const minuteInterval = 60 / this.hourParts();
@@ -1229,40 +1233,41 @@ class PECalendar {
         let currentHour = +splitCurrent[0];
         let currentMinute = +splitCurrent[1];
 
-        const splitStart = startTime.split(":");
-        let startHour = +splitStart[0];
-        let startMinute = +splitStart[1];
-
         // Convert times to DateTime objects for easier manipulation
-        let startDateTime = luxon.DateTime.fromObject({ hour: startHour, minute: startMinute });
-        let endDateTime = luxon.DateTime.fromObject({ hour: currentHour, minute: currentMinute });
+        let currentDateTime = luxon.DateTime.fromObject({ hour: currentHour, minute: currentMinute });
+        let startDateTime = luxon.DateTime.fromISO(startTime);
+        let endDateTime = luxon.DateTime.fromISO(endTime);
 
-        // Ensure the event is at least 1 hour long
-        if (endDateTime < startDateTime) {
-            // If dragging backwards, adjust the start time
-            startDateTime = endDateTime.minus({ hours: 1 });
-        } else if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
-            // If dragging forwards but less than 1 hour, extend the end time
-            endDateTime = startDateTime.plus({ hours: 1 });
+        if (currentDateTime < startDateTime) {
+            // Dragging from the top
+            newStartTime = currentDateTime.toFormat('HH:mm:ss');
+        } else if (currentDateTime > endDateTime) {
+            // Dragging from the bottom
+            newEndTime = currentDateTime.toFormat('HH:mm:ss');
         }
 
-        // Format times back to strings
-        const newStartTime = startDateTime.toFormat('HH:mm:ss');
-        endTime = endDateTime.toFormat('HH:mm:ss');
+        // Ensure the event is at least 1 hour long
+        if (luxon.DateTime.fromISO(newEndTime).diff(luxon.DateTime.fromISO(newStartTime), 'hours').hours < 1) {
+            if (newStartTime !== startTime) {
+                newStartTime = luxon.DateTime.fromISO(newEndTime).minus({ hours: 1 }).toFormat('HH:mm:ss');
+            } else {
+                newEndTime = luxon.DateTime.fromISO(newStartTime).plus({ hours: 1 }).toFormat('HH:mm:ss');
+            }
+        }
 
         if (!this.canCreateTemporaryEvent({
             ...this.tempEvent(),
             from: newStartTime,
-            to: endTime,
+            to: newEndTime,
         })) {
             return;
         }
 
         this.dragStart(newStartTime);
-        this.dragEnd(endTime);
+        this.dragEnd(newEndTime);
 
-        // Update the temporary event's end time
-        this.updateTemporaryEvent(this.tempEvent(), newStartTime, endTime);
+        // Update the temporary event's times
+        this.updateTemporaryEvent(this.tempEvent(), newStartTime, newEndTime);
     }
     handleMouseUp = (cellProps, event) => {
         this.isDragging(false);
@@ -1775,32 +1780,20 @@ if (globalThis['ko']) {
         template: `
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
-                    <!-- ko ifnot: combinedTempEvents().length -->
-                    <!-- SPACING PLACEHOLDER-->
-                    <div class="pending-row" data-bind="hidden: disableInteraction">
-                        <div id="tempEventPills" class="pills">
-                        </div>
-                    </div>
-                    <!-- /ko -->
-                    <div class="select_building_resource" data-bind="hidden: disableInteraction">
-                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">
-                            <!-- ko if: resourcesAsArray().length > 0 -->
 
-                            <select
-                                class="js-select-basic"
-                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
-                            </select>
-                            <!-- /ko -->
+<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-                        </div>
-                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
-                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
-                           data-bind="attr: { href: applicationURL }">
-                            <trans>bookingfrontend:application</trans>
-                        </a>
-                        <!-- /ko -->
-                    </div>
-                    <!-- ko if: combinedTempEvents().length -->
+<!--                            <select-->
+<!--                                class="js-select-basic"-->
+<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+<!--                            </select>-->
+<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+
+<!--                        </div>-->
+
+<!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1820,7 +1813,6 @@ if (globalThis['ko']) {
                                data-bind="css: {'fa-chevron-up': showAllTempEventPills(), 'fa-chevron-down': !showAllTempEventPills()}"></i>
                         </button>
                     </div>
-                    <!-- /ko -->
                     <div class="calendar-settings">
                         <div class="date">
                             <fieldset data-bind="css: { 'd-none': !hasTimeSlots() }">
@@ -1860,6 +1852,12 @@ if (globalThis['ko']) {
                             <div><i class="fas fa-calendar-alt export-ical" title="Export to iCal"
                                     data-bind="click: generateICal"></i></div>
                         </button>
+                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
+                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
+                           data-bind="attr: { href: applicationURL }">
+                            <trans>bookingfrontend:application</trans> <span class="fas fa-long-arrow-right"></span>
+                        </a>
+                        <!-- /ko -->
                         <!-- ko ifnot: hasTimeSlots() -->
 
                         <div class="info-types d-none">
