@@ -1775,32 +1775,20 @@ if (globalThis['ko']) {
         template: `
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
-                    <!-- ko ifnot: combinedTempEvents().length -->
-                    <!-- SPACING PLACEHOLDER-->
-                    <div class="pending-row" data-bind="hidden: disableInteraction">
-                        <div id="tempEventPills" class="pills">
-                        </div>
-                    </div>
-                    <!-- /ko -->
-                    <div class="select_building_resource" data-bind="hidden: disableInteraction">
-                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">
-                            <!-- ko if: resourcesAsArray().length > 0 -->
 
-                            <select
-                                class="js-select-basic"
-                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
-                            </select>
-                            <!-- /ko -->
+                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-                        </div>
-                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
-                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
-                           data-bind="attr: { href: applicationURL }">
-                            <trans>bookingfrontend:application</trans>
-                        </a>
-                        <!-- /ko -->
-                    </div>
-                    <!-- ko if: combinedTempEvents().length -->
+                    <!--                            <select-->
+                    <!--                                class="js-select-basic"-->
+                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+                    <!--                            </select>-->
+                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+
+                    <!--                        </div>-->
+
+                    <!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1810,7 +1798,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                    class="pill-cross"></i></button>
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -1820,7 +1808,6 @@ if (globalThis['ko']) {
                                data-bind="css: {'fa-chevron-up': showAllTempEventPills(), 'fa-chevron-down': !showAllTempEventPills()}"></i>
                         </button>
                     </div>
-                    <!-- /ko -->
                     <div class="calendar-settings">
                         <div class="date">
                             <fieldset data-bind="css: { 'd-none': !hasTimeSlots() }">
@@ -1860,6 +1847,12 @@ if (globalThis['ko']) {
                             <div><i class="fas fa-calendar-alt export-ical" title="Export to iCal"
                                     data-bind="click: generateICal"></i></div>
                         </button>
+                        <!-- ko ifnot: hasTimeSlots() || disableInteraction -->
+                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
+                           data-bind="attr: { href: applicationURL }">
+                            <trans>bookingfrontend:application</trans> <span class="fas fa-long-arrow-right"></span>
+                        </a>
+                        <!-- /ko -->
                         <!-- ko ifnot: hasTimeSlots() -->
 
                         <div class="info-types d-none">

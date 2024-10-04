@@ -1041,19 +1041,20 @@ h4, .h4 {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 8px;
+  gap: 24px;
 }
 .calendar .header {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  gap: 8px;
+  gap: 24px;
 }
 .calendar .header .date {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 24px;
+  flex-grow: 1;
 }
 .calendar .header .date fieldset {
   justify-content: center;
@@ -1092,12 +1093,12 @@ h4, .h4 {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 24px;
 }
 .calendar .header .temp-event-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* space between pills */
+  gap: 24px; /* space between pills */
 }
 .calendar .header .temp-event-pills .temp-event-pill {
   padding: 0px 10px;
@@ -1130,7 +1131,7 @@ h4, .h4 {
     flex-wrap: wrap;
     display: flex;
     flex-direction: row;
-    gap: 0.275rem;
+    gap: 0.5rem;
   }
 }
 .calendar .header .pending-row .show-more {
