@@ -1103,12 +1103,14 @@ class PECalendar {
         }
 
         if (event.target.classList.contains('event-temporary')) {
-            const threshold = 10;
+            const threshold = 15;
             const rect = event.target.getBoundingClientRect();
             // Calculate the top and bottom boundaries within the element
             const topBoundary = rect.top + threshold;
             const bottomBoundary = rect.bottom - threshold;
 
+            console.log(event.target.classList, topBoundary, bottomBoundary, event.clientY)
+            console.log(`Is top: ${event.clientY < topBoundary}, is bottom: ${event.clientY > bottomBoundary}`)
             const targetEvent = this.tempEvents().find(e => e.id === event.target.dataset.id);
             // Check if the click is near the top or bottom of the element
             if (event.clientY < topBoundary) {
@@ -1225,33 +1227,32 @@ class PECalendar {
         let newStartTime = startTime;
         let newEndTime = endTime;
 
-        // Calculate minute interval based on hourParts
-        const minuteInterval = 60 / this.hourParts();
-
-        // Split current time and start time into hours and minutes
-        const splitCurrent = currentTime.split(":");
-        let currentHour = +splitCurrent[0];
-        let currentMinute = +splitCurrent[1];
-
         // Convert times to DateTime objects for easier manipulation
-        let currentDateTime = luxon.DateTime.fromObject({ hour: currentHour, minute: currentMinute });
+        let currentDateTime = luxon.DateTime.fromISO(currentTime);
         let startDateTime = luxon.DateTime.fromISO(startTime);
         let endDateTime = luxon.DateTime.fromISO(endTime);
 
-        if (currentDateTime < startDateTime) {
+        // Determine if we're dragging from top or bottom
+        const isDraggingTop = Math.abs(currentDateTime.diff(startDateTime).as('minutes')) <
+            Math.abs(currentDateTime.diff(endDateTime).as('minutes'));
+
+        if (isDraggingTop) {
             // Dragging from the top
             newStartTime = currentDateTime.toFormat('HH:mm:ss');
-        } else if (currentDateTime > endDateTime) {
+        } else {
             // Dragging from the bottom
             newEndTime = currentDateTime.toFormat('HH:mm:ss');
         }
 
-        // Ensure the event is at least 1 hour long
-        if (luxon.DateTime.fromISO(newEndTime).diff(luxon.DateTime.fromISO(newStartTime), 'hours').hours < 1) {
-            if (newStartTime !== startTime) {
-                newStartTime = luxon.DateTime.fromISO(newEndTime).minus({ hours: 1 }).toFormat('HH:mm:ss');
+        // Ensure the event is at least 15 minutes long (or your preferred minimum duration)
+        const minDuration = { minutes: 15 };
+        const newDuration = luxon.DateTime.fromISO(newEndTime).diff(luxon.DateTime.fromISO(newStartTime)).as('minutes');
+
+        if (newDuration < minDuration.minutes) {
+            if (isDraggingTop) {
+                newStartTime = luxon.DateTime.fromISO(newEndTime).minus(minDuration).toFormat('HH:mm:ss');
             } else {
-                newEndTime = luxon.DateTime.fromISO(newStartTime).plus({ hours: 1 }).toFormat('HH:mm:ss');
+                newEndTime = luxon.DateTime.fromISO(newStartTime).plus(minDuration).toFormat('HH:mm:ss');
             }
         }
 
@@ -1781,19 +1782,19 @@ if (globalThis['ko']) {
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
 
-<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
-<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
-<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
+                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-<!--                            <select-->
-<!--                                class="js-select-basic"-->
-<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
-<!--                            </select>-->
-<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+                    <!--                            <select-->
+                    <!--                                class="js-select-basic"-->
+                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+                    <!--                            </select>-->
+                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
 
-<!--                        </div>-->
+                    <!--                        </div>-->
 
-<!--                    </div>-->
+                    <!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1803,7 +1804,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                    class="pill-cross"></i></button>
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
