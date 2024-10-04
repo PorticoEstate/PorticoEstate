@@ -466,6 +466,7 @@ $column-width: 12; // how many columns in a given timeslot
       display: flex;
       justify-content: center;
       align-items: flex-start;
+
       .event-title {
         display: none;
       }
@@ -486,6 +487,7 @@ $column-width: 12; // how many columns in a given timeslot
         color: white;
       }
     }
+
     .dots-container {
       align-self: stretch;
       display: flex;
@@ -552,6 +554,9 @@ $column-width: 12; // how many columns in a given timeslot
         z-index: auto;
       }
 
+      .event-title {
+        flex-grow: 1;
+      }
       //opacity: 0.75;
       //resize: vertical;
       //overflow: auto;
@@ -575,6 +580,26 @@ $column-width: 12; // how many columns in a given timeslot
         bottom: 0; /* Position the ::after element at the bottom */
       }
 
+      .drag-handle {
+        bottom: 0;
+        display: flex;
+        cursor: ns-resize;
+        align-items: flex-end;
+        justify-content: center;
+        grid-column: span 2;
+        max-height: 10px;
+        align-self: flex-end;
+        .drag-handle-inner {
+
+          border-radius: 8px;
+          min-width: 50%;
+          min-height: 3px;
+          max-height: 3px;
+          background-color: $black-40;
+
+
+        }
+      }
     }
 
 
@@ -680,9 +705,10 @@ $column-width: 12; // how many columns in a given timeslot
         width: max-content;
 
         .info-title {
-          h3{
+          h3 {
             margin: 0;
           }
+
           display: flex;
           flex-direction: row;
           gap: 0.5rem;

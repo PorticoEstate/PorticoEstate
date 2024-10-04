@@ -1195,6 +1195,15 @@ class PECalendar {
         // this.tempEvent(this.createTemporaryEvent(startTime));
     }
 
+
+    handleDragStart(eventData, edge, event) {
+        event.stopPropagation();
+        this.tempEvent(eventData.event);
+        this.isDragging(true);
+        this.dragStart(edge === 'bottom' ? eventData.event.to : eventData.event.from);
+        this.tempEvents(this.tempEvents().filter(e => e.id !== eventData.event.id));
+    }
+
     isAdjacentEvents(event1, event2) {
         if (event1.date !== event2.date) {
             return false;
@@ -1778,8 +1787,8 @@ if (globalThis['ko']) {
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
                             <select
-                                    class="js-select-basic"
-                                    data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
+                                class="js-select-basic"
+                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
                             </select>
                             <!-- /ko -->
 
@@ -1801,7 +1810,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                        class="pill-cross"></i></button>
+                                    class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -2065,7 +2074,11 @@ if (globalThis['ko']) {
                             </div>
 
                             <!-- /ko -->
-
+                            <!-- ko if: $data.event.type === 'temporary' -->
+                            <div class="drag-handle">
+                                <div class="drag-handle-inner" ></div>
+                            </div>
+                            <!-- /ko -->
                         </div>
                         <!-- /ko -->
 
