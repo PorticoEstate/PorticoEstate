@@ -1039,34 +1039,30 @@ class PECalendar {
      * @returns {Partial<IEvent>} The created temporary event.
      */
     createTemporaryEvent(startTime, endTime, date) {
-        /**
-         * @type {IBuildingResource}
-         */
         const resource = this.resources()[this.resource_id()];
-        /**
-         * @type {Partial<IEvent> & {id: string}} - An array of event objects.
-         */
+
+        // Ensure the event is at least 1 hour long
+        const startDateTime = luxon.DateTime.fromISO(`${date}T${startTime}`);
+        let endDateTime = luxon.DateTime.fromISO(`${date}T${endTime}`);
+
+        if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
+            endDateTime = startDateTime.plus({ hours: 1 });
+        }
+
         const tempEvent = {
             id: `temp-${Date.now()}`,
             name: 'Ny søknad',
             from: startTime,
-            to: endTime,
+            to: endDateTime.toFormat('HH:mm:ss'),
             date: date,
             type: "temporary",
             is_public: 1,
-            resources: [
-                resource
-            ]
+            resources: [resource]
         };
 
-
-        // Append the event to the tempEvents array
-        // this.tempEvents().push(tempEvent);
-        //
-        // this.createTempEventPill(tempEvent);
-        // this.updateResourceSelectState();
         return tempEvent;
     }
+
 
     handleTouchEvent = (_props, event) => {
         if (event.type === 'touchstart') {
@@ -1199,6 +1195,13 @@ class PECalendar {
         // this.tempEvent(this.createTemporaryEvent(startTime));
     }
 
+    isAdjacentEvents(event1, event2) {
+        if (event1.date !== event2.date) {
+            return false;
+        }
+        return event1.to === event2.from || event1.from === event2.to;
+    }
+
     handleMouseMove = (cellProps, event) => {
         if (!this.isDragging()) return;
         if (event.target.className !== 'calendar-cell') {
@@ -1210,53 +1213,48 @@ class PECalendar {
         let endTime = currentTime;
 
         // Calculate minute interval based on hourParts
-        const minuteInterval = 60 / this.hourParts(); // Assuming this.hourParts() is a method that returns the number of parts an hour is divided into
+        const minuteInterval = 60 / this.hourParts();
 
-        // Split current time into hours and minutes
+        // Split current time and start time into hours and minutes
         const splitCurrent = currentTime.split(":");
         let currentHour = +splitCurrent[0];
         let currentMinute = +splitCurrent[1];
 
-        // Convert current time and start time to minutes for calculation
-        let currentTotalMinutes = currentHour * 60 + currentMinute;
         const splitStart = startTime.split(":");
         let startHour = +splitStart[0];
         let startMinute = +splitStart[1];
-        let startTotalMinutes = startHour * 60 + startMinute;
 
-        // Check if dragging backwards or forwards and adjust accordingly
-        if (currentTotalMinutes < startTotalMinutes) {
-            // Dragging backwards, set end time to start time and adjust start time backwards
-            // endTime = startTime; // Switch the logic for start and end time
-            startTotalMinutes = currentTotalMinutes - minuteInterval; // Move start time back by one interval
-            if (startTotalMinutes < 0) startTotalMinutes = 0; // Prevent negative time
-            // Update start time to the new calculated time
-            startHour = Math.floor(startTotalMinutes / 60);
-            startMinute = startTotalMinutes % 60;
-            endTime = (`${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}:00`);
-        } else {
-            // Dragging forwards, ensure at least one interval difference
-            currentTotalMinutes = Math.max(currentTotalMinutes, startTotalMinutes + minuteInterval);
-            // Calculate new end time
-            let endHour = Math.floor(currentTotalMinutes / 60);
-            let endMinute = currentTotalMinutes % 60;
-            endTime = `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}:00`;
+        // Convert times to DateTime objects for easier manipulation
+        let startDateTime = luxon.DateTime.fromObject({ hour: startHour, minute: startMinute });
+        let endDateTime = luxon.DateTime.fromObject({ hour: currentHour, minute: currentMinute });
+
+        // Ensure the event is at least 1 hour long
+        if (endDateTime < startDateTime) {
+            // If dragging backwards, adjust the start time
+            startDateTime = endDateTime.minus({ hours: 1 });
+        } else if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
+            // If dragging forwards but less than 1 hour, extend the end time
+            endDateTime = startDateTime.plus({ hours: 1 });
         }
+
+        // Format times back to strings
+        const newStartTime = startDateTime.toFormat('HH:mm:ss');
+        endTime = endDateTime.toFormat('HH:mm:ss');
 
         if (!this.canCreateTemporaryEvent({
             ...this.tempEvent(),
-            from: this.dragStart() > endTime ? this.dragStart() : endTime,
-            to: this.dragStart() > endTime ? endTime : this.dragStart(),
+            from: newStartTime,
+            to: endTime,
         })) {
             return;
         }
 
-        this.dragEnd(this.dragStart() > endTime ? this.dragStart() : endTime);
+        this.dragStart(newStartTime);
+        this.dragEnd(endTime);
 
         // Update the temporary event's end time
-        this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), endTime);
-    };
-
+        this.updateTemporaryEvent(this.tempEvent(), newStartTime, endTime);
+    }
     handleMouseUp = (cellProps, event) => {
         this.isDragging(false);
 
@@ -1352,9 +1350,47 @@ class PECalendar {
         if (!this.tempEvent()) {
             return;
         }
-        this.tempEvents.push(this.tempEvent());
+
+        let newEvent = this.tempEvent();
+
+        // Ensure the event is at least 1 hour long
+        const startDateTime = luxon.DateTime.fromISO(`${newEvent.date}T${newEvent.from}`);
+        let endDateTime = luxon.DateTime.fromISO(`${newEvent.date}T${newEvent.to}`);
+
+        if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
+            endDateTime = startDateTime.plus({ hours: 1 });
+            newEvent.to = endDateTime.toFormat('HH:mm:ss');
+            newEvent.name = `${newEvent.from.substring(0, 5)} - ${newEvent.to.substring(0, 5)}`;
+        }
+
+        let stitched = false;
+
+        // Check for adjacent events and stitch them together
+        this.tempEvents(this.tempEvents().map(existingEvent => {
+            if (this.isAdjacentEvents(newEvent, existingEvent)) {
+                stitched = true;
+                const stitchedStartDateTime = luxon.DateTime.fromISO(`${existingEvent.date}T${existingEvent.from}`);
+                const stitchedEndDateTime = luxon.DateTime.fromISO(`${existingEvent.date}T${existingEvent.to}`);
+
+                const newStartDateTime = stitchedStartDateTime < startDateTime ? stitchedStartDateTime : startDateTime;
+                const newEndDateTime = stitchedEndDateTime > endDateTime ? stitchedEndDateTime : endDateTime;
+
+                return {
+                    ...existingEvent,
+                    from: newStartDateTime.toFormat('HH:mm:ss'),
+                    to: newEndDateTime.toFormat('HH:mm:ss'),
+                    name: `${newStartDateTime.toFormat('HH:mm')} - ${newEndDateTime.toFormat('HH:mm')}`
+                };
+            }
+            return existingEvent;
+        }));
+
+        // If no stitching occurred, add the new event
+        if (!stitched) {
+            this.tempEvents.push(newEvent);
+        }
+
         this.tempEvent(undefined);
-        // Finalize the event (e.g., save it or make permanent changes)
     }
 
 
@@ -1742,8 +1778,8 @@ if (globalThis['ko']) {
                             <!-- ko if: resourcesAsArray().length > 0 -->
 
                             <select
-                                class="js-select-basic"
-                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
+                                    class="js-select-basic"
+                                    data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">
                             </select>
                             <!-- /ko -->
 
@@ -1765,7 +1801,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                    class="pill-cross"></i></button>
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
