@@ -222,7 +222,7 @@
 				$_value_set = array
 					(
 //					'xml_representation' => $this->db->db_addslashes($xml),
-					'json_representation'	 => json_encode($value_set),
+					'json_representation'	 => json_encode($value_set, JSON_HEX_APOS),
 					'p_location_id'			 => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
 					'p_id'					 => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
 					'location_code'			 => $value_set['location_code'],
@@ -279,7 +279,7 @@
 					'location_id'			 => $location_id,
 					'guid'					 => $guid,
 //					'xml_representation' => $this->db->db_addslashes($xml),
-					'json_representation'	 => json_encode($value_set),
+					'json_representation'	 => json_encode($value_set,JSON_HEX_APOS),
 					'model'					 => 0,
 					'p_location_id'			 => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
 					'p_id'					 => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
