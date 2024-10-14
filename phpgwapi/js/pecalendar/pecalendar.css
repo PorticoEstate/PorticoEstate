@@ -1474,6 +1474,30 @@ h4, .h4 {
   max-height: 3px;
   background-color: #999999;
 }
+.calendar .calendar-body .event-small {
+  padding: 1px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+.calendar .calendar-body .event-small .event-text .event-title {
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+@media (max-width: 1024px) {
+  .calendar .calendar-body .event-small .event-text .event-title {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+}
+.calendar .calendar-body .event-small .dots-container {
+  height: 16px;
+  width: 16px;
+  align-self: inherit;
+}
+.calendar .calendar-body .event-small .dots-container i {
+  font-size: 100%;
+}
 .calendar .calendar-body .available-slot {
   border-color: #FFF;
   z-index: 4;
