@@ -830,7 +830,6 @@ class PECalendar {
         let eventsByDay = this.resourceEvents().reduce((days, event) => {
             const dates = this.getEventDates(event);
             dates.forEach(dateRange => {
-                console.log('Processing date range:', dateRange.from.toISO(), 'to', dateRange.to.toISO());
                 let currentDate = dateRange.from.startOf('day');
                 const endDate = dateRange.to.startOf('day');
 
@@ -864,7 +863,6 @@ class PECalendar {
                                 to: dayEnd
                             },
                         });
-                        console.log('Processing date range:', dateRange.from.toISO(), 'to', dateRange.to.toISO());
                     }
                     currentDate = currentDate.plus({ days: 1 });
                 }
@@ -940,16 +938,11 @@ class PECalendar {
 
 
     getGridRow(date, event) {
-        console.log('getGridRow called for event:', event.name, 'ID:', event.id);
-        console.log('Original date range:', date.from.toISO(), 'to', date.to.toISO());
-
         const startHour = date.from.hour;
         const startMinute = date.from.minute;
         const endHour = date.to.hour;
         const endMinute = date.to.minute;
 
-        console.log('Calculated times - Start:', `${startHour}:${startMinute}`, 'End:', `${endHour}:${endMinute}`);
-        console.log('this.startHour():', this.startHour());
 
         const minutesPerPart = 60 / this.hourParts();
 
@@ -957,7 +950,6 @@ class PECalendar {
         const startPosition = (startHour - this.startHour()) * this.hourParts() + Math.floor(startMinute / minutesPerPart);
         const endPosition = (endHour - this.startHour()) * this.hourParts() + Math.ceil(endMinute / minutesPerPart);
 
-        console.log('Start Position:', startPosition, 'End Position:', endPosition);
 
         // Ensure the event is visible even if it starts before startHour or ends after endHour
         const visibleStartPosition = Math.max(0, startPosition);
@@ -967,7 +959,6 @@ class PECalendar {
         const span = Math.max(1, visibleEndPosition - visibleStartPosition);
 
         const result = `${visibleStartPosition + 1} / span ${span}`;
-        console.log('Grid Row Result:', result);
 
         return result;
     }
@@ -1475,7 +1466,6 @@ class PECalendar {
 
 
     togglePopper(e, clickEvent) {
-        console.log(e);
         // Identify if the event target or any of its ancestors is an <a> element
         let isLink = false;
         for (let elem = clickEvent.target; elem !== clickEvent.currentTarget; elem = elem.parentNode) {
