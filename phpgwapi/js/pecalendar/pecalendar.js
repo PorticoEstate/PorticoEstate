@@ -829,16 +829,42 @@ class PECalendar {
         // Organize events by day
         let eventsByDay = this.resourceEvents().reduce((days, event) => {
             const dates = this.getEventDates(event);
-            dates.forEach(date => {
-                if (this.isDateInRange(date.from)) {
-                    const dayKey = date.from.toISODate(); // Assuming 'from' is a luxon.DateTime object
-                    if (!days[dayKey]) {
-                        days[dayKey] = [];
+            dates.forEach(dateRange => {
+                let currentDate = dateRange.from.startOf('day');
+                const endDate = dateRange.to.startOf('day');
+
+                while (currentDate <= endDate) {
+                    if (this.isDateInRange(currentDate)) {
+                        const dayKey = currentDate.toISODate();
+                        if (!days[dayKey]) {
+                            days[dayKey] = [];
+                        }
+
+                        let dayStart, dayEnd;
+
+                        if (currentDate.hasSame(dateRange.from, 'day')) {
+                            // First day of the event
+                            dayStart = dateRange.from;
+                            dayEnd = currentDate.endOf('day');
+                        } else if (currentDate.hasSame(dateRange.to, 'day')) {
+                            // Last day of the event
+                            dayStart = currentDate.startOf('day');
+                            dayEnd = dateRange.to;
+                        } else {
+                            // Middle days of the event
+                            dayStart = currentDate.startOf('day');
+                            dayEnd = currentDate.endOf('day');
+                        }
+
+                        days[dayKey].push({
+                            event,
+                            date: {
+                                from: dayStart,
+                                to: dayEnd
+                            },
+                        });
                     }
-                    days[dayKey].push({
-                        event,
-                        date,
-                    });
+                    currentDate = currentDate.plus({ days: 1 });
                 }
             });
             return days;
@@ -911,29 +937,30 @@ class PECalendar {
     }
 
 
-    /**
-     * Get the visual row location of an event.
-     * @param {{from: luxon.DateTime, to: luxon.DateTime}} date - The date object associated with the event.
-     * @param {IEvent} event - The event object containing details of the event.
-     * @returns {string} - Grid row span.
-     */
     getGridRow(date, event) {
         const startHour = date.from.hour;
         const startMinute = date.from.minute;
         const endHour = date.to.hour;
         const endMinute = date.to.minute;
 
+
         const minutesPerPart = 60 / this.hourParts();
 
-        // Calculate start and end positions based on hourParts
+        // Calculate positions relative to startHour
         const startPosition = (startHour - this.startHour()) * this.hourParts() + Math.floor(startMinute / minutesPerPart);
         const endPosition = (endHour - this.startHour()) * this.hourParts() + Math.ceil(endMinute / minutesPerPart);
 
-        // Calculate the span
-        const span = endPosition - startPosition;
 
-        // Grid rows start at 1, so we add 1 to startPosition
-        return `${startPosition + 1} / span ${span}`;
+        // Ensure the event is visible even if it starts before startHour or ends after endHour
+        const visibleStartPosition = Math.max(0, startPosition);
+        const visibleEndPosition = Math.min(endPosition, (this.endHour() - this.startHour()) * this.hourParts());
+
+        // Calculate the span, ensuring it's at least 1
+        const span = Math.max(1, visibleEndPosition - visibleStartPosition);
+
+        const result = `${visibleStartPosition + 1} / span ${span}`;
+
+        return result;
     }
 
 
@@ -1782,19 +1809,19 @@ if (globalThis['ko']) {
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
 
-                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
-                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
-                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
+<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-                    <!--                            <select-->
-                    <!--                                class="js-select-basic"-->
-                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
-                    <!--                            </select>-->
-                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+<!--                            <select-->
+<!--                                class="js-select-basic"-->
+<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+<!--                            </select>-->
+<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
 
-                    <!--                        </div>-->
+<!--                        </div>-->
 
-                    <!--                    </div>-->
+<!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1804,7 +1831,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                        class="pill-cross"></i></button>
+                                    class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -1924,7 +1951,7 @@ if (globalThis['ko']) {
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
                              data-bind="
-                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}),
+                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 2, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}),
                                  style: {
                                         gridRow: $parent.getGridRow($data.date, $data.event),
                                         gridColumn: $parent.getGridColumn($data.date, $data)
