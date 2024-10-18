@@ -606,6 +606,9 @@ class bookingfrontend_uievent extends booking_uievent
         $config = CreateObject('phpgwapi.config', 'booking')->read();
         $user_can_delete_events = $config['user_can_delete_events'] === 'yes' ? 1 : 0;
 
+        $from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
+
+
         $events_info = [];
         foreach ($ids as $id) {
             $event = $this->bo->read_single($id);
@@ -621,9 +624,11 @@ class bookingfrontend_uievent extends booking_uievent
             $event['info_org'] = $this->info_get_org_info($event['customer_organization_number']);
             $event['info_when'] = $this->info_format_event_time($event['from_'], $event['to_']);
             $event['info_participant_limit'] = $this->info_calculate_participant_limit($event, $config);
-            $event['info_edit_link'] = $this->info_determine_edit_link($event);
+            $event['resource_ids'] = isset($event['resources']) ? array_map('intval', $event['resources']) : [];
 
-            $event['info_cancel_link'] = $this->info_determine_cancel_link($event, $user_can_delete_events);
+            $event['info_edit_link'] = $this->info_determine_edit_link($event, $from_org);
+            $event['info_cancel_link'] = $this->info_determine_cancel_link($event, $user_can_delete_events, $from_org);
+
 
             $event['info_ical_link'] = self::link([
                 'menuaction' => 'bookingfrontend.uiparticipant.ical',
@@ -715,7 +720,7 @@ class bookingfrontend_uievent extends booking_uievent
         return !$event['participant_limit'] ? ($resource_participant_limit ?: (int)$config['participant_limit']) : $event['participant_limit'];
     }
 
-    private function info_determine_edit_link($event)
+    private function info_determine_edit_link($event, $from_org)
     {
         $bouser = CreateObject('bookingfrontend.bouser');
 
@@ -724,13 +729,13 @@ class bookingfrontend_uievent extends booking_uievent
                 'menuaction' => 'bookingfrontend.uievent.edit',
                 'id' => $event['id'],
                 'resource_ids' => $event['resource_ids'],
-                'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                'from_org' => $from_org
             ]);
         }
         return null;
     }
 
-    private function info_determine_cancel_link($event, $user_can_delete_events)
+    private function info_determine_cancel_link($event, $user_can_delete_events, $from_org)
     {
         $bouser = CreateObject('bookingfrontend.bouser');
 
@@ -739,7 +744,7 @@ class bookingfrontend_uievent extends booking_uievent
                 'menuaction' => 'bookingfrontend.uievent.cancel',
                 'id' => $event['id'],
                 'resource_ids' => $event['resource_ids'],
-                'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                'from_org' => $from_org
             ]);
         }
         return null;
