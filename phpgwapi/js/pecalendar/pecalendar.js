@@ -216,6 +216,7 @@ class PECalendar {
         this.instance = instance;
         this.disableInteraction = nointeraction;
         this.filterGroups = filterGroups;
+
         // Initialize the date of the instance
         if (dateString) {
             if (ko.isObservable(dateString)) {
@@ -401,6 +402,42 @@ class PECalendar {
     });
 
 
+    mergeDateTimestamps(events) {
+        return events.map(event => {
+            if (!event.dates || event.dates.length <= 1) {
+                return event; // No need to merge if there's only one or no dates
+            }
+
+            // Sort dates by start time
+            const sortedDates = [...event.dates].sort((a, b) =>
+                a.from_.localeCompare(b.from_)
+            );
+
+            const mergedDates = sortedDates.reduce((acc, current) => {
+                if (acc.length === 0) {
+                    acc.push(current);
+                    return acc;
+                }
+
+                const last = acc[acc.length - 1];
+                const lastDate = last.from_.split(' ')[0];
+                const currentDate = current.from_.split(' ')[0];
+
+                if (lastDate === currentDate && last.to_ === current.from_) {
+                    // Merge the timestamps
+                    last.to_ = current.to_;
+                } else {
+                    acc.push(current);
+                }
+
+                return acc;
+            }, []);
+
+            return { ...event, dates: mergedDates };
+        });
+    }
+
+
     async loadBuildingData() {
         try {
             if (!this.building_id() || !this.currentDate()) {
@@ -438,7 +475,9 @@ class PECalendar {
             this.calculateStartEndHours(buildingData?.schedule || [], buildingData.seasons);
             this.seasons(buildingData.seasons);
             this.availableTimeSlots(timeSlotsData);
-            this.events(buildingData?.schedule || []);
+            const eventsWithMergedDates = this.mergeDateTimestamps(buildingData?.schedule || []);
+            this.events(eventsWithMergedDates);
+            // this.events(buildingData?.schedule || []);
         } catch (error) {
             console.error('Error loading building data:', error);
         }
@@ -1809,19 +1848,19 @@ if (globalThis['ko']) {
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
 
-<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
-<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
-<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
+                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-<!--                            <select-->
-<!--                                class="js-select-basic"-->
-<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
-<!--                            </select>-->
-<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+                    <!--                            <select-->
+                    <!--                                class="js-select-basic"-->
+                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+                    <!--                            </select>-->
+                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
 
-<!--                        </div>-->
+                    <!--                        </div>-->
 
-<!--                    </div>-->
+                    <!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1831,7 +1870,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                    class="pill-cross"></i></button>
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
