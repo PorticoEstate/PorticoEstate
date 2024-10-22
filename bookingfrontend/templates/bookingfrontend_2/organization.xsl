@@ -271,17 +271,14 @@
             </div>
 
             <div id="search-result" class="pt-3">
-                <!-- ko if: resources().length > 0 -->
+
                 <div data-bind="foreach: {{ data: resources, as: 'resource' }}">
                     <resource-info-card
                             params="{{ resource: resource, buildings: $parent.getBuildingsFromResource(resource.id), towns: $parent.getTownFromBuilding($parent.getBuildingsFromResource(resource.id)), lang: null, towns_data: $parent.towns_data, date: $parent.searchDate, disableText: true, static: true, filterGroups: $parent.groupIds }}"></resource-info-card>
                 </div>
-                <!-- /ko -->
-                <!-- ko if: resources().length === 0 -->
-                <div class="alert alert-info col-md-4">
+                <div class="alert alert-info col-md-4" data-bind="hidden: resources().length > 0">
                     <xsl:value-of select="php:function('lang', 'no_resources_found')"/>
                 </div>
-                <!-- /ko -->
             </div>
 
 

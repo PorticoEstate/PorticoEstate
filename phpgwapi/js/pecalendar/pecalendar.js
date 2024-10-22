@@ -216,6 +216,7 @@ class PECalendar {
         this.instance = instance;
         this.disableInteraction = nointeraction;
         this.filterGroups = filterGroups;
+
         // Initialize the date of the instance
         if (dateString) {
             if (ko.isObservable(dateString)) {
@@ -401,6 +402,42 @@ class PECalendar {
     });
 
 
+    mergeDateTimestamps(events) {
+        return events.map(event => {
+            if (!event.dates || event.dates.length <= 1) {
+                return event; // No need to merge if there's only one or no dates
+            }
+
+            // Sort dates by start time
+            const sortedDates = [...event.dates].sort((a, b) =>
+                a.from_.localeCompare(b.from_)
+            );
+
+            const mergedDates = sortedDates.reduce((acc, current) => {
+                if (acc.length === 0) {
+                    acc.push(current);
+                    return acc;
+                }
+
+                const last = acc[acc.length - 1];
+                const lastDate = last.from_.split(' ')[0];
+                const currentDate = current.from_.split(' ')[0];
+
+                if (lastDate === currentDate && last.to_ === current.from_) {
+                    // Merge the timestamps
+                    last.to_ = current.to_;
+                } else {
+                    acc.push(current);
+                }
+
+                return acc;
+            }, []);
+
+            return { ...event, dates: mergedDates };
+        });
+    }
+
+
     async loadBuildingData() {
         try {
             if (!this.building_id() || !this.currentDate()) {
@@ -438,7 +475,9 @@ class PECalendar {
             this.calculateStartEndHours(buildingData?.schedule || [], buildingData.seasons);
             this.seasons(buildingData.seasons);
             this.availableTimeSlots(timeSlotsData);
-            this.events(buildingData?.schedule || []);
+            const eventsWithMergedDates = this.mergeDateTimestamps(buildingData?.schedule || []);
+            this.events(eventsWithMergedDates);
+            // this.events(buildingData?.schedule || []);
         } catch (error) {
             console.error('Error loading building data:', error);
         }
@@ -829,16 +868,42 @@ class PECalendar {
         // Organize events by day
         let eventsByDay = this.resourceEvents().reduce((days, event) => {
             const dates = this.getEventDates(event);
-            dates.forEach(date => {
-                if (this.isDateInRange(date.from)) {
-                    const dayKey = date.from.toISODate(); // Assuming 'from' is a luxon.DateTime object
-                    if (!days[dayKey]) {
-                        days[dayKey] = [];
+            dates.forEach(dateRange => {
+                let currentDate = dateRange.from.startOf('day');
+                const endDate = dateRange.to.startOf('day');
+
+                while (currentDate <= endDate) {
+                    if (this.isDateInRange(currentDate)) {
+                        const dayKey = currentDate.toISODate();
+                        if (!days[dayKey]) {
+                            days[dayKey] = [];
+                        }
+
+                        let dayStart, dayEnd;
+
+                        if (currentDate.hasSame(dateRange.from, 'day')) {
+                            // First day of the event
+                            dayStart = dateRange.from;
+                            dayEnd = currentDate.endOf('day');
+                        } else if (currentDate.hasSame(dateRange.to, 'day')) {
+                            // Last day of the event
+                            dayStart = currentDate.startOf('day');
+                            dayEnd = dateRange.to;
+                        } else {
+                            // Middle days of the event
+                            dayStart = currentDate.startOf('day');
+                            dayEnd = currentDate.endOf('day');
+                        }
+
+                        days[dayKey].push({
+                            event,
+                            date: {
+                                from: dayStart,
+                                to: dayEnd
+                            },
+                        });
                     }
-                    days[dayKey].push({
-                        event,
-                        date,
-                    });
+                    currentDate = currentDate.plus({ days: 1 });
                 }
             });
             return days;
@@ -911,29 +976,30 @@ class PECalendar {
     }
 
 
-    /**
-     * Get the visual row location of an event.
-     * @param {{from: luxon.DateTime, to: luxon.DateTime}} date - The date object associated with the event.
-     * @param {IEvent} event - The event object containing details of the event.
-     * @returns {string} - Grid row span.
-     */
     getGridRow(date, event) {
         const startHour = date.from.hour;
         const startMinute = date.from.minute;
         const endHour = date.to.hour;
         const endMinute = date.to.minute;
 
+
         const minutesPerPart = 60 / this.hourParts();
 
-        // Calculate start and end positions based on hourParts
+        // Calculate positions relative to startHour
         const startPosition = (startHour - this.startHour()) * this.hourParts() + Math.floor(startMinute / minutesPerPart);
         const endPosition = (endHour - this.startHour()) * this.hourParts() + Math.ceil(endMinute / minutesPerPart);
 
-        // Calculate the span
-        const span = endPosition - startPosition;
 
-        // Grid rows start at 1, so we add 1 to startPosition
-        return `${startPosition + 1} / span ${span}`;
+        // Ensure the event is visible even if it starts before startHour or ends after endHour
+        const visibleStartPosition = Math.max(0, startPosition);
+        const visibleEndPosition = Math.min(endPosition, (this.endHour() - this.startHour()) * this.hourParts());
+
+        // Calculate the span, ensuring it's at least 1
+        const span = Math.max(1, visibleEndPosition - visibleStartPosition);
+
+        const result = `${visibleStartPosition + 1} / span ${span}`;
+
+        return result;
     }
 
 
@@ -1924,7 +1990,7 @@ if (globalThis['ko']) {
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
                              data-bind="
-                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}),
+                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 2, 'event-no-title': $data.props?.columnSpan !== undefined && $data.props?.columnSpan < 8}),
                                  style: {
                                         gridRow: $parent.getGridRow($data.date, $data.event),
                                         gridColumn: $parent.getGridColumn($data.date, $data)

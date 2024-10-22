@@ -13,16 +13,16 @@ $column-width: 12; // how many columns in a given timeslot
 
 
 :root {
-  --day-width: 1fr;
-  --time-width: 3em;
-  --calendar-rows: 1;
-  --header-height: 110px;
-  --day-columns: #{$column-width};
+    --day-width: 1fr;
+    --time-width: 3em;
+    --calendar-rows: 1;
+    --header-height: 110px;
+    --day-columns: #{$column-width};
 
-  @media all and (max-width: 480px) {
-    --time-width: 2em;
-    --header-height: 130px;
-  }
+    @media all and (max-width: 480px) {
+        --time-width: 2em;
+        --header-height: 130px;
+    }
 }
 
 
@@ -64,799 +64,822 @@ $column-width: 12; // how many columns in a given timeslot
 //}
 
 #ui-datepicker-div {
-  z-index: 20 !important;
+    z-index: 20 !important;
 }
 
 .calendar {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 24px;
-
-  .header {
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    flex: 1;
     gap: 24px;
-    //display: grid;
-    //grid-template-columns: var(--time-width) repeat(7, 1fr);
-    //background: #F5F5F5;
-    //border-width: 10px 10px 10px 10px;
-    //border-radius: 20px 20px 20px 20px;
-    //box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
-    //padding: 10px 15px 10px 15px;
-    //grid-row: 1 /span 1;
-    //grid-column: 1 / span 8;
-    //z-index: 12;
 
-    .date {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 24px;
-      flex-grow: 1;
-
-      fieldset {
-        justify-content: center;
-        margin-left: 10px;
-        margin-right: 10px;
-        display: flex;
-        flex-direction: row;
-
-        label {
-          display: block;
-        }
-      }
-
-      input {
-      }
-
-      .date-selector {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 0.5rem;
-
-        .pe-btn--circle {
-          border-radius: 50%;
-          padding: 0;
-          width: 2.5rem;
-          height: 2.5rem;
-        }
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .date {
-        fieldset {
-          flex-grow: 1;
-        }
-
-        input {
-          flex-grow: 1;
-        }
-      }
-    }
-
-    .calendar-settings {
-      margin-top: 5px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-
-    .temp-event-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px; /* space between pills */
-      .temp-event-pill {
-        padding: 0px 10px;
-        border-radius: 15px;
-        //background-color: #EFEFEF;
-        display: flex;
-        align-items: center;
-        gap: 5px; /* space between text and 'x' */
-      }
-    }
-
-
-    .info-types {
-      flex-wrap: nowrap;
-      display: flex;
-      flex-direction: row;
-      gap: 8px;
-    }
-
-    .pending-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      .pills {
-        &.collapsed {
-          max-height: 2.75rem;
-        }
-
-        display: none;
-        @media screen and (min-width: 840px) {
-          min-height: 2.75rem;
-
-          overflow-y: hidden;
-          flex-wrap: wrap;
-          //border-top-right-radius: 50px;
-          //border-bottom-right-radius: 50px;
-          display: flex;
-          flex-direction: row;
-          gap: 0.5rem;
-        }
-      }
-
-      .show-more {
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        min-width: 10rem;
-        align-self: flex-start;
-      }
-
-    }
-
-
-    .select_building_resource {
-      //margin-top: 5px;
-      //display: flex;
-      //flex-direction: row;
-      //justify-content: space-between;
-      //align-items: center;
-      //flex-wrap: wrap;
-      //gap: 8px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: stretch;
-
-
-      gap: 8px;
-
-      .resource-switch {
-        max-width: 34rem;
-        @media screen and (max-width: 840px) {
-          max-width: unset;
-        }
-      }
-
-      .application-button {
-        max-width: 9rem;
-        max-height: 3rem;
-        @media screen and (max-width: 840px) {
-          max-width: unset;
-        }
-      }
-
-
-      @media screen and (max-width: 840px) {
-        .resource-switch {
-          max-width: 34rem;
-        }
+    .header {
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
-        > button {
-          flex-grow: 1;
+        margin-top: 10px;
+        gap: 24px;
+        //display: grid;
+        //grid-template-columns: var(--time-width) repeat(7, 1fr);
+        //background: #F5F5F5;
+        //border-width: 10px 10px 10px 10px;
+        //border-radius: 20px 20px 20px 20px;
+        //box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+        //padding: 10px 15px 10px 15px;
+        //grid-row: 1 /span 1;
+        //grid-column: 1 / span 8;
+        //z-index: 12;
+
+        .date {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 24px;
+            flex-grow: 1;
+
+            fieldset {
+                justify-content: center;
+                margin-left: 10px;
+                margin-right: 10px;
+                display: flex;
+                flex-direction: row;
+
+                label {
+                    display: block;
+                }
+            }
+
+            input {
+            }
+
+            .date-selector {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+
+                .pe-btn--circle {
+                    border-radius: 50%;
+                    padding: 0;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                }
+            }
         }
-      }
 
-      > div {
-        width: 100%;
-      }
+        @media screen and (max-width: 480px) {
+            .date {
+                fieldset {
+                    flex-grow: 1;
+                }
 
-      > span {
-        min-width: 15rem;
-      }
-
-      select {
-        /* Style when the select is disabled */
-        &:disabled + * {
-          opacity: 0.5; /* Reduced opacity to indicate disabled state */
-          //background-color: #f3f3f3; /* Light gray background */
-          .select2-selection--single {
-            cursor: not-allowed !important; /* Cursor indicating action is not allowed */
-          }
+                input {
+                    flex-grow: 1;
+                }
+            }
         }
-      }
 
-    }
+        .calendar-settings {
+            margin-top: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
 
-
-    .type {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-content: center;
-      margin-right: 20px;
-
-      img {
-        height: 14px;
-      }
-    }
-  }
-
-
-  .calendar-body {
-    user-select: none;
-    overflow-x: scroll;
-    display: grid;
-    grid-template-rows: $days-height auto;
-    border-width: 10px 10px 10px 10px;
-    border-radius: 20px 20px 20px 20px;
-    box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
-    font-size: 1.5rem;
-    grid-template-columns: var(--time-width) repeat(7, 1fr);
-    //@media all and (max-width: 480px) {
-    //  width: calc(500vw + var(--time-width));
-    //}
-
-    @media all and (min-width: 481px) and (max-width: 992px) {
-      width: calc(300vw + var(--time-width));
-    }
-
-
-    .js-basic-datepicker {
-      font-size: 1rem;
-    }
-
-
-    .title {
-      background: #217346;
-      text-align: center;
-      display: grid;
-      place-content: center;
-      color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .days {
-      background: #FFFFFF;
-      display: grid;
-      place-content: center;
-      text-align: center;
-      grid-template-columns: repeat(7, 1fr);
-      position: sticky;
-      //position: -webkit-sticky;
-      top: 0;
-      z-index: 11;
-      line-height: 1rem;
-      grid-row: 1 / span 1;
-      grid-column: 2 / span 7;
-      @media all and (max-width: 480px) {
-        width: 500vw;
-      }
-
-      @media all and (min-width: 481px) and (max-width: 992px) {
-        width: 300vw;
-      }
-    }
-
-    .day {
-      font-weight: bold;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: $days-height;
-      background-color: #F5F5F5;
-      margin-right: 1px;
-
-      :nth-child(2) {
-        font-weight: normal;
-        font-size: 0.8rem;
-      }
-    }
-
-    .day:last-child {
-      margin-right: 0;
-    }
-
-    .time-container {
-      display: grid;
-      grid-row: 3 / span var(--calendar-rows);
-      grid-column: 1 / span 1;
-      position: sticky;
-      //position: -webkit-sticky;
-      left: 0;
-      z-index: 10;
-      background-color: #FFF;
-      height: 100%;
-    }
-
-    .content {
-      display: grid;
-      grid-template-columns: repeat(7 * $column-width, 1fr);
-      grid-row: 3 / span 1;
-      grid-column: 2 / span 7;
-      @media all and (max-width: 480px) {
-        width: 500vw;
-      }
-
-      @media all and (min-width: 481px) and (max-width: 992px) {
-        width: 300vw;
-      }
-
-    }
-
-    .time {
-      grid-column: 1;
-      text-align: right;
-      align-self: end;
-      position: relative;
-      bottom: -1ex;
-      color: #70757a;
-      padding-right: 2px;
-      height: 12px;
-
-      font-family: 'Open Sans';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 1rem;
-      line-height: 1px;
-    }
-
-    .col {
-      border-right: 1px solid $grid-color;
-    }
-
-    .past-day, .past-hour {
-      background-color: #eaeaea;
-      z-index: auto;
-    }
-
-    .filler-col {
-      grid-row: 1 / -1;
-      grid-column: 2;
-      border-right: 1px solid $grid-color;
-    }
-
-    .row {
-      grid-column: 1 / -1;
-      border-bottom: 1px solid $grid-color;
-      margin-left: 0;
-      margin-right: 0;
-    }
-
-    .event {
-      z-index: auto;
-      position: relative;
-      border-radius: 5px;
-      padding: 5px;
-      font-weight: normal;
-      font-size: 1rem;
-      border: 1px solid #FFF;
-      line-height: 1rem;
-      display: grid;
-      grid-template-columns: 1fr 1.5rem;
-
-      .event-text {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-
-
-        .event-title {
-          @include applyFontProperties('label');
-          font-weight: $text-medium;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
+        .temp-event-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px; /* space between pills */
+            .temp-event-pill {
+                padding: 0px 10px;
+                border-radius: 15px;
+                //background-color: #EFEFEF;
+                display: flex;
+                align-items: center;
+                gap: 5px; /* space between text and 'x' */
+            }
         }
 
 
-      }
+        .info-types {
+            flex-wrap: nowrap;
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+        }
 
-      button {
-        //height: 24px;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-      }
+        .pending-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .pills {
+                &.collapsed {
+                    max-height: 2.75rem;
+                }
+
+                display: none;
+                @media screen and (min-width: 840px) {
+                    min-height: 2.75rem;
+
+                    overflow-y: hidden;
+                    flex-wrap: wrap;
+                    //border-top-right-radius: 50px;
+                    //border-bottom-right-radius: 50px;
+                    display: flex;
+                    flex-direction: row;
+                    gap: 0.5rem;
+                }
+            }
+
+            .show-more {
+                flex-wrap: nowrap;
+                white-space: nowrap;
+                min-width: 10rem;
+                align-self: flex-start;
+            }
+
+        }
+
+
+        .select_building_resource {
+            //margin-top: 5px;
+            //display: flex;
+            //flex-direction: row;
+            //justify-content: space-between;
+            //align-items: center;
+            //flex-wrap: wrap;
+            //gap: 8px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+
+
+            gap: 8px;
+
+            .resource-switch {
+                max-width: 34rem;
+                @media screen and (max-width: 840px) {
+                    max-width: unset;
+                }
+            }
+
+            .application-button {
+                max-width: 9rem;
+                max-height: 3rem;
+                @media screen and (max-width: 840px) {
+                    max-width: unset;
+                }
+            }
+
+
+            @media screen and (max-width: 840px) {
+                .resource-switch {
+                    max-width: 34rem;
+                }
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                > button {
+                    flex-grow: 1;
+                }
+            }
+
+            > div {
+                width: 100%;
+            }
+
+            > span {
+                min-width: 15rem;
+            }
+
+            select {
+                /* Style when the select is disabled */
+                &:disabled + * {
+                    opacity: 0.5; /* Reduced opacity to indicate disabled state */
+                    //background-color: #f3f3f3; /* Light gray background */
+                    .select2-selection--single {
+                        cursor: not-allowed !important; /* Cursor indicating action is not allowed */
+                    }
+                }
+            }
+
+        }
+
+
+        .type {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            margin-right: 20px;
+
+            img {
+                height: 14px;
+            }
+        }
     }
 
-    .event-no-title {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
 
-      .event-title {
-        display: none;
-      }
-    }
+    .calendar-body {
+        user-select: none;
+        overflow-x: scroll;
+        display: grid;
+        grid-template-rows: $days-height auto;
+        border-width: 10px 10px 10px 10px;
+        border-radius: 20px 20px 20px 20px;
+        box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+        font-size: 1.5rem;
+        grid-template-columns: var(--time-width) repeat(7, 1fr);
+        //@media all and (max-width: 480px) {
+        //  width: calc(500vw + var(--time-width));
+        //}
 
-    .weekend {
-      background-color: #f1f3f4;
-    }
+        @media all and (min-width: 481px) and (max-width: 992px) {
+            width: calc(300vw + var(--time-width));
+        }
 
-    .current {
-      font-weight: bold;
-    }
 
-    .dots-container {
-      z-index: 11;
+        .js-basic-datepicker {
+            font-size: 1rem;
+        }
 
-      i {
-        color: white;
-      }
-    }
 
-    .dots-container {
-      align-self: stretch;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: calc(#{$time-height} - 10px); /* Adjust as needed */
-      i {
-        font-size: 150%; /* Ensures the icon scales with the container */
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
+        .title {
+            background: #217346;
+            text-align: center;
+            display: grid;
+            place-content: center;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-    .event-allocation {
-      background-color: #E6E3DB;;
-      border-color: #FFF;
-      @extend .text-black;
-      position: relative;
+        .days {
+            background: #FFFFFF;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            grid-template-columns: repeat(7, 1fr);
+            position: sticky;
+            //position: -webkit-sticky;
+            top: 0;
+            z-index: 11;
+            line-height: 1rem;
+            grid-row: 1 / span 1;
+            grid-column: 2 / span 7;
+            @media all and (max-width: 480px) {
+                width: 500vw;
+            }
 
-      .dots {
-        height: 16px;
-        width: 16px;
-        fill: #000;
-      }
-    }
+            @media all and (min-width: 481px) and (max-width: 992px) {
+                width: 300vw;
+            }
+        }
 
-    .event-booking {
-      background-color: #999EC1;
-      border-color: #FFF;
-      @extend .text-black;
-      position: relative;
+        .day {
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: $days-height;
+            background-color: #F5F5F5;
+            margin-right: 1px;
 
-      .dots {
-        height: 16px;
-        width: 16px;
-        fill: #000;
-      }
-    }
+            :nth-child(2) {
+                font-weight: normal;
+                font-size: 0.8rem;
+            }
+        }
 
-    .event-event {
-      @extend .bg-blue;
-      border-color: #FFF;
-      @extend .text-white;
-      position: relative;
+        .day:last-child {
+            margin-right: 0;
+        }
 
-      .dots {
-        height: 16px;
-        width: 16px;
-        filter: invert(100%);
-      }
-    }
+        .time-container {
+            display: grid;
+            grid-row: 3 / span var(--calendar-rows);
+            grid-column: 1 / span 1;
+            position: sticky;
+            //position: -webkit-sticky;
+            left: 0;
+            z-index: 10;
+            background-color: #FFF;
+            height: 100%;
+        }
 
-    .event-temporary {
-      @extend .bg-purple;
-      opacity: 85%;
-      border-color: #FFF;
-      @extend .text-white;
-      position: relative;
-      z-index: 11; /* Ensure they are on top */
-      &.current-temp {
-        z-index: auto;
-      }
+        .content {
+            display: grid;
+            grid-template-columns: repeat(7 * $column-width, 1fr);
+            grid-row: 3 / span 1;
+            grid-column: 2 / span 7;
+            @media all and (max-width: 480px) {
+                width: 500vw;
+            }
 
-      .event-title {
-        flex-grow: 1;
-      }
-      //opacity: 0.75;
-      //resize: vertical;
-      //overflow: auto;
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 10px; /* Define the height of the resizable area at the top and bottom */
-        cursor: ns-resize; /* Two-sided vertical arrow */
-        z-index: 12; /* Ensure they are on top */
-      }
+            @media all and (min-width: 481px) and (max-width: 992px) {
+                width: 300vw;
+            }
 
-      &::before {
-        top: 0; /* Position the ::before element at the top */
-      }
+        }
 
-      &::after {
-        bottom: 0; /* Position the ::after element at the bottom */
-      }
+        .time {
+            grid-column: 1;
+            text-align: right;
+            align-self: end;
+            position: relative;
+            bottom: -1ex;
+            color: #70757a;
+            padding-right: 2px;
+            height: 12px;
 
-      .drag-handle {
-        bottom: 0;
-        display: flex;
-        cursor: ns-resize;
-        align-items: flex-end;
-        justify-content: center;
-        grid-column: span 2;
-        max-height: 10px;
-        align-self: flex-end;
-        .drag-handle-inner {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 1px;
+        }
 
-          border-radius: 8px;
-          min-width: 50%;
-          min-height: 3px;
-          max-height: 3px;
-          background-color: $black-40;
+        .col {
+            border-right: 1px solid $grid-color;
+        }
+
+        .past-day, .past-hour {
+            background-color: #eaeaea;
+            z-index: auto;
+        }
+
+        .filler-col {
+            grid-row: 1 / -1;
+            grid-column: 2;
+            border-right: 1px solid $grid-color;
+        }
+
+        .row {
+            grid-column: 1 / -1;
+            border-bottom: 1px solid $grid-color;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .event {
+            z-index: auto;
+            position: relative;
+            border-radius: 5px;
+            padding: 5px;
+            font-weight: normal;
+            font-size: 1rem;
+            border: 1px solid #FFF;
+            line-height: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5rem;
+
+            .event-text {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+
+
+                .event-title {
+                    @include applyFontProperties('label');
+                    font-weight: $text-medium;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+
+            }
+
+            button {
+                //height: 24px;
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+            }
+        }
+
+        .event-no-title {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            .event-title {
+                display: none;
+            }
+        }
+
+        .weekend {
+            background-color: #f1f3f4;
+        }
+
+        .current {
+            font-weight: bold;
+        }
+
+        .dots-container {
+            z-index: 11;
+
+            i {
+                color: white;
+            }
+        }
+
+        .dots-container {
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(#{$time-height} - 10px); /* Adjust as needed */
+            i {
+                font-size: 150%; /* Ensures the icon scales with the container */
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .event-allocation {
+            background-color: #E6E3DB;;
+            border-color: #FFF;
+            @extend .text-black;
+            position: relative;
+
+            .dots {
+                height: 16px;
+                width: 16px;
+                fill: #000;
+            }
+        }
+
+        .event-booking {
+            background-color: #999EC1;
+            border-color: #FFF;
+            @extend .text-black;
+            position: relative;
+
+            .dots {
+                height: 16px;
+                width: 16px;
+                fill: #000;
+            }
+        }
+
+        .event-event {
+            @extend .bg-blue;
+            border-color: #FFF;
+            @extend .text-white;
+            position: relative;
+
+            .dots {
+                height: 16px;
+                width: 16px;
+                filter: invert(100%);
+            }
+        }
+
+        .event-temporary {
+            @extend .bg-purple;
+            opacity: 85%;
+            border-color: #FFF;
+            @extend .text-white;
+            position: relative;
+            z-index: 11; /* Ensure they are on top */
+            &.current-temp {
+                z-index: auto;
+            }
+
+            .event-title {
+                flex-grow: 1;
+            }
+            //opacity: 0.75;
+            //resize: vertical;
+            //overflow: auto;
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 10px; /* Define the height of the resizable area at the top and bottom */
+                cursor: ns-resize; /* Two-sided vertical arrow */
+                z-index: 12; /* Ensure they are on top */
+            }
+
+            &::before {
+                top: 0; /* Position the ::before element at the top */
+            }
+
+            &::after {
+                bottom: 0; /* Position the ::after element at the bottom */
+            }
+
+            .drag-handle {
+                bottom: 0;
+                display: flex;
+                cursor: ns-resize;
+                align-items: flex-end;
+                justify-content: center;
+                grid-column: span 2;
+                max-height: 10px;
+                align-self: flex-end;
+                .drag-handle-inner {
+
+                    border-radius: 8px;
+                    min-width: 50%;
+                    min-height: 3px;
+                    max-height: 3px;
+                    background-color: $black-40;
+
+
+                }
+            }
+        }
+
+        .event-small {
+            padding: 1px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+            .event-text {
+
+                .event-title {
+                    @include applyFontProperties('label');
+                }
+
+
+            }
+            .dots-container {
+                height: 16px;
+                width: 16px;
+                align-self: inherit;
+                i {
+                    font-size: 100%;
+                }
+            }
+        }
+
+
+        //.event-small {
+        //  padding-top: 0;
+        //  padding-bottom: 0;
+        //  padding-right: 10px;
+        //  @include applyFontProperties('tiny');
+        //  border-width: 0;
+        //  border-radius: 2px;
+        //  z-index: 1000;
+        //
+        //  > div:first-child {
+        //    display: flex;
+        //    flex-direction: row;
+        //
+        //
+        //    > div {
+        //      font-size: inherit;
+        //      display: flex;
+        //      flex-direction: row;
+        //
+        //      &:not(:last-child) {
+        //        &:after {
+        //          content: ","; /* Insert a comma as content */
+        //          margin-right: .25em; /* Add margin after the content */
+        //        }
+        //      }
+        //    }
+        //
+        //    > div:nth-child(1) {
+        //      font-size: inherit;
+        //      //@extend .text-bold;
+        //    }
+        //
+        //
+        //  }
+        //
+        //  .dots-container {
+        //    height: 10px;
+        //    width: 10px;
+        //
+        //    i {
+        //      color: white;
+        //    }
+        //
+        //  }
+        //}
+
+        .available-slot {
+            @extend .bg-yellow-light;
+            border-color: #FFF;
+            z-index: 4;
+            @extend .text-black;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+
+            &.first-day {
+                margin-left: 1.5rem;
+            }
+
+            &.second-day {
+                margin-right: 1.5rem;
+            }
+
+            &.selected {
+                @extend .bg-green-light;
+                //margin-left: 1.5rem;
+                opacity: 0.75;
+
+            }
+
+            &.disabled {
+                @extend .bg-grey-light;
+                //margin-left: 1.5rem;
+                cursor: not-allowed;
+                opacity: 0.75;
+            }
+
+            //
+            //resize: vertical;
+            //overflow: auto;
 
 
         }
-      }
-    }
 
+        .info {
+            padding: 1.5rem;
+            border-radius: $rounded-mini;
+            border: 1px solid $purple;
+            background-color: $grey-light;
+            min-height: 100px;
+            min-width: 100px;
 
-    //.event-small {
-    //  padding-top: 0;
-    //  padding-bottom: 0;
-    //  padding-right: 10px;
-    //  @include applyFontProperties('tiny');
-    //  border-width: 0;
-    //  border-radius: 2px;
-    //  z-index: 1000;
-    //
-    //  > div:first-child {
-    //    display: flex;
-    //    flex-direction: row;
-    //
-    //
-    //    > div {
-    //      font-size: inherit;
-    //      display: flex;
-    //      flex-direction: row;
-    //
-    //      &:not(:last-child) {
-    //        &:after {
-    //          content: ","; /* Insert a comma as content */
-    //          margin-right: .25em; /* Add margin after the content */
-    //        }
-    //      }
-    //    }
-    //
-    //    > div:nth-child(1) {
-    //      font-size: inherit;
-    //      //@extend .text-bold;
-    //    }
-    //
-    //
-    //  }
-    //
-    //  .dots-container {
-    //    height: 10px;
-    //    width: 10px;
-    //
-    //    i {
-    //      color: white;
-    //    }
-    //
-    //  }
-    //}
+            .info-inner {
+                @extend .text-black;
+                //min-height: 100px;
+                cursor: pointer;
+                //font-size: 1rem;
+                //position: relative;
+                width: max-content;
 
-    .available-slot {
-      @extend .bg-yellow-light;
-      border-color: #FFF;
-      z-index: 4;
-      @extend .text-black;
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      cursor: pointer;
+                .info-title {
+                    h3 {
+                        margin: 0;
+                    }
 
-      &.first-day {
-        margin-left: 1.5rem;
-      }
+                    display: flex;
+                    flex-direction: row;
+                    gap: 0.5rem;
+                    align-items: center;
+                }
 
-      &.second-day {
-        margin-right: 1.5rem;
-      }
+                .info-actions {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                }
+            }
 
-      &.selected {
-        @extend .bg-green-light;
-        //margin-left: 1.5rem;
-        opacity: 0.75;
-
-      }
-
-      &.disabled {
-        @extend .bg-grey-light;
-        //margin-left: 1.5rem;
-        cursor: not-allowed;
-        opacity: 0.75;
-      }
-
-      //
-      //resize: vertical;
-      //overflow: auto;
-
-
-    }
-
-    .info {
-      padding: 1.5rem;
-      border-radius: $rounded-mini;
-      border: 1px solid $purple;
-      background-color: $grey-light;
-      min-height: 100px;
-      min-width: 100px;
-
-      .info-inner {
-        @extend .text-black;
-        //min-height: 100px;
-        cursor: pointer;
-        //font-size: 1rem;
-        //position: relative;
-        width: max-content;
-
-        .info-title {
-          h3 {
-            margin: 0;
-          }
-
-          display: flex;
-          flex-direction: row;
-          gap: 0.5rem;
-          align-items: center;
+            display: none;
+            z-index: 12;
         }
 
-        .info-actions {
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
+        .info[data-show] {
+            display: flex;
         }
-      }
 
-      display: none;
-      z-index: 12;
+
     }
 
-    .info[data-show] {
-      display: flex;
+    .event-filter {
+        filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
     }
 
-
-  }
-
-  .event-filter {
-    filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
-  }
-
-  .booking-filter {
-    filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
-  }
-
-  .allocation-filter {
-    filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
-  }
-
-  .hide-mobile {
-    @media screen and (max-width: 480px) {
-      display: none;
+    .booking-filter {
+        filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
     }
-  }
+
+    .allocation-filter {
+        filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
+    }
+
+    .hide-mobile {
+        @media screen and (max-width: 480px) {
+            display: none;
+        }
+    }
 }
 
 .badge {
-  background-color: #28358B;
-  padding: 0.2em 0.5em;
-  border-radius: 10px;
-  // Additional styles for the badge
+    background-color: #28358B;
+    padding: 0.2em 0.5em;
+    border-radius: 10px;
+    // Additional styles for the badge
 }
 
 .expansion-panel {
-  .expansion-header {
-    display: inline-block;
-    cursor: pointer;
-    // Additional styles for the header
+    .expansion-header {
+        display: inline-block;
+        cursor: pointer;
+        // Additional styles for the header
 
 
-  }
+    }
 
-  .expansion-content {
-    display: none;
-    // Additional styles for the content
-  }
+    .expansion-content {
+        display: none;
+        // Additional styles for the content
+    }
 }
 
 
 .calendar-cell {
-  z-index: 10;
+    z-index: 10;
 }
 
 .time-slot-card {
-  //border: 1px solid #ddd;
-  margin-bottom: 10px;
-  display: grid;
-  grid-template-columns: 6.375rem 1fr auto;
-  min-height: 5rem;
-  align-items: center;
-  max-width: 450px;
-
-  .time-slot-status {
-    border-radius: 0.5rem 0 0 0.5rem;
-    border: 1px solid $purple-24;
-    border-right: 0;
-
-    padding-left: 1rem;
-    font-weight: bold;
-
-    align-self: stretch;
-    display: flex;
+    //border: 1px solid #ddd;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 6.375rem 1fr auto;
+    min-height: 5rem;
     align-items: center;
+    max-width: 450px;
 
-    &.green {
-      background-color: $green-light;
-    }
+    .time-slot-status {
+        border-radius: 0.5rem 0 0 0.5rem;
+        border: 1px solid $purple-24;
+        border-right: 0;
 
-    &.yellow {
-      background-color: $yellow-light;
-    }
+        padding-left: 1rem;
+        font-weight: bold;
 
-    &.red {
-      background-color: $red-light;
-    }
-  }
-
-  .time-slot-date-time {
-    flex-direction: column;
-    align-self: stretch;
-    border: 1px solid $purple-24;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border-right: 0;
-    border-left: 0;
-    display: flex;
-    justify-content: center;
-    //  d-flex flex-wrap gap-1
-    .time-slot-date-container {
-      .single-date {
+        align-self: stretch;
         display: flex;
-        gap: 0.25rem;
+        align-items: center;
+
+        &.green {
+            background-color: $green-light;
+        }
+
+        &.yellow {
+            background-color: $yellow-light;
+        }
+
+        &.red {
+            background-color: $red-light;
+        }
+    }
+
+    .time-slot-date-time {
         flex-direction: column;
-      }
-
-      .multi-date {
+        align-self: stretch;
+        border: 1px solid $purple-24;
+        padding-right: 1rem;
+        padding-left: 1rem;
+        border-right: 0;
+        border-left: 0;
         display: flex;
-        gap: 0.25rem;
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
+        justify-content: center;
+        //  d-flex flex-wrap gap-1
+        .time-slot-date-container {
+            .single-date {
+                display: flex;
+                gap: 0.25rem;
+                flex-direction: column;
+            }
+
+            .multi-date {
+                display: flex;
+                gap: 0.25rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
     }
-  }
 
-  .time-slot-button {
-    padding-right: 1rem;
-    padding-left: 1rem;
-    display: flex;
-    border: 1px solid $purple-24;
-    border-left: 0;
+    .time-slot-button {
+        padding-right: 1rem;
+        padding-left: 1rem;
+        display: flex;
+        border: 1px solid $purple-24;
+        border-left: 0;
 
-    align-self: stretch;
-    align-items: center;
+        align-self: stretch;
+        align-items: center;
 
-    border-radius: 0 0.5rem 0.5rem 0;
+        border-radius: 0 0.5rem 0.5rem 0;
 
-  }
+    }
 }
 
 
 .z-auto {
-  z-index: auto !important;
+    z-index: auto !important;
 }
