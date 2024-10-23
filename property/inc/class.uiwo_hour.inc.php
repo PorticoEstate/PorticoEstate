@@ -1816,9 +1816,9 @@ HTML;
 				}
 				else
 				{
-					$receipt['error'][]	 = array('msg' => lang('The recipient did not get the email:'));
-					$receipt['error'][]	 = array('msg' => lang('From') . ' ' . $from_email);
-					$receipt['error'][]	 = array('msg' => lang('To') . ' ' . $_to);
+					$receipt['error'][]	 = array('msg' => lang('The recipient did not get the email:') . lang('From') . ' ' . $from_email .' ,' . lang('To') . ' ' . $_to);
+//					$receipt['error'][]	 = array('msg' => lang('From') . ' ' . $from_email);
+//					$receipt['error'][]	 = array('msg' => lang('To') . ' ' . $_to);
 				}
 			}
 
