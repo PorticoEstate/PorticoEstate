@@ -159,7 +159,7 @@ function FormatDateRange(start, end, useYear) {
         if (typeof value === 'number') {
             return new Date(value);
         }
-        if (value instanceof DateTime) {
+        if (value instanceof luxon.DateTime) {
             return value.toJSDate();
         }
         return value;
@@ -192,7 +192,7 @@ function FormatTimeRange(start, end) {
         if (typeof value === 'number') {
             return new Date(value);
         }
-        if (value instanceof DateTime) {
+        if (value instanceof luxon.DateTime) {
             return value.toJSDate();
         }
         return value;
@@ -224,7 +224,7 @@ function GenerateDateTime(start, end) {
         if (typeof value === 'number') {
             return new Date(value);
         }
-        if (value instanceof DateTime) {
+        if (value instanceof luxon.DateTime) {
             return value.toJSDate();
         }
         return value;
