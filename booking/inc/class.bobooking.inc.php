@@ -515,7 +515,7 @@
                     'id' => $allocation['id'],
                     'id_string' => $allocation['id_string'],
                     'active' => $allocation['active'],
-					'skip_bas' => $allocation['skip_bas'],
+                    'skip_bas' => $allocation['skip_bas'],
                     'building_id' => $allocation['building_id'],
                     'application_id' => $allocation['application_id'],
                     'completed' => $allocation['completed'],
@@ -525,6 +525,8 @@
                     'resources' => $allocation_resources,
                     'season_id' => $allocation['season_id'],
                     'season_name' => $allocation['season_name'],
+                    '_from' => $allocation['from_'],
+                    '_to' => $allocation['to_'],
                     'from' => explode(" ", $allocation['from_'])[1],
                     'to' => explode(" ", $allocation['to_'])[1],
                     'date' => explode(" ", $allocation['from_'])[0],
@@ -548,7 +550,7 @@
                     'name'				 => $booking['group_name'],
                     'shortname'			 => $booking['group_shortname'],
                     'active'			 => $booking['active'],
-					'skip_bas'			 => $booking['skip_bas'],
+                    'skip_bas'			 => $booking['skip_bas'],
                     'allocation_id'		 => $booking['allocation_id'],
                     'group_id'			 => $booking['group_id'],
                     'season_id'			 => $booking['season_id'],
@@ -560,6 +562,8 @@
                     'group_shortname'	 => $booking['group_shortname'],
                     'building_id'		 => $booking['building_id'],
                     'building_name'		 => $booking['building_name'],
+                    '_from' => $booking['from_'],
+                    '_to' => $booking['to_'],
                     'from' => explode(" ", $booking['from_'])[1],
                     'to' => explode(" ", $booking['to_'])[1],
                     'date' => explode(" ", $booking['from_'])[0],
@@ -586,7 +590,7 @@
                     'id'				 => $event['id'],
                     'id_string'			 => $event['id_string'],
                     'active'			 => $event['active'],
-					'skip_bas'			 => $event['skip_bas'],
+                    'skip_bas'			 => $event['skip_bas'],
                     'activity_id'		 => $event['activity_id'],
                     'application_id'	 => $event['application_id'],
                     'name'				 => $event['is_public'] ? $event['name'] : '',
@@ -601,6 +605,8 @@
                     'completed'			 => $event['completed'],
                     'access_requested'	 => $event['access_requested'],
                     'reminder'			 => $event['reminder'],
+                    '_from' => $event['from_'],
+                    '_to' => $event['to_'],
                     'is_public'			 => $event['is_public'],
                     'activity_name'		 => $event['activity_name'],
                     'resources'			 => $event_resources,
@@ -608,8 +614,8 @@
                 );
             }
 
-			$soseason = CreateObject('booking.soseason');
-			$seasons = $soseason->get_building_seasons($building_id, $from->format('Y-m-d'), $to->format('Y-m-d'));
+            $soseason = CreateObject('booking.soseason');
+            $seasons = $soseason->get_building_seasons($building_id, $from->format('Y-m-d'), $to->format('Y-m-d'));
             return array('total_records' => count($results), 'results' => array("schedule" => $results, "resources" => $resources_id, "seasons" => $seasons));
         }
 
