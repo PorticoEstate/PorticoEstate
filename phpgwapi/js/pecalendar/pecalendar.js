@@ -32,6 +32,9 @@ if (globalThis['ko'] && 'bindingHandlers' in ko) {
 
 }
 
+
+
+
 class PECalendar {
     BOOKING_MONTH_HORIZON = 2;
     /**
@@ -483,16 +486,23 @@ class PECalendar {
             // Update the calendar's start and end hours
             return [(minTime), (maxTime)];
         }
+
         let [minTime, maxTime] = seasonTime(seasons);
         for (let event of events) {
-            const start = +event.from.substring(0, 2);
-            const end = +event.to.substring(0, 2) + 1;
+            const fromDateTime = luxon.DateTime.fromSQL(event._from);
+            const toDateTime = luxon.DateTime.fromSQL(event._to);
+            // Extract hours
+            const start = fromDateTime.hour;
+            const end = toDateTime.hour + (toDateTime.minute > 0 ? 1 : 0); // Add 1 hour if there are minutes
+
 
             // Adjust the start and end hours of the calendar if needed
-            if (minTime > start)
-                minTime = (start);
-            if (maxTime < end)
-                maxTime = (end);
+            if (minTime > start) {
+                minTime = start;
+            }
+            if (maxTime < end) {
+                maxTime = end;
+            }
         }
 
 
@@ -1826,19 +1836,19 @@ if (globalThis['ko']) {
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
 
-                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
-                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
-                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
+<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-                    <!--                            <select-->
-                    <!--                                class="js-select-basic"-->
-                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
-                    <!--                            </select>-->
-                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+<!--                            <select-->
+<!--                                class="js-select-basic"-->
+<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+<!--                            </select>-->
+<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
 
-                    <!--                        </div>-->
+<!--                        </div>-->
 
-                    <!--                    </div>-->
+<!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1848,7 +1858,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                        class="pill-cross"></i></button>
+                                    class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
