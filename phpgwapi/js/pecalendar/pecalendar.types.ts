@@ -13,9 +13,11 @@ interface IEvent {
     resources: IBuildingResource[]
     season_id?: number
     season_name?: string
-    from: string
-    to: string
-    date: string
+    // from: string
+    // to: string
+    _from: string
+    _to: string
+    // date: string
     building_name: string
     allocation_id?: number
     group_id?: number
