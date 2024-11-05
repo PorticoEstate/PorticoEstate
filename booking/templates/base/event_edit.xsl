@@ -702,23 +702,26 @@
 		<div class="form-buttons">
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'approve')"/>
+					<xsl:value-of select="php:function('lang', 'save')"/>
 				</xsl:attribute>
 			</input>
 			<xsl:if test="event/application_id != ''">
-				<a class="cancel pure-button pure-button-primary">
+				<a class="cancel pure-button">
 					<xsl:attribute name="href">
 						<xsl:value-of select="event/application_link"/>
 					</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'back')" />
+					<xsl:value-of select="php:function('lang', 'application')" />
+					#<xsl:value-of select="event/application_id"/>
 				</a>
 			</xsl:if>
-			<a class="cancel pure-button pure-button-primary">
-				<xsl:attribute name="href">
-					<xsl:value-of select="event/cancel_link"/>
-				</xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'Cancel')" />
-			</a>
+			<xsl:if test="not(event/application_id) or normalize-space(event/application_id) = ''">
+				<a class="cancel pure-button">
+					<xsl:attribute name="href">
+						<xsl:value-of select="event/cancel_link"/>
+					</xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'applications')" />
+				</a>
+			</xsl:if>
 		</div>
 	</form>
 	<script type="text/javascript">
