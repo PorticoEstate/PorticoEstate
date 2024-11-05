@@ -32,6 +32,9 @@ if (globalThis['ko'] && 'bindingHandlers' in ko) {
 
 }
 
+
+
+
 class PECalendar {
     BOOKING_MONTH_HORIZON = 2;
     /**
@@ -334,26 +337,28 @@ class PECalendar {
     });
 
     /**
-     * Generates Unix timestamps for the provided start and end times on a given date.
+     * Generates Unix timestamps for the provided datetime strings.
      *
-     * @param {string} date - The specified date in the format "YYYY-MM-DD".
-     * @param {string} timeStart - The start time in the format "HH:mm:ss".
-     * @param {string} timeEnd - The end time in the format "HH:mm:ss".
+     * @param {string} fromDateTime - The start datetime in format "YYYY-MM-DD HH:mm:ss"
+     * @param {string} toDateTime - The end datetime in format "YYYY-MM-DD HH:mm:ss"
      * @returns {{
      *     startTimestamp: number,
      *     endTimestamp: number
      * }} - Returns an object containing Unix timestamps for the start and end times.
      */
-    getUnixTimestamps(date, timeStart, timeEnd) {
-        // Create a Date object for the start time
-        const startDateTime = new Date(`${date}T${timeStart}`);
-        const startTimestamp = startDateTime.getTime();
+    getUnixTimestamps(fromDateTime, toDateTime) {
+        // Clean datetime strings (remove milliseconds if present)
+        const cleanFrom = fromDateTime.split('.')[0];
+        const cleanTo = toDateTime.split('.')[0];
 
-        // Create a Date object for the end time
-        const endDateTime = new Date(`${date}T${timeEnd}`);
-        const endTimestamp = endDateTime.getTime();
+        // Create Date objects for the start and end times
+        const startDateTime = new Date(cleanFrom.replace(' ', 'T'));
+        const endDateTime = new Date(cleanTo.replace(' ', 'T'));
 
-        return {startTimestamp, endTimestamp};
+        return {
+            startTimestamp: startDateTime.getTime(),
+            endTimestamp: endDateTime.getTime()
+        };
     }
 
     applicationURL = ko.computed(() => {
@@ -367,7 +372,7 @@ class PECalendar {
         }
 
         let dateRanges = this.tempEvents().map(tempEvent => {
-            const unixDates = this.getUnixTimestamps(tempEvent.date, tempEvent.from, tempEvent.to);
+            const unixDates = this.getUnixTimestamps(tempEvent._from, tempEvent._to);
             return `${Math.floor(unixDates.startTimestamp / 1000)}_${Math.floor(unixDates.endTimestamp / 1000)}`;
         }).join(',');
 
@@ -481,16 +486,23 @@ class PECalendar {
             // Update the calendar's start and end hours
             return [(minTime), (maxTime)];
         }
+
         let [minTime, maxTime] = seasonTime(seasons);
         for (let event of events) {
-            const start = +event.from.substring(0, 2);
-            const end = +event.to.substring(0, 2) + 1;
+            const fromDateTime = luxon.DateTime.fromSQL(event._from);
+            const toDateTime = luxon.DateTime.fromSQL(event._to);
+            // Extract hours
+            const start = fromDateTime.hour;
+            const end = toDateTime.hour + (toDateTime.minute > 0 ? 1 : 0); // Add 1 hour if there are minutes
+
 
             // Adjust the start and end hours of the calendar if needed
-            if (minTime > start)
-                minTime = (start);
-            if (maxTime < end)
-                maxTime = (end);
+            if (minTime > start) {
+                minTime = start;
+            }
+            if (maxTime < end) {
+                maxTime = end;
+            }
         }
 
 
@@ -660,24 +672,15 @@ class PECalendar {
      * @returns {Array<{from: luxon.DateTime, to: luxon.DateTime}>} - An array of objects, each containing a "from" and "to" luxon.DateTime.
      */
     getEventDates(event) {
-        // if (event?.dates && event.dates.length > 0 && false) {
-        //     return event.dates.map(date => ({
-        //         from: luxon.DateTime.fromISO(date.from_.replace(" ", "T")),
-        //         to: luxon.DateTime.fromISO(date.to_.replace(" ", "T"))
-        //     }));
-        // } else {
-        // Construct luxon.DateTime objects for event's start and end times
-        const dateFrom = luxon.DateTime.fromISO(`${event.date}T${event.from}`);
-        const dateTo = luxon.DateTime.fromISO(`${event.date}T${event.to}`);
+        const dateFrom = luxon.DateTime.fromSQL(event._from);
+        const dateTo = luxon.DateTime.fromSQL(event._to);
 
-        // console.log(event.id, event.from, event.to, dateFrom.toISO(), dateTo.toISO())
         return [{
             from: dateFrom,
             to: dateTo,
-            from_str:dateFrom.toISO(),
+            from_str: dateFrom.toISO(),
             to_str: dateTo.toISO()
         }];
-        // }
     }
 
 
@@ -910,7 +913,7 @@ class PECalendar {
 
         const mappedTempEvents = temps.filter(a => {
 
-            const eventDate = luxon.DateTime.fromISO(a.date);
+            const eventDate = luxon.DateTime.fromSQL(a._from);
             return (this.isDateInRange(eventDate))
 
         }).map((event) => {
@@ -983,15 +986,17 @@ class PECalendar {
         if (event1.id === event2.id) {
             return false;
         }
-        if (event1.date !== event2.date) {
-            // Different days, no overlap
-            return false;
-        }
+
         if (event2.type === 'allocation' || event2.type === 'booking') {
             return false;
         }
 
-        const isTimeOverlapping = (event1.from < event2.to && event1.to > event2.from);
+        const event1Start = luxon.DateTime.fromSQL(event1._from);
+        const event1End = luxon.DateTime.fromSQL(event1._to);
+        const event2Start = luxon.DateTime.fromSQL(event2._from);
+        const event2End = luxon.DateTime.fromSQL(event2._to);
+
+        const isTimeOverlapping = (event1Start < event2End && event1End > event2Start);
         const isResourceOverlapping = event1.resources?.some(resource1 =>
             event2.resources?.some(resource2 => resource1.id === resource2.id)
         );
@@ -1008,14 +1013,9 @@ class PECalendar {
      *                      and is within the allowed hours, false otherwise.
      */
     canCreateTemporaryEvent(newEvent) {
-        // Parse the hours and minutes from the from and to properties of the new event
-        const [startHour, startMinute] = newEvent.from.split(':').map(Number);
-        const [endHour, endMinute] = newEvent.to.split(':').map(Number);
-
-        // Construct luxon.DateTime objects for start and end of the event
-        const eventStart = luxon.DateTime.fromObject({hour: startHour, minute: startMinute});
-        const eventEnd = luxon.DateTime.fromObject({hour: endHour, minute: endMinute});
-        const eventDate = luxon.DateTime.fromISO(newEvent.date);
+        const eventStart = luxon.DateTime.fromSQL(newEvent._from);
+        const eventEnd = luxon.DateTime.fromSQL(newEvent._to);
+        const eventDate = eventStart.startOf('day');
 
         // Construct luxon.DateTime objects for allowed start and end hours
         let allowedStart = luxon.DateTime.fromObject({hour: this.startHour(), minute: 0});
@@ -1040,26 +1040,26 @@ class PECalendar {
         if (eventStart < allowedStart || eventEnd > allowedEnd) {
             return false; // Event is outside of allowed hours
         }
+
         // Check if the event is in the future
         const currentDate = luxon.DateTime.local();
 
         // Check if the event's date and time are in the past
-        if (eventDate.startOf('day').plus({hour: endHour, minute: endMinute}) <= currentDate) {
+        if (eventEnd <= currentDate) {
             return false; // Event is in the past
         }
 
         // If the event is on the current day, ensure its hours are within the allowed range
         if (eventDate.hasSame(currentDate, 'day')) {
             if (eventStart < allowedStart || eventEnd > allowedEnd || eventStart <= currentDate) {
-                return false; // Event is outside of allowed hours or in the past on the current day
+                return false;
             }
         }
-
 
         // Check for overlaps with existing events
         for (let event of [...this.events(), ...this.tempEvents()]) {
             if (this.doesEventsOverlap(newEvent, event)) {
-                return false; // There's an overlap with an existing event
+                return false;
             }
         }
         return true; // No overlaps found and is within the allowed hours
@@ -1068,17 +1068,12 @@ class PECalendar {
     /**
      * Creates a temporary event and appends it to the tempEvents array.
      *
-     * @param {string} startTime - The starting time of the event.
-     * @param {string} endTime - The ending time of the event.
-     * @param {string} date - The date on which the event occurs.
+     * @param {luxon.DateTime} startDateTime - The starting time of the event.
+     * @param {luxon.DateTime} endDateTime - The ending time of the event.
      * @returns {Partial<IEvent>} The created temporary event.
      */
-    createTemporaryEvent(startTime, endTime, date) {
+    createTemporaryEvent(startDateTime, endDateTime) {
         const resource = this.resources()[this.resource_id()];
-
-        // Ensure the event is at least 1 hour long
-        const startDateTime = luxon.DateTime.fromISO(`${date}T${startTime}`);
-        let endDateTime = luxon.DateTime.fromISO(`${date}T${endTime}`);
 
         if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
             endDateTime = startDateTime.plus({ hours: 1 });
@@ -1087,9 +1082,8 @@ class PECalendar {
         const tempEvent = {
             id: `temp-${Date.now()}`,
             name: 'Ny søknad',
-            from: startTime,
-            to: endDateTime.toFormat('HH:mm:ss'),
-            date: date,
+            _from: startDateTime.toSQL({ includeOffset: false }),
+            _to: endDateTime.toSQL({ includeOffset: false }),
             type: "temporary",
             is_public: 1,
             resources: [resource]
@@ -1151,64 +1145,71 @@ class PECalendar {
             if (event.clientY < topBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
-                this.dragStart(targetEvent.from);
-                this.dragEnd(targetEvent.to); // Add this line
+                this.dragStart(targetEvent._from);
+                this.dragEnd(targetEvent._to); // Add this line
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
             } else if (event.clientY > bottomBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
-                this.dragStart(targetEvent.from); // Keep this as 'from'
-                this.dragEnd(targetEvent.to); // Add this line
+                this.dragStart(targetEvent._from); // Keep this as 'from'
+                this.dragEnd(targetEvent._to); // Add this line
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
             }
             return;
         }
-        let startTime = event.target.dataset.time;
-        startTime = startTime.split(":")[0] + ":00:00";
-        this.dragStart(startTime);
+        const startTime = event.target.dataset.time;
+        const date = this.firstDayOfCalendar().plus({days: event.target.dataset.dayofweek - 1});
+        const startDateTime = date.set({
+            hour: parseInt(startTime.split(':')[0]),
+            minute: parseInt(startTime.split(':')[1]) || 0,
+            second: 0
+        });
+
+        this.dragStart(startDateTime.toSQL({ includeOffset: false }));
         this.isDragging(true);
-        const date = this.firstDayOfCalendar().plus({days: event.target.dataset.dayofweek - 1}).toISODate();
 
 
-        let endTime;
+        // let endTime;
+        // if (event.type === 'touchend') {
+        //     //1 hour later
+        //     const parts = startTime.split(':');
+        //     let hours = parseInt(parts[0], 10);
+        //     const minutes = parts[1];
+        //     const seconds = parts[2];
+        //     hours += 1;
+        //     endTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        // } else {
+        //     // 1 hourParts later
+        //     const parts = startTime.split(':');
+        //     let hours = parseInt(parts[0], 10);
+        //     let minutes = parseInt(parts[1], 10);
+        //     const seconds = parts[2];
+        //
+        //     const minutesToAdd = 60 / this.hourParts(); // Calculate minutes to add based on hourParts
+        //     minutes += minutesToAdd;
+        //
+        //     if (minutes >= 60) {
+        //         hours += 1; // Increment hour if minutes exceed 59
+        //         minutes -= 60; // Adjust minutes to new value
+        //     }
+        //
+        //     endTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds}`;
+        //     // console.log(endTime)
+        // }
+
+        let endDateTime;
         if (event.type === 'touchend') {
-            //1 hour later
-            const parts = startTime.split(':');
-            let hours = parseInt(parts[0], 10);
-            const minutes = parts[1];
-            const seconds = parts[2];
-            hours += 1;
-            endTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            endDateTime = startDateTime.plus({ hours: 1 });
         } else {
-            // 1 hourParts later
-            const parts = startTime.split(':');
-            let hours = parseInt(parts[0], 10);
-            let minutes = parseInt(parts[1], 10);
-            const seconds = parts[2];
-
-            const minutesToAdd = 60 / this.hourParts(); // Calculate minutes to add based on hourParts
-            minutes += minutesToAdd;
-
-            if (minutes >= 60) {
-                hours += 1; // Increment hour if minutes exceed 59
-                minutes -= 60; // Adjust minutes to new value
-            }
-
-            endTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds}`;
-            // console.log(endTime)
+            endDateTime = startDateTime.plus({ minutes: 60 / this.hourParts() });
         }
-
-        const resource = this.resources()[this.resource_id()];
 
         const testEvent = {
             id: `TOTEST`,
-            from: startTime,
-            to: endTime,
+            _from: startDateTime.toSQL({ includeOffset: false }),
+            _to: endDateTime.toSQL({ includeOffset: false }),
             is_public: 1,
-            date: date,
-            resources: [
-                resource
-            ]
+            resources: [this.resources()[this.resource_id()]]
         };
 
         if (!this.canCreateTemporaryEvent(testEvent)) {
@@ -1218,10 +1219,17 @@ class PECalendar {
         }
 
         // console.log(testEvent);
-        this.tempEvent(this.createTemporaryEvent(this.dragStart(), endTime, date));
+        this.tempEvent(this.createTemporaryEvent(
+            startDateTime,
+            endDateTime
+        ));        //
         //
-        //
-        this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), endTime);
+
+        this.updateTemporaryEvent(
+            this.tempEvent(),
+            startDateTime,
+            endDateTime
+        );
 
         if (event.type === 'touchend') {
             this.isDragging(false);
@@ -1244,10 +1252,18 @@ class PECalendar {
     }
 
     isAdjacentEvents(event1, event2) {
-        if (event1.date !== event2.date) {
+        const event1Start = luxon.DateTime.fromSQL(event1._from);
+        const event1End = luxon.DateTime.fromSQL(event1._to);
+        const event2Start = luxon.DateTime.fromSQL(event2._from);
+        const event2End = luxon.DateTime.fromSQL(event2._to);
+
+        // Check if they're on the same day
+        if (!event1Start.hasSame(event2Start, 'day')) {
             return false;
         }
-        return event1.to === event2.from || event1.from === event2.to;
+
+        // Check if they're adjacent
+        return event1End.equals(event2Start) || event1Start.equals(event2End);
     }
 
     handleMouseMove = (cellProps, event) => {
@@ -1257,53 +1273,59 @@ class PECalendar {
         }
 
         const currentTime = event.target.dataset.time;
-        const startTime = this.dragStart();
-        const endTime = this.dragEnd();
-        let newStartTime = startTime;
-        let newEndTime = endTime;
+        const startDateTime = luxon.DateTime.fromSQL(this.dragStart());
+        const endDateTime = luxon.DateTime.fromSQL(this.dragEnd());
 
-        // Convert times to luxon.DateTime objects for easier manipulation
-        let currentDateTime = luxon.DateTime.fromISO(currentTime);
-        let startDateTime = luxon.DateTime.fromISO(startTime);
-        let endDateTime = luxon.DateTime.fromISO(endTime);
+
+        // Convert current cell time to full datetime
+        const currentDate = startDateTime.startOf('day');
+        const currentDateTime = currentDate.set({
+            hour: parseInt(currentTime.split(':')[0]),
+            minute: parseInt(currentTime.split(':')[1]) || 0,
+            second: 0
+        });
 
         // Determine if we're dragging from top or bottom
         const isDraggingTop = Math.abs(currentDateTime.diff(startDateTime).as('minutes')) <
             Math.abs(currentDateTime.diff(endDateTime).as('minutes'));
 
+        let newStartDateTime = startDateTime;
+        let newEndDateTime = endDateTime;
+
         if (isDraggingTop) {
-            // Dragging from the top
-            newStartTime = currentDateTime.toFormat('HH:mm:ss');
+            newStartDateTime = currentDateTime;
         } else {
-            // Dragging from the bottom
-            newEndTime = currentDateTime.toFormat('HH:mm:ss');
+            newEndDateTime = currentDateTime;
         }
 
-        // Ensure the event is at least 15 minutes long (or your preferred minimum duration)
+        // Ensure minimum duration (15 minutes)
         const minDuration = { minutes: 15 };
-        const newDuration = luxon.DateTime.fromISO(newEndTime).diff(luxon.DateTime.fromISO(newStartTime)).as('minutes');
+        const newDuration = newEndDateTime.diff(newStartDateTime).as('minutes');
 
         if (newDuration < minDuration.minutes) {
             if (isDraggingTop) {
-                newStartTime = luxon.DateTime.fromISO(newEndTime).minus(minDuration).toFormat('HH:mm:ss');
+                newStartDateTime = newEndDateTime.minus(minDuration);
             } else {
-                newEndTime = luxon.DateTime.fromISO(newStartTime).plus(minDuration).toFormat('HH:mm:ss');
+                newEndDateTime = newStartDateTime.plus(minDuration);
             }
         }
 
         if (!this.canCreateTemporaryEvent({
             ...this.tempEvent(),
-            from: newStartTime,
-            to: newEndTime,
+            _from: newStartDateTime.toSQL({ includeOffset: false }),
+            _to: newEndDateTime.toSQL({ includeOffset: false }),
         })) {
             return;
         }
 
-        this.dragStart(newStartTime);
-        this.dragEnd(newEndTime);
+        this.dragStart(newStartDateTime.toSQL({ includeOffset: false }));
+        this.dragEnd(newEndDateTime.toSQL({ includeOffset: false }));
 
-        // Update the temporary event's times
-        this.updateTemporaryEvent(this.tempEvent(), newStartTime, newEndTime);
+        this.updateTemporaryEvent(
+            this.tempEvent(),
+            newStartDateTime,
+            newEndDateTime
+        );
     }
     handleMouseUp = (cellProps, event) => {
         this.isDragging(false);
@@ -1313,19 +1335,17 @@ class PECalendar {
     }
 
     // Method to update a temporary event
-    updateTemporaryEvent(tempEvent, startTime, endTime) {
+    updateTemporaryEvent(tempEvent, startDateTime, endDateTime) {
+        // const dateStr = luxon.DateTime.fromSQL(tempEvent._from).toFormat('yyyy-MM-dd');
 
         const updatedEvent = {
             ...tempEvent,
-            name: `${startTime.substring(0, 5)} - ${endTime.substring(0, 5)}`,
-            from: startTime < endTime ? startTime : endTime,
-            to: startTime > endTime ? startTime : endTime,
+            _from: startDateTime.toSQL({ includeOffset: false }),
+            _to: endDateTime.toSQL({ includeOffset: false }),
+            name: `${startDateTime.toFormat('HH:mm')} - ${endDateTime.toFormat('HH:mm')}`
         };
-        updatedEvent.name = `${updatedEvent.from.substring(0, 5)} - ${updatedEvent.to.substring(0, 5)}`;
-
 
         this.tempEvent(updatedEvent);
-
     }
 
     /**
@@ -1333,9 +1353,8 @@ class PECalendar {
      * @returns {string} - Returns formatted date string
      */
     formatPillTimeInterval(event) {
-        const dateObj = luxon.DateTime.fromISO(event.date, {locale: 'nb'});
-        const fromTime = luxon.DateTime.fromISO(`${event.date}T${event.from}`, {locale: 'nb'});
-        const toTime = luxon.DateTime.fromISO(`${event.date}T${event.to}`, {locale: 'nb'});
+        const fromTime = luxon.DateTime.fromSQL(event._from);
+        const toTime = luxon.DateTime.fromSQL(event._to);
 
         const formattedFromTime = fromTime.toFormat('HH:mm');
         const formattedToTime = toTime.toFormat('HH:mm');
@@ -1348,12 +1367,13 @@ class PECalendar {
      * @returns {string} - Returns formatted date string
      */
     formatPillDateInterval(event) {
-        const dateObj = luxon.DateTime.fromISO(event.date, {locale: 'nb'});
-
-        const formattedDate = FormatDateRange(dateObj);
-
-        return formattedDate;
+        // console.log(event);
+        const dateObj = luxon.DateTime.fromSQL(event._from);
+        return FormatDateRange(dateObj);
     }
+
+
+
 
     /**
      * Formats the given Unix timestamps into a date range string.
@@ -1402,34 +1422,32 @@ class PECalendar {
         }
 
         let newEvent = this.tempEvent();
-
-        // Ensure the event is at least 1 hour long
-        const startDateTime = luxon.DateTime.fromISO(`${newEvent.date}T${newEvent.from}`);
-        let endDateTime = luxon.DateTime.fromISO(`${newEvent.date}T${newEvent.to}`);
+        const startDateTime = luxon.DateTime.fromSQL(newEvent._from);
+        let endDateTime = luxon.DateTime.fromSQL(newEvent._to);
 
         if (endDateTime.diff(startDateTime, 'hours').hours < 1) {
             endDateTime = startDateTime.plus({ hours: 1 });
-            newEvent.to = endDateTime.toFormat('HH:mm:ss');
-            newEvent.name = `${newEvent.from.substring(0, 5)} - ${newEvent.to.substring(0, 5)}`;
+            newEvent._to = endDateTime.toSQL({ includeOffset: false });
+            newEvent.name = `${startDateTime.toFormat('HH:mm')} - ${endDateTime.toFormat('HH:mm')}`;
         }
 
         let stitched = false;
 
         // Check for adjacent events and stitch them together
         this.tempEvents(this.tempEvents().map(existingEvent => {
+            const existingStart = luxon.DateTime.fromSQL(existingEvent._from);
+            const existingEnd = luxon.DateTime.fromSQL(existingEvent._to);
+
             if (this.isAdjacentEvents(newEvent, existingEvent)) {
                 stitched = true;
-                const stitchedStartDateTime = luxon.DateTime.fromISO(`${existingEvent.date}T${existingEvent.from}`);
-                const stitchedEndDateTime = luxon.DateTime.fromISO(`${existingEvent.date}T${existingEvent.to}`);
-
-                const newStartDateTime = stitchedStartDateTime < startDateTime ? stitchedStartDateTime : startDateTime;
-                const newEndDateTime = stitchedEndDateTime > endDateTime ? stitchedEndDateTime : endDateTime;
+                const stitchedStartDateTime = existingStart < startDateTime ? existingStart : startDateTime;
+                const stitchedEndDateTime = existingEnd > endDateTime ? existingEnd : endDateTime;
 
                 return {
                     ...existingEvent,
-                    from: newStartDateTime.toFormat('HH:mm:ss'),
-                    to: newEndDateTime.toFormat('HH:mm:ss'),
-                    name: `${newStartDateTime.toFormat('HH:mm')} - ${newEndDateTime.toFormat('HH:mm')}`
+                    _from: stitchedStartDateTime.toSQL({ includeOffset: false }),
+                    _to: stitchedEndDateTime.toSQL({ includeOffset: false }),
+                    name: `${stitchedStartDateTime.toFormat('HH:mm')} - ${stitchedEndDateTime.toFormat('HH:mm')}`
                 };
             }
             return existingEvent;
@@ -1760,7 +1778,6 @@ class PECalendar {
     }
 
     formatEventTime(data) {
-        // console.log(data)
         const fromTime = data.date.from.toFormat('HH:mm');
         const toTime = data.date.to.toFormat('HH:mm');
         return `${fromTime} - ${toTime}`;
@@ -1784,8 +1801,8 @@ class PECalendar {
         // console.log(events);
         events.forEach(eventData => {
             const event = eventData.event;
-            const eventStart = luxon.DateTime.fromISO(`${event.date}T${event.from}`).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
-            const eventEnd = luxon.DateTime.fromISO(`${event.date}T${event.to}`).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+            const eventStart = luxon.DateTime.fromSQL(event._from).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+            const eventEnd = luxon.DateTime.fromSQL(event._to).toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
             const summary = this.escapeICalText(this.getEventName(event));
             const description = this.escapeICalText(event.description || '');
             const location = this.escapeICalText(event.building_name) + ': ' + this.escapeICalText(event.resources.map(resource => resource.name).join(', '));

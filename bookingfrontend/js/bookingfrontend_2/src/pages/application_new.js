@@ -42,20 +42,49 @@ function applicationModel() {
 
     self.goNext = () => {
         if (am.formStep() === 0) {
-            if (validateStep1()) {
-                clearGlobalError();
-                self.formStep(self.formStep() + 1);
-                window.scrollTo({top: 0, behavior: 'smooth'});
+            // Check if there are unsaved time entries before validation
+            if (checkAndAddPendingTimeEntries()) {
+                if (validateStep1()) {
+                    clearGlobalError();
+                    self.formStep(self.formStep() + 1);
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                } else {
+                    showStep1Errors();
+                }
             } else {
-                showStep1Errors();
+                // If time entries were added, delay the validation to allow state update
+                setTimeout(() => {
+                    if (validateStep1()) {
+                        clearGlobalError();
+                        self.formStep(self.formStep() + 1);
+                        window.scrollTo({top: 0, behavior: 'smooth'});
+                    } else {
+                        showStep1Errors();
+                    }
+                }, 100);
             }
         } else if (am.formStep() === 1) {
             if (validateStep2()) {
-                // If this is the last step, you might want to submit the form here
                 document.getElementById('application_form').submit();
             }
         }
     };
+
+
+    // Add new function to check and add pending time entries
+    function checkAndAddPendingTimeEntries() {
+        let timeEntriesAdded = false;
+
+        // Only attempt to add if we have all required fields
+        if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
+            self.addDate();
+            timeEntriesAdded = true;
+        }
+
+        return timeEntriesAdded;
+    }
+
+
 
     self.goPrev = () => {
         self.formStep(self.formStep() - 1);
@@ -157,8 +186,10 @@ function applicationModel() {
 
             if (start < now || end < now) {
                 showError('date-time-selection', trans('bookingfrontend', 'selected_time_must_be_in_future'));
+                return false;
             } else if (start >= end) {
                 showError('date-time-selection', trans('bookingfrontend', 'start_time_must_be_before_end_time'));
+                return false;
             } else {
                 hideError('date-time-selection');
                 clearGlobalError();
@@ -174,7 +205,6 @@ function applicationModel() {
                         formatedPeriode: start.toFormat('dd/MM/yyyy HH:mm') + ' - ' + end.toFormat('HH:mm')
                     });
 
-
                     setTimeout(function () {
                         self.bookingDate("");
                         self.bookingStartTime("");
@@ -184,12 +214,11 @@ function applicationModel() {
                             post_handle_order_table();
                         }
                     }, 500);
+                    return true;
                 }
             }
-        } else {
-            showError('date-time-selection', trans('bookingfrontend', 'please_fill_all_date_and_time_fields'));
         }
-
+        return false;
     };
 
     self.removeDate = function (data) {
