@@ -1834,6 +1834,10 @@ textarea {
   border-color: #dfd0e3;
 }
 
+.dropdown-icon.open {
+  transform: rotate(-180deg);
+}
+
 .select2-container--select-v2 {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
   border-radius: 3.125rem;
@@ -2138,7 +2142,7 @@ textarea {
 
 .slidedown {
   position: relative;
-  border-radius: 3.125rem;
+  border-radius: 1rem;
   border: 1px solid #D6D6D6;
   background-color: #FFFFFF;
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
@@ -2166,7 +2170,8 @@ textarea {
 }
 .slidedown__toggler {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   background: transparent;
   border-radius: 3.125rem;
   color: #333333;
@@ -2183,47 +2188,27 @@ textarea {
     font-size: 1.125rem;
   }
 }
+.slidedown__toggler .slidedown-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+}
 @media (min-width: 768px) {
   .slidedown__toggler {
-    padding: 1.4rem 4rem 1.4rem 2rem;
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
   }
 }
 @media (min-width: 992px) {
   .slidedown__toggler {
-    padding-right: 3rem;
+    padding-right: 1.5rem;
   }
 }
 .slidedown__toggler:focus {
   outline: none;
-}
-.slidedown__toggler::after {
-  content: "\f078";
-  font-family: "Font Awesome 5 Free";
-  font-weight: 700;
-  position: absolute;
-  right: 1.5rem;
-  top: 0.5rem;
-  transform: rotate(0);
-  transition: all 0.3s;
-  font-size: 1rem;
-  color: #000000;
-  color: #793C8A;
-  font-size: 1.2rem;
-  top: 0;
-  bottom: 0;
-  right: 1.8rem;
-  display: flex;
-  align-items: center;
-}
-@media (min-width: 576px) {
-  .slidedown__toggler::after {
-    right: 2rem;
-  }
-}
-@media (min-width: 576px) {
-  .slidedown__toggler::after {
-    font-size: 1.4rem;
-  }
 }
 @media (min-width: 992px) {
   .slidedown__toggler--large {
@@ -3290,28 +3275,40 @@ div#applications-cart-content {
 .accordion {
   --bs-accordion-btn-padding-x: 0.5rem;
   --bs-accordion-btn-padding-y: 0.5rem;
-  --bs-accordion-active-color: #28358B;
+  --bs-accordion-active-color: #FFFFFF;
   --bs-accordion-btn-icon-pe: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2328358B' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
-  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2328358B' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+}
+.accordion .accordion-item {
+  border: none;
+  border-top: 1px solid black;
+  border-radius: 0;
 }
 .accordion .accordion-button {
-  font-size: 1rem;
-  line-height: 1.25rem;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
 }
 @media (max-width: 1024px) {
   .accordion .accordion-button {
-    font-size: 0.875rem;
-    line-height: 1.125rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
+}
+.accordion .accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.125);
+}
+.accordion .accordion-button:not(.collapsed) {
+  background-color: transparent;
 }
 .accordion .accordion-button:not(.collapsed)::after {
   background-image: var(--bs-accordion-btn-active-icon);
 }
 .accordion .accordion-button::after {
-  background-image: var(--bs-accordion-btn-icon-pe);
+  background-image: var(--bs-accordion-btn-icon-pe) !important;
 }
 .accordion .accordion-button.collapsed {
-  color: #28358B;
   background-color: transparent;
 }
 

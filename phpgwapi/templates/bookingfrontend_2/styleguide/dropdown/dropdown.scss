@@ -25,6 +25,12 @@
 }
 
 
+.dropdown-icon {
+  &.open {
+    transform: rotate(-180deg);
+  }
+}
+
 .select2-container--select-v2 {
   box-shadow: $box-shadow-large;
   border-radius: $rounded-large;
@@ -371,10 +377,11 @@
 
 .slidedown {
   position: relative;
-  border-radius: $rounded-large;
+  border-radius: $rounded-small;
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
+
 
   &:focus-within {
     box-shadow: $box-shadow-large, $box-focus-shadow;
@@ -405,7 +412,8 @@
 
   &__toggler {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     background: transparent;
     border-radius: $rounded-large;
     color: $black-80;
@@ -418,32 +426,43 @@
     padding: 1rem 3rem 1rem 2rem;
     border: 0;
 
+    .slidedown-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: flex-start;
+
+    }
+
     @media (min-width: $media-medium) {
-      padding: 1.4rem 4rem 1.4rem 2rem;
+      padding-top: 1rem;
+      padding-right: 1rem;
+      padding-left: 1rem;
+      padding-bottom: 1rem;
     }
 
     @media (min-width: $media-large) {
-      padding-right: 3rem;
+      padding-right: 1.5rem;
     }
 
     &:focus {
       outline: none;
     }
 
-    &::after {
-      @include dropdown-arrow;
-      color: $purple;
-      font-size: 1.2rem;
-      top: 0;
-      bottom: 0;
-      right: 1.8rem;
-      display: flex;
-      align-items: center;
-
-      @media (min-width: $media-small) {
-        font-size: 1.4rem;
-      }
-    }
+    //&::after {
+    //  @include dropdown-arrow;
+    //  color: $purple;
+    //  font-size: 1.2rem;
+    //  top: 0;
+    //  bottom: 0;
+    //  right: 1.8rem;
+    //  display: flex;
+    //  align-items: center;
+    //
+    //  @media (min-width: $media-small) {
+    //    font-size: 1.4rem;
+    //  }
+    //}
 
     &--large {
       @media (min-width: $media-large) {

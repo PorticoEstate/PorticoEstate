@@ -1,4 +1,4 @@
-$accordion-active-colour: $blue;
+$accordion-active-colour: $white;
 $accordion-inactive-colour: $blue;
 
 /* Style for the accordion button */
@@ -59,16 +59,25 @@ $escaped-characters: (
   --bs-accordion-btn-active-icon: #{escape-svg($bs-accordion-btn-active-icon)};
 
 
-  .accordion-item {
 
+  .accordion-item {
+    border: none;
+    border-top: 1px solid black;
+    border-radius: 0;
   }
 
   .accordion-button {
-    @include applyFontProperties('label');
+    color: inherit;
+    //@include applyFontProperties('label');
+    @include applyFontProperties('title');
+    &:focus {
+      box-shadow: none;
+      border-color: rgba(0,0,0,.125);
+    }
 
     &:not(.collapsed) {
       //color: var(--#{$prefix}accordion-active-color);
-      //background-color: var(--#{$prefix}accordion-active-bg);
+      background-color: transparent;
       //box-shadow: inset 0 calc(-1 * var(--#{$prefix}accordion-border-width)) 0 var(--#{$prefix}accordion-border-color); // stylelint-disable-line function-disallowed-list
 
       &::after {
@@ -84,7 +93,7 @@ $escaped-characters: (
       //height: var(--#{$prefix}accordion-btn-icon-width);
       //margin-left: auto;
       //content: "";
-      background-image: var(--bs-accordion-btn-icon-pe);
+      background-image: var(--bs-accordion-btn-icon-pe)!important;
       //background-repeat: no-repeat;
       //background-size: var(--#{$prefix}accordion-btn-icon-width);
       //@include transition(var(--#{$prefix}accordion-btn-icon-transition));
@@ -92,7 +101,7 @@ $escaped-characters: (
 
 
     &.collapsed {
-      color: $accordion-active-colour;
+      //color: $accordion-active-colour;
       background-color: transparent;
     }
   }
