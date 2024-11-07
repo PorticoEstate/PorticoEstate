@@ -1,7 +1,8 @@
-// resource-info-card.js
+import '../../accordion-item'
+
 
 ko.bindingHandlers.slidedownTarget = {
-    init: function(element, valueAccessor) {
+    init: function (element, valueAccessor) {
         var callback = valueAccessor();
         if (typeof callback === 'function') {
             callback(element);
@@ -20,7 +21,7 @@ function ResourceInfoCardViewModel(params) {
     this.expanded = ko.observable(false);
     this.static = params.static || false;
 
-    this.filterGroups = params.filterGroups ||undefined
+    this.filterGroups = params.filterGroups || undefined
 
 
     this.cleanTownName = function (townName) {
@@ -36,7 +37,7 @@ function ResourceInfoCardViewModel(params) {
     };
 
     this.description_text = ko.computed(() => {
-        if(this.disableText) {
+        if (this.disableText) {
             return ''
         }
         const description_json = JSON.parse(this.resource.description_json);
@@ -44,9 +45,21 @@ function ResourceInfoCardViewModel(params) {
             .parseFromString(this.lang && description_json[this.lang] || description_json['no'], "text/html")
             .documentElement.textContent;
     })
+    this.getHtml = (html) => {
+        if (this.disableText) {
+            return ''
+        }
+        const t = new DOMParser()
+            .parseFromString(html, "text/html");
+        return new DOMParser()
+            .parseFromString(html, "text/html")
+            .documentElement.innerHTML;
+    }
+
+
 
     this.url = ko.computed(() => {
-        if(!this.buildings || this.buildings.length === 0) {
+        if (!this.buildings || this.buildings.length === 0) {
             return '';
         }
         if (this.resource.simple_booking === 1) {
@@ -65,7 +78,7 @@ function ResourceInfoCardViewModel(params) {
     });
 
     this.locationUrl = ko.computed(() => {
-        if(!this.buildings || this.buildings.length === 0) {
+        if (!this.buildings || this.buildings.length === 0) {
             return '';
         }
         return phpGWLink('bookingfrontend/', {
@@ -74,32 +87,43 @@ function ResourceInfoCardViewModel(params) {
         });
     });
 
+    this.resourceUrl = ko.computed(() => {
+        return phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uiresource.show',
+            id: this.resource.original_id !== undefined ? this.resource.original_id : this.resource.id
+        }, false, this.resource.remoteInstance?.webservicehost || undefined);
+    });
+
     this.calendarId = `calendar-${this.resource.id}`;
 
-    this.infoText = ko.computed(() => {
+    this.placeText = ko.computed(() => {
         const towns = this.towns().map(t => this.cleanTownName(t.name)).join(' • ');
-        const buildings = this.buildings?.map(b => {
+
+
+        const remoteInstance = this.resource.remoteInstance?.name ? `<span class="text-overline">${this.resource.remoteInstance?.name}</span>` : '';
+
+        return [remoteInstance, `<span class="text-overline">${towns}</span>`].filter(Boolean).join(' • ');
+    });
+
+    this.building = ko.computed(() => {
+        return this.buildings?.map(b => {
             const buildingUrl = phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uibuilding.show',
                 id: b.original_id !== undefined ? b.original_id : b.id
             }, false, b.remoteInstance?.webservicehost || undefined);
             return `<a href="${buildingUrl}" class="link-text link-text-primary"><i class="fa-solid fa-location-dot"></i>${b.name}</a>`;
         }).join(' • ');
-
-        const remoteInstance = this.resource.remoteInstance?.name ? `<span class="text-overline">${this.resource.remoteInstance?.name}</span>` : '';
-
-        return [remoteInstance, `<span class="text-overline">${towns}</span>`, buildings].filter(Boolean).join(' • ');
     });
 
 
-    this.toggle = (data,clickEvent)  => {
-        if(clickEvent.target?.tagName === 'A') {
+    this.toggle = (data, clickEvent) => {
+        if (clickEvent.target?.tagName === 'A' || clickEvent.target?.classList.contains('no-op')) {
             return true;
         }
         const target = clickEvent.target.closest('.js-slidedown.slidedown').querySelector('.js-slidedown-content.slidedown__content');
         const expanded = !this.expanded();
 
-        expanded ? $(target).slideDown(): $(target).slideUp();
+        expanded ? $(target).slideDown() : $(target).slideUp();
 
         this.expanded(expanded);
         return false;
@@ -108,23 +132,56 @@ function ResourceInfoCardViewModel(params) {
 
 ko.components.register('resource-info-card', {
     viewModel: ResourceInfoCardViewModel,
+    // language=HTML
     template: `
         <div class="col-12 mb-4">
-    <div class="js-slidedown slidedown">
-        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false" data-bind="click: toggle">
-            <span><div class="fa-solid fa-layer-group"></div> <span data-bind="text: resource.name"></span></span>
-            <span class="slidedown__toggler__info" data-bind="html: infoText"></span>
-        </button>
 
-            <div class="js-slidedown-content slidedown__content">
-                <!-- ko ifnot: disableText -->
-                    <div>
-                        <p data-bind="html: description_text"></p>
+            <div class="js-slidedown slidedown">
+                <button class="js-slidedown-toggler slidedown__toggler" type="button"
+                        data-bind="click: toggle, attr:{'aria-expanded': expanded}">
+                    <div class="slider-header">
+                         <span><div class="fa-solid fa-layer-group"></div> <span
+                             data-bind="text: resource.name"></span></span>
+                        <span class="slidedown__toggler__info" data-bind="html: placeText"></span>
+                        <span class="slidedown__toggler__info" data-bind="html: building"></span>
                     </div>
-                <!-- /ko -->
+                    <div class="slidedown-actions">
+                        <a data-bind="attr: {'href': resourceUrl}" class="link-text link-text-primary"><i
+                            class="fa-solid fa-expand no-op"></i></a>
+                        <i class="fa-solid fa-chevron-down dropdown-icon text-primary"
+                           data-bind="css: { open: expanded }"></i>
+                    </div>
+                </button>
 
-                <!-- ko if: expanded -->
-                <!-- ko if: date -->
+                <div class="js-slidedown-content slidedown__content">
+                    <!-- ko ifnot: disableText -->
+
+                    <div class="accordion" data-bind="attr: {id: 'accordion' + resource.id}">
+                        <accordion-item
+                            params="title_tag: 'description', parentID: 'accordion' + resource.id, content: description_text">
+                            <!--                            <p data-bind="html: description_text"></p>-->
+                        </accordion-item>
+                        <!-- ko if: !!resource.opening_hours -->
+
+                        <accordion-item
+                            params="title_tag: 'opening hours', title_group: 'booking', parentID: 'accordion' + resource.id, content: getHtml(resource.opening_hours)">
+
+                        </accordion-item>
+                        <!-- /ko -->
+                        <!-- ko if: !!resource.contact_info -->
+
+                        <accordion-item params=" title_tag: 'contact information', parentID: 'accordion' + resource.id, content: getHtml(resource.contact_info)">
+                        </accordion-item>
+                        <!-- /ko -->
+
+                    </div>
+                    <!--                    <div>-->
+                    <!--                        -->
+                    <!--                    </div>-->
+                    <!-- /ko -->
+
+                    <!-- ko if: expanded -->
+                    <!-- ko if: date -->
                     <!-- ko component: {
                         name: 'pe-calendar',
                         params: {
@@ -138,10 +195,10 @@ ko.components.register('resource-info-card', {
                     } -->
                     <!-- /ko -->
                     <!-- /ko -->
-                <!-- /ko -->
+                    <!-- /ko -->
+                </div>
             </div>
-    </div>
-</div>
+        </div>
 
     `
 });
