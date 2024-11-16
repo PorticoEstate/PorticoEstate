@@ -68,13 +68,13 @@ Debugging php will work
 Netbeans will can only be used as with remote source via ssh/sftp - not recommended.
 
 
-==== Upgrade PostgreSQL from 15 to 17 usig docker:
+==== Upgrade PostgreSQL from 15 to 17 using docker:
 [source]
----
+----
 docker exec -t postgres15_container pg_dumpall -c -U postgres > /tmp/portico_backup.sql
 docker cp /tmp/portico_backup.sql postgres17_container:/tmp/portico_backup.sql
 docker exec -i postgres17_container psql -U postgres -f /tmp/portico_backup.sql
----
+----
 
 == - OR running with vagrant
 See the howto outlined in the vagrantfile
