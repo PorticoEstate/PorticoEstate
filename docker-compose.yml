@@ -4,7 +4,7 @@
 # docker compose build
 
 services:
-  postgres15:
+  postgres:
     container_name: postgres15_container
     image: postgres:15.0
     ports:
@@ -42,7 +42,7 @@ services:
       # developement: store your files in '/var/local/phpgw/<domain>/tmp' and '/var/local/phpgw/<domain>/files'
     restart: always
     depends_on:
-      - postgres15
+      - postgres
       - redis
 
 volumes:
