@@ -388,7 +388,7 @@
 				}
 			}
 
-			if (count($period_list) == 1) //last month in year
+			if (count($period_list) < 3) //last month in year
 			{
 				$year++;
 				$period			 = sprintf("%s%02d", $year, 1);
