@@ -309,32 +309,7 @@ class PECalendar {
     });
 
 
-    availableTimeSlotWithOverlaps = ko.computed(() => {
-        const allocations = this.events().filter(event => event.type === 'allocation');
-        const availableSlots = this.availableTimeSlots()[this.resource_id()] || [];
 
-        const updatedslots = availableSlots.map(slot => {
-            const slotStart = luxon.DateTime.fromMillis(parseInt(slot.start));
-            const slotEnd = luxon.DateTime.fromMillis(parseInt(slot.end));
-            let overlap = false;
-
-            allocations.forEach(allocation => {
-                const allocationStart = luxon.DateTime.fromISO(`${allocation.date}T${allocation.from}`);
-                const allocationEnd = luxon.DateTime.fromISO(`${allocation.date}T${allocation.to}`);
-
-                if (allocationStart <= slotEnd && allocationEnd >= slotStart) {
-                    overlap = true;
-                }
-            });
-
-            return {...slot, overlap: overlap ? 2 : slot.overlap};
-        });
-
-        return updatedslots;
-
-        // Update the availableTimeSlots observable to trigger reactivity
-        // this.availableTimeSlots.valueHasMutated();
-    });
 
     /**
      * Generates Unix timestamps for the provided datetime strings.
@@ -698,6 +673,38 @@ class PECalendar {
         return filteredEvents.filter(event => event?.resources.some(resource => resource?.id === this.resource_id()));
     });
 
+    availableTimeSlotWithOverlaps = ko.computed(() => {
+        if (!this.resourceEvents() || this.resourceEvents().length === 0) {
+            return []
+        }
+        const allocations = this.resourceEvents();
+        const availableSlots = this.availableTimeSlots()[this.resource_id()] || [];
+
+        const updatedslots = availableSlots.map(slot => {
+            const slotStart = luxon.DateTime.fromMillis(parseInt(slot.start));
+            const slotEnd = luxon.DateTime.fromMillis(parseInt(slot.end));
+            let overlap = false;
+            const overlappingEvents = [];
+
+            allocations.forEach(allocation => {
+                const allocationStart = luxon.DateTime.fromISO(`${allocation.date}T${allocation.from}`);
+                const allocationEnd = luxon.DateTime.fromISO(`${allocation.date}T${allocation.to}`);
+
+                if (allocationStart < slotEnd && allocationEnd > slotStart) {
+                    overlap = true;
+                    overlappingEvents.push(allocation);
+                }
+            });
+
+            return {...slot, overlap: overlap ? 2 : slot.overlap, overlappingEvents
+            };
+        });
+
+        return updatedslots;
+
+        // Update the availableTimeSlots observable to trigger reactivity
+        // this.availableTimeSlots.valueHasMutated();
+    });
 
     /**
      * Checks if a given date falls within the range of firstDayOfCalendar and lastDayOfCalendar.
@@ -1836,19 +1843,19 @@ if (globalThis['ko']) {
             <div class="calendar" data-bind="style: {'--calendar-rows': (endHour() - startHour() + 1) * hourParts()}">
                 <div class="header">
 
-<!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
-<!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
-<!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
+                    <!--                    <div class="select_building_resource" data-bind="hidden: disableInteraction">-->
+                    <!--                        <div class="resource-switch" data-bind="css: { 'invisible': disableResourceSwap }">-->
+                    <!--                            &lt;!&ndash; ko if: resourcesAsArray().length > 0 &ndash;&gt;-->
 
-<!--                            <select-->
-<!--                                class="js-select-basic"-->
-<!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
-<!--                            </select>-->
-<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+                    <!--                            <select-->
+                    <!--                                class="js-select-basic"-->
+                    <!--                                data-bind="options: resourcesAsArray, optionsText: 'name', optionsValue: 'id', value: resource_id, optionsCaption: 'Velg Ressurs', withAfterRender: { afterRender: updateSelectBasicAfterRender}, disable: combinedTempEvents().length > 0">-->
+                    <!--                            </select>-->
+                    <!--                            &lt;!&ndash; /ko &ndash;&gt;-->
 
-<!--                        </div>-->
+                    <!--                        </div>-->
 
-<!--                    </div>-->
+                    <!--                    </div>-->
                     <div class="pending-row">
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
@@ -1858,7 +1865,7 @@ if (globalThis['ko']) {
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
                                 <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
-                                    class="pill-cross"></i></button>
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -2154,8 +2161,8 @@ if (globalThis['ko']) {
                         <!--                            <span data-bind="text: $data.overlap === false ? 'Ledig' : ($data.overlap === 2 ? 'Reservert' : 'Opptatt')"></span>-->
                         <!--                        </div>-->
                         <div class="time-slot-status"
-                             data-bind="css: { 'green': $data.overlap === false, 'red': $data.overlap !== false }">
-                            <span data-bind="text: $data.overlap === false ? 'Ledig' : 'Opptatt'"></span>
+                             data-bind="css: { 'green': !$data.overlap, 'red': $data.overlap !== false }">
+                            <span data-bind="text: !$data.overlap ? 'Ledig' : 'Opptatt'"></span>
                         </div>
 
                         <!-- Date and time section -->
@@ -2167,7 +2174,7 @@ if (globalThis['ko']) {
 
                         <!-- Button section -->
                         <div class="time-slot-button">
-                            <!-- ko if: $data.overlap === false -->
+                            <!-- ko if: !$data.overlap -->
                             <a class="pe-btn  pe-btn-secondary pe-btn--small link-text "
                                data-bind="attr: {href: phpGWLink('bookingfrontend/', $data.applicationLink, false, $parent.instance)}">Velg
                             </a>
