@@ -56,7 +56,7 @@ class Search {
 
     constructor() {
         const searchEl = document.getElementById("search-page-content");
-        console.log(remote_search)
+        // console.log(remote_search)
 
         ko.cleanNode(searchEl);
         ko.applyBindings(this, searchEl);
