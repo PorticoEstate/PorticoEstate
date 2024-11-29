@@ -837,13 +837,67 @@ class PECalendar {
         return (dateTime.hour * this.hourParts()) + Math.ceil(dateTime.minute / (60 / this.hourParts()));
     }
 
+    isCompletelyOverlapped(eventA, eventB) {
+        const aStart = luxon.DateTime.fromSQL(eventA._from);
+        const aEnd = luxon.DateTime.fromSQL(eventA._to);
+        const bStart = luxon.DateTime.fromSQL(eventB._from);
+        const bEnd = luxon.DateTime.fromSQL(eventB._to);
+
+        // Check if event B completely contains event A
+        return bStart <= aStart && bEnd >= aEnd;
+    }
+
 
     sizedEvents = ko.computed(() => {
         if (!this.resourceEvents() || this.resourceEvents().length === 0) {
-            return []
+            return [];
         }
+
+        // First, separate events by type
+        const eventsByType = {
+            event: [],
+            booking: [],
+            allocation: [],
+            temporary: []
+        };
+
+        this.resourceEvents().forEach(event => {
+            eventsByType[event.type].push(event);
+        });
+
+        // First, filter out allocations that are completely overlapped by events or bookings
+        const visibleAllocations = eventsByType.allocation.filter(allocation => {
+            // Check if any event or booking completely overlaps this allocation
+            const isOverlappedByEvent = eventsByType.event.some(event =>
+                this.isCompletelyOverlapped(allocation, event)
+            );
+
+            const isOverlappedByBooking = eventsByType.booking.some(booking =>
+                this.isCompletelyOverlapped(allocation, booking)
+            );
+
+            return !isOverlappedByEvent && !isOverlappedByBooking;
+        });
+
+        // Then, filter out bookings that are completely overlapped by events
+        const visibleBookings = eventsByType.booking.filter(booking => {
+            const isOverlappedByEvent = eventsByType.event.some(event =>
+                this.isCompletelyOverlapped(booking, event)
+            );
+
+            return !isOverlappedByEvent;
+        });
+
+        // Combine all visible events for processing
+        const visibleEvents = [
+            ...eventsByType.event,
+            ...visibleBookings,
+            ...visibleAllocations,
+            ...eventsByType.temporary
+        ];
+
         // Organize events by day
-        let eventsByDay = this.resourceEvents().reduce((days, event) => {
+        let eventsByDay = visibleEvents.reduce((days, event) => {
             const dates = this.getEventDates(event);
             dates.forEach(dateRange => {
                 let currentDate = dateRange.from.startOf('day');
@@ -859,18 +913,14 @@ class PECalendar {
                         // Calculate proper start and end times for this day's portion of the event
                         let dayStart, dayEnd;
                         if (currentDate.hasSame(dateRange.from, 'day')) {
-                            // First day - use actual start time
                             dayStart = dateRange.from;
                         } else {
-                            // Middle or last day - start at beginning of day
                             dayStart = currentDate.startOf('day');
                         }
 
                         if (currentDate.hasSame(dateRange.to, 'day')) {
-                            // Last day - use actual end time
                             dayEnd = dateRange.to;
                         } else {
-                            // First or middle day - end at end of day
                             dayEnd = currentDate.endOf('day');
                         }
 
@@ -890,12 +940,11 @@ class PECalendar {
             return days;
         }, {});
 
-        // Allocate events for each day
+        // Allocate events for each day and build final array
         Object.keys(eventsByDay).forEach(dayKey => {
             eventsByDay[dayKey] = this.allocateEvents(eventsByDay[dayKey]);
         });
 
-        // Rebuild the array for the computed observable
         const calEvents = [];
         Object.entries(eventsByDay).forEach(([dayKey, events]) => {
             events.forEach(({event, date, columnSpan, startColumn}) => {
@@ -914,6 +963,8 @@ class PECalendar {
 
         return calEvents;
     });
+
+
 
     calendarEvents = ko.computed(() => {
         const temps = [...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()))
