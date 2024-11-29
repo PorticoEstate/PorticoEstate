@@ -62,6 +62,7 @@
                     resource_facilities: data.resource_facilities,
                     resource_activities: data.resource_activities,
                     resource_category_activity: data.resource_category_activity,
+                    native_buildings: data.buildings
             ">
             </booking-search>
         </div>
