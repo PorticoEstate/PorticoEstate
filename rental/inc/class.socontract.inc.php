@@ -264,13 +264,13 @@
 			 */
 			if ($filters['start_date_report'])
 			{
-				$filters['contract_status'] = 'all';
-				$filter_clauses[] = "contract.date_end > {$filters['start_date_report']}";
-				$filter_clauses[] = "contract.date_start < {$filters['start_date_report']}";
+//				$filters['contract_status'] = 'all';
+//				$filter_clauses[] = "contract.date_end > {$filters['start_date_report']}";
+				$filter_clauses[] = "contract.date_start > {$filters['start_date_report']}";
 			}
 			if ($filters['end_date_report'])
 			{
-				$filters['contract_status'] = 'all';
+//				$filters['contract_status'] = 'all';
 				$filter_clauses[] = "contract.date_end < {$filters['end_date_report']}";
 			}
 //_debug_array($filtes);die();
@@ -280,33 +280,40 @@
 				{
 					$ts_query = $filters['status_date']; // target timestamp specified by user
 				}
+				else if (isset($filters['start_date_report']) && $filters['start_date_report'])
+				{
+					$ts_query = $filters['start_date_report']; // target timestamp specified by user
+				}
 				else
 				{
 					$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 				}
+
+				$ts_query_now = strtotime(date('Y-m-d')); // timestamp for query (today)
+
 				switch ($filters['contract_status'])
 				{
 					case 'under_planning':
 						$filter_clauses[] = "contract.date_start > {$ts_query} OR contract.date_start IS NULL";
 						break;
 					case 'active':
-						$filter_clauses[] = "contract.date_start <= {$ts_query} AND ( contract.date_end >= {$ts_query} OR contract.date_end IS NULL OR contract.date_end = 0)";
+						$filter_clauses[] = "contract.date_start <= {$ts_query_now} AND ( contract.date_end >= {$ts_query_now} OR contract.date_end IS NULL OR contract.date_end = 0)";
 						break;
 					case 'under_dismissal':
-						$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
+						$filter_clauses[] = "contract.date_start <= {$ts_query_now} AND contract.date_end >= {$ts_query_now} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query_now}";
 						break;
 					case 'closing_due_date':
-						$filter_clauses[] = "contract.due_date >= {$ts_query} AND (contract.due_date - (type.notify_before_due_date * (24 * 60 * 60)))  <= {$ts_query}";
+						$filter_clauses[] = "contract.due_date >= {$ts_query_now} AND (contract.due_date - (type.notify_before_due_date * (24 * 60 * 60)))  <= {$ts_query_now}";
 						$order = "ORDER BY contract.due_date ASC";
 						$this->sort_field = 'contract.due_date';
 						break;
 					case 'terminated_contracts':
-						$filter_clauses[] = "contract.date_end >= ({$ts_query} - (type.notify_after_termination_date * (24 * 60 * 60))) AND contract.date_end < {$ts_query}";
+						$filter_clauses[] = "contract.date_end >= ({$ts_query_now} - (type.notify_after_termination_date * (24 * 60 * 60))) AND contract.date_end < {$ts_query_now}";
 						$order = "ORDER BY contract.date_end DESC";
 						$this->sort_field = 'contract.date_end';
 						break;
 					case 'ended':
-						$filter_clauses[] = "contract.date_end < {$ts_query}";
+						$filter_clauses[] = "contract.date_end < {$ts_query_now}";
 						break;
 				}
 			}
