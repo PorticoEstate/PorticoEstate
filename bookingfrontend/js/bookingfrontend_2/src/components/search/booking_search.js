@@ -84,6 +84,7 @@ export class BookingSearch {
     constructor(params) {
         params.instance(this)
 
+        this.native_buildings = params.native_buildings;
         this.building_resources = params.building_resources;
         this.towns_data = params.towns_data;
         this.activities = params.activities;
@@ -160,20 +161,39 @@ export class BookingSearch {
 
 
     initializeComputed() {
-        this.buildings = ko.computed(() => {
+
+        this.buidling_towns = ko.computed(() => {
             if (!this.towns_data || !this.towns_data()) {
+                return {};
+            }
+
+
+            const mappedData = this.towns_data().reduce((acc, item) => {
+                acc[item.b_id] = item;
+                return acc;
+            }, {});
+
+            // console.log(mappedData);
+
+            return mappedData;
+
+        })
+        this.buildings = ko.computed(() => {
+            if (!this.buidling_towns || !this.buidling_towns()) {
                 return [];
             }
+            const buildingTowns = this.buidling_towns();
             const town = this.selected_town();
-            const filtered =  this.towns_data()
-                .filter(item => town ? town.id === item.id : true)
+            const filtered =  this.native_buildings()
+                .filter(item => town ? (buildingTowns[item.id] && town.id === buildingTowns[item.id].id) : true)
                 .map(item => ({
-                    id: item.b_id,
-                    name: htmlDecode(item.b_name),
-                    original_id: item.original_b_id,
+                    id: item.id,
+                    name: htmlDecode(item.name),
+                    original_id: item.original_id,
                     remoteInstance: item.remoteInstance,
                 }))
                 .sort((a, b) => a.name?.localeCompare(b.name, "no"));
+
             return filtered;
 
         });
@@ -329,7 +349,7 @@ export class BookingSearch {
     }
 
     searchFetch() {
-        console.log("SEARCHING")
+        // console.log("SEARCHING")
         this.result_shown(25); // Reset the number of shown results to 25 when search is performed
         if (this.show_only_available())
             this.fetchAvailableResources();
@@ -373,10 +393,13 @@ export class BookingSearch {
             let buildings_resources = [];
             let activity_resources = [];
             // Find all buildings matching so we can filter on later
+            let buildings;
             if (this.selected_buildings().length === 0) {
-                const buildings = this.buildings().filter(building => building.name.match(re));
+                buildings = this.buildings().filter(building => building.name.match(re));
                 buildings_resources = this.getResourcesFromBuildings(buildings);
             }
+
+            // console.log('Building filter', buildings, buildings_resources)
             if (this.selected_activities().length === 0) {
                 const matchingActivities = this.activities().filter(activity => activity.name.match(re));
                 const activitySets = matchingActivities.map(activity => this.activity_cache[activity.id]);
@@ -404,15 +427,16 @@ export class BookingSearch {
             }, []);
 
             // Filter resources to ensure they have at least one building and one town
-            resources = resources.filter(resource => {
-                const buildings = this.getBuildingsFromResource(resource.id);
-                const towns = this.getTownFromBuilding(buildings);
-                return buildings.length > 0 && towns.length > 0;
-            });
+            // resources = resources.filter(resource => {
+            //     const buildings = this.getBuildingsFromResource(resource.id);
+            //     const towns = this.getTownFromBuilding(buildings);
+            //     return buildings.length > 0 && towns.length > 0;
+            // });
+
             this.result_all(resources);
             if (this.show_only_available())
                 resources = resources.filter(r => this.resources_with_available_time().includes(r.id));
-            console.log(resources.length, "res")
+            // console.log(resources.length, "res")
             this.result(resources);
         } else {
             fillSearchCount(null);
