@@ -7,8 +7,8 @@
       "lg": { "value": "16px", "type": "spacing" }
     },
     "radius": {
-      "base": { "value": "8px", "type": "radius" } // Default radius
-    },
+  "base": { "value": "8px", "type": "radius" }
+}
     "shadow": {
       "light": { "value": "0px 1px 2px rgba(0, 0, 0, 0.1)", "type": "shadow" },
       "md": { "value": "0px 2px 4px rgba(0, 0, 0, 0.2)", "type": "shadow" },
