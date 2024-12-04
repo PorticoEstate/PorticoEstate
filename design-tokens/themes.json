@@ -7,8 +7,8 @@
       "lg": { "value": "16px", "type": "spacing" }
     },
     "radius": {
-  "base": { "value": "8px", "type": "radius" }
-}
+      "base": { "value": "8px", "type": "radius" }
+    },
     "shadow": {
       "light": { "value": "0px 1px 2px rgba(0, 0, 0, 0.1)", "type": "shadow" },
       "md": { "value": "0px 2px 4px rgba(0, 0, 0, 0.2)", "type": "shadow" },
@@ -28,15 +28,15 @@
       },
       "typography": {
         "front-heading": {
-          "value": { "fontFamily": "Poppins", "fontWeight": "700", "fontSize": "24px", "lineHeight": "32px" },
+          "value": "Poppins, 700, 24px, 32px",
           "type": "typography"
         },
         "front-body": {
-          "value": { "fontFamily": "Roboto", "fontWeight": "400", "fontSize": "16px", "lineHeight": "24px" },
+          "value": "Roboto, 400, 16px, 24px",
           "type": "typography"
         },
         "front-caption": {
-          "value": { "fontFamily": "Roboto", "fontWeight": "400", "fontSize": "12px", "lineHeight": "16px" },
+          "value": "Roboto, 400, 12px, 16px",
           "type": "typography"
         }
       },
@@ -56,15 +56,15 @@
       },
       "typography": {
         "back-heading": {
-          "value": { "fontFamily": "IBM Plex Mono", "fontWeight": "600", "fontSize": "20px", "lineHeight": "28px" },
+          "value": "IBM Plex Mono, 600, 20px, 28px",
           "type": "typography"
         },
         "back-body": {
-          "value": { "fontFamily": "IBM Plex Sans", "fontWeight": "400", "fontSize": "14px", "lineHeight": "20px" },
+          "value": "IBM Plex Sans, 400, 14px, 20px",
           "type": "typography"
         },
         "back-caption": {
-          "value": { "fontFamily": "IBM Plex Sans", "fontWeight": "400", "fontSize": "12px", "lineHeight": "16px" },
+          "value": "IBM Plex Sans, 400, 12px, 16px",
           "type": "typography"
         }
       },
