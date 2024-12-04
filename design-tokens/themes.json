@@ -1,26 +1,56 @@
 {
   "$schema": "https://json.schemastore.org/design-tokens",
-  "global": {
-    "colors": {
-      "primary": {
-        "value": "#793c8a",
-        "type": "color"
-      },
-      "secondary": {
-        "value": "#28358b",
-        "type": "color"
-      },
-      "tertiary": {
-        "value": "#4a7cab",
-        "type": "color"
-      },
-      "complementary": {
-        "value": "#a061a4",
-        "type": "color"
-      },
-      "neutral": {
-        "value": "#4d4d4d",
-        "type": "color"
+  "themes": {
+    "tema-innbyggerportal": {
+      "global": {
+        "colors": {
+          "primary": {
+            "value": "#793c8a",
+            "type": "color"
+          },
+          "secondary": {
+            "value": "#28358b",
+            "type": "color"
+          },
+          "tertiary": {
+            "value": "#4a7cab",
+            "type": "color"
+          },
+          "complementary": {
+            "value": "#a061a4",
+            "type": "color"
+          },
+          "neutral": {
+            "value": "#4d4d4d",
+            "type": "color"
+          }
+        }
+      }
+    },
+    "tema-adminpanel": {
+      "global": {
+        "colors": {
+          "primary": {
+            "value": "#1d5f4a",
+            "type": "color"
+          },
+          "secondary": {
+            "value": "#3a8a79",
+            "type": "color"
+          },
+          "tertiary": {
+            "value": "#d9771a",
+            "type": "color"
+          },
+          "complementary": {
+            "value": "#8a4f8d",
+            "type": "color"
+          },
+          "neutral": {
+            "value": "#4d4d4d",
+            "type": "color"
+          }
+        }
       }
     }
   }
