@@ -1,172 +1,75 @@
 {
   "$schema": "https://json.schemastore.org/design-tokens",
-  "themes": {
-    "tema-innbyggerportal": {
-      "global": {
-        "colors": {
-          "primary": {
-            "value": "#793c8a",
-            "type": "color"
-          },
-          "secondary": {
-            "value": "#28358b",
-            "type": "color"
-          },
-          "tertiary": {
-            "value": "#4a7cab",
-            "type": "color"
-          },
-          "complementary": {
-            "value": "#a061a4",
-            "type": "color"
-          },
-          "neutral": {
-            "value": "#4d4d4d",
-            "type": "color"
-          },
-          "background": {
-            "value": "#ffffff",
-            "type": "color"
-          },
-          "text": {
-            "value": "#000000",
-            "type": "color"
-          }
-        },
-        "typography": {
-          "heading": {
-            "value": {
-              "fontFamily": "Poppins",
-              "fontWeight": "700",
-              "fontSize": "24px",
-              "lineHeight": "32px"
-            },
-            "type": "typography"
-          },
-          "body": {
-            "value": {
-              "fontFamily": "Roboto",
-              "fontWeight": "400",
-              "fontSize": "16px",
-              "lineHeight": "24px"
-            },
-            "type": "typography"
-          },
-          "caption": {
-            "value": {
-              "fontFamily": "Roboto",
-              "fontWeight": "400",
-              "fontSize": "12px",
-              "lineHeight": "16px"
-            },
-            "type": "typography"
-          }
-        },
-        "radius": {
-          "base": {
-            "value": "8px",
-            "type": "radius"
-          }
-        }
-      }
-    },
-    "tema-adminpanel": {
-      "global": {
-        "colors": {
-          "primary": {
-            "value": "#1d5f4a",
-            "type": "color"
-          },
-          "secondary": {
-            "value": "#3a8a79",
-            "type": "color"
-          },
-          "tertiary": {
-            "value": "#d9771a",
-            "type": "color"
-          },
-          "complementary": {
-            "value": "#8a4f8d",
-            "type": "color"
-          },
-          "neutral": {
-            "value": "#4d4d4d",
-            "type": "color"
-          },
-          "background": {
-            "value": "#f8f9fa",
-            "type": "color"
-          },
-          "text": {
-            "value": "#333333",
-            "type": "color"
-          }
-        },
-        "typography": {
-          "heading": {
-            "value": {
-              "fontFamily": "IBM Plex Mono",
-              "fontWeight": "600",
-              "fontSize": "20px",
-              "lineHeight": "28px"
-            },
-            "type": "typography"
-          },
-          "body": {
-            "value": {
-              "fontFamily": "IBM Plex Sans",
-              "fontWeight": "400",
-              "fontSize": "14px",
-              "lineHeight": "20px"
-            },
-            "type": "typography"
-          },
-          "caption": {
-            "value": {
-              "fontFamily": "IBM Plex Sans",
-              "fontWeight": "400",
-              "fontSize": "12px",
-              "lineHeight": "16px"
-            },
-            "type": "typography"
-          }
-        },
-        "radius": {
-          "base": {
-            "value": "4px",
-            "type": "radius"
-          }
-        }
-      }
-    }
-  },
   "global": {
     "spacing": {
-      "small": {
-        "value": "4px",
-        "type": "spacing"
-      },
-      "medium": {
-        "value": "8px",
-        "type": "spacing"
-      },
-      "large": {
-        "value": "16px",
-        "type": "spacing"
-      }
+      "sm": { "value": "4px", "type": "spacing" },
+      "md": { "value": "8px", "type": "spacing" },
+      "lg": { "value": "16px", "type": "spacing" }
+    },
+    "radius": {
+      "base": { "value": "8px", "type": "radius" } // Default radius
     },
     "shadow": {
-      "light": {
-        "value": "0px 1px 2px rgba(0, 0, 0, 0.1)",
-        "type": "shadow"
+      "light": { "value": "0px 1px 2px rgba(0, 0, 0, 0.1)", "type": "shadow" },
+      "md": { "value": "0px 2px 4px rgba(0, 0, 0, 0.2)", "type": "shadow" },
+      "lg": { "value": "0px 4px 8px rgba(0, 0, 0, 0.3)", "type": "shadow" }
+    }
+  },
+  "themes": {
+    "innbyggerportal": {
+      "colors": {
+        "front-primary": { "value": "#793c8a", "type": "color" },
+        "front-secondary": { "value": "#28358b", "type": "color" },
+        "front-tertiary": { "value": "#4a7cab", "type": "color" },
+        "front-complementary": { "value": "#a061a4", "type": "color" },
+        "front-neutral": { "value": "#4d4d4d", "type": "color" },
+        "front-background": { "value": "#ffffff", "type": "color" },
+        "front-text": { "value": "#000000", "type": "color" }
       },
-      "medium": {
-        "value": "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        "type": "shadow"
+      "typography": {
+        "front-heading": {
+          "value": { "fontFamily": "Poppins", "fontWeight": "700", "fontSize": "24px", "lineHeight": "32px" },
+          "type": "typography"
+        },
+        "front-body": {
+          "value": { "fontFamily": "Roboto", "fontWeight": "400", "fontSize": "16px", "lineHeight": "24px" },
+          "type": "typography"
+        },
+        "front-caption": {
+          "value": { "fontFamily": "Roboto", "fontWeight": "400", "fontSize": "12px", "lineHeight": "16px" },
+          "type": "typography"
+        }
       },
-      "heavy": {
-        "value": "0px 4px 8px rgba(0, 0, 0, 0.3)",
-        "type": "shadow"
+      "radius": {
+        "front-base": { "value": "8px", "type": "radius" }
+      }
+    },
+    "adminpanel": {
+      "colors": {
+        "back-primary": { "value": "#1d5f4a", "type": "color" },
+        "back-secondary": { "value": "#3a8a79", "type": "color" },
+        "back-tertiary": { "value": "#d9771a", "type": "color" },
+        "back-complementary": { "value": "#8a4f8d", "type": "color" },
+        "back-neutral": { "value": "#4d4d4d", "type": "color" },
+        "back-background": { "value": "#f8f9fa", "type": "color" },
+        "back-text": { "value": "#333333", "type": "color" }
+      },
+      "typography": {
+        "back-heading": {
+          "value": { "fontFamily": "IBM Plex Mono", "fontWeight": "600", "fontSize": "20px", "lineHeight": "28px" },
+          "type": "typography"
+        },
+        "back-body": {
+          "value": { "fontFamily": "IBM Plex Sans", "fontWeight": "400", "fontSize": "14px", "lineHeight": "20px" },
+          "type": "typography"
+        },
+        "back-caption": {
+          "value": { "fontFamily": "IBM Plex Sans", "fontWeight": "400", "fontSize": "12px", "lineHeight": "16px" },
+          "type": "typography"
+        }
+      },
+      "radius": {
+        "back-base": { "value": "4px", "type": "radius" }
       }
     }
   }
