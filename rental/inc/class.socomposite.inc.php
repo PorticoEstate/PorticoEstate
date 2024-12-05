@@ -96,25 +96,37 @@
 				$availability_date_to =  phpgwapi_datetime::date_to_timestamp($filters['availability_date_to']);
 			}
 
+			$availability_date_to = max($availability_date_to, ($availability_date_from + 1));
+
 			switch ($filters['has_contract'])
 			{
 				case "has_contract":
-					$filter_clauses[] = "NOT rental_contract_composite.contract_id IS NULL"; // Composite must have a contract
-					$filter_clauses[] = "NOT rental_contract.date_start IS NULL"; // The contract must have start date
+					$filter_clauses[] = "rental_contract_composite.contract_id IS NOT NULL"; // Composite must have a contract
+					$filter_clauses[] = "rental_contract.date_start IS NOT NULL"; // The contract must have start date
 
 					/* The contract's start date not after the end of the period if there is no end date */
 					$filter_clauses[] = "
 					(
 						(
-							((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
-							OR
-							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+							rental_contract_composite.contract_id IS NOT NULL
+							AND
+							(
+								(rental_contract.date_start >= $availability_date_from AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
+								OR (rental_contract.date_start >= $availability_date_from AND rental_contract.date_start < $availability_date_to)
+								OR (rental_contract.date_end > $availability_date_from AND rental_contract.date_end <= $availability_date_to)
+								OR (rental_contract.date_start < $availability_date_from AND rental_contract.date_end > $availability_date_to)
+							)
 						)
 						OR
 						(
-							((NOT rental_application.date_start > $availability_date_to AND rental_application.date_end IS NULL)
-							OR
-							(NOT rental_application.date_start > $availability_date_to AND NOT rental_application.date_end IS NULL AND NOT rental_application.date_end < $availability_date_from))
+							rental_application_composite.application_id IS NOT NULL
+							AND
+							(
+								(rental_application.date_start >= $availability_date_from AND (rental_application.date_end IS NULL OR rental_application.date_end = 0))
+								OR (rental_application.date_start >= $availability_date_from AND rental_application.date_start < $availability_date_to)
+								OR (rental_application.date_end > $availability_date_from AND rental_application.date_end <= $availability_date_to)
+								OR (rental_application.date_start < $availability_date_from AND rental_application.date_end > $availability_date_to)
+							)
 						)
 					)";
 					$special_query = true;
@@ -124,7 +136,7 @@
 				(
 					-- rental_contract_composite.contract_id IS NULL OR
 					-- rental_application_composite.application_id IS NULL OR
-					NOT rental_composite.id IN
+					rental_composite.id NOT IN
 					(
 						SELECT rental_composite.id FROM rental_composite 
 						LEFT JOIN rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
@@ -134,19 +146,25 @@
 						WHERE  
 						(
 							(
-								NOT rental_contract_composite.contract_id IS NULL AND
-								NOT rental_contract.date_start IS NULL AND
-								((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
-								OR
-								(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+								rental_contract_composite.contract_id IS NOT NULL
+								AND
+								(
+									(rental_contract.date_start >= $availability_date_from AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
+									OR (rental_contract.date_start >= $availability_date_from AND rental_contract.date_start < $availability_date_to)
+									OR (rental_contract.date_end > $availability_date_from AND rental_contract.date_end <= $availability_date_to)
+									OR (rental_contract.date_start < $availability_date_from AND rental_contract.date_end > $availability_date_to)
+								)
 							)
 							OR
 							(
-								NOT rental_application_composite.application_id IS NULL AND
-								NOT rental_application.date_start IS NULL AND
-								((NOT rental_application.date_start > $availability_date_to AND rental_application.date_end IS NULL)
-								OR
-								(NOT rental_application.date_start > $availability_date_to AND NOT rental_application.date_end IS NULL AND NOT rental_application.date_end < $availability_date_from))
+								rental_application_composite.application_id IS NOT NULL
+								AND
+								(
+									(rental_application.date_start >= $availability_date_from AND (rental_application.date_end IS NULL OR rental_application.date_end = 0))
+									OR (rental_application.date_start >= $availability_date_from AND rental_application.date_start < $availability_date_to)
+									OR (rental_application.date_end > $availability_date_from AND rental_application.date_end <= $availability_date_to)
+									OR (rental_application.date_start < $availability_date_from AND rental_application.date_end > $availability_date_to)
+								)
 							)
 
 

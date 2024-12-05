@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json.schemastore.org/design-tokens",
+  "global": {
+    "spacing": {
+      "sm": { "value": "4px", "type": "spacing" },
+      "md": { "value": "8px", "type": "spacing" },
+      "lg": { "value": "16px", "type": "spacing" }
+    },
+    "radius": {
+      "base": { "value": "8px", "type": "radius" }
+    },
+    "shadow": {
+      "light": { "value": "0px 1px 2px rgba(0, 0, 0, 0.1)", "type": "shadow" },
+      "md": { "value": "0px 2px 4px rgba(0, 0, 0, 0.2)", "type": "shadow" },
+      "lg": { "value": "0px 4px 8px rgba(0, 0, 0, 0.3)", "type": "shadow" }
+    }
+  },
+  "themes": {
+    "innbyggerportal": {
+      "colors": {
+        "front-primary": { "value": "#793c8a", "type": "color" },
+        "front-secondary": { "value": "#28358b", "type": "color" },
+        "front-tertiary": { "value": "#4a7cab", "type": "color" },
+        "front-complementary": { "value": "#a061a4", "type": "color" },
+        "front-neutral": { "value": "#4d4d4d", "type": "color" },
+        "front-background": { "value": "#ffffff", "type": "color" },
+        "front-text": { "value": "#000000", "type": "color" }
+      },
+      "typography": {
+        "front-heading": {
+          "value": "Poppins, 700, 24px, 32px",
+          "type": "typography"
+        },
+        "front-body": {
+          "value": "Roboto, 400, 16px, 24px",
+          "type": "typography"
+        },
+        "front-caption": {
+          "value": "Roboto, 400, 12px, 16px",
+          "type": "typography"
+        }
+      },
+      "radius": {
+        "front-base": { "value": "8px", "type": "radius" }
+      }
+    },
+    "adminpanel": {
+      "colors": {
+        "back-primary": { "value": "#1d5f4a", "type": "color" },
+        "back-secondary": { "value": "#3a8a79", "type": "color" },
+        "back-tertiary": { "value": "#d9771a", "type": "color" },
+        "back-complementary": { "value": "#8a4f8d", "type": "color" },
+        "back-neutral": { "value": "#4d4d4d", "type": "color" },
+        "back-background": { "value": "#f8f9fa", "type": "color" },
+        "back-text": { "value": "#333333", "type": "color" }
+      },
+      "typography": {
+        "back-heading": {
+          "value": "IBM Plex Mono, 600, 20px, 28px",
+          "type": "typography"
+        },
+        "back-body": {
+          "value": "IBM Plex Sans, 400, 14px, 20px",
+          "type": "typography"
+        },
+        "back-caption": {
+          "value": "IBM Plex Sans, 400, 12px, 16px",
+          "type": "typography"
+        }
+      },
+      "radius": {
+        "back-base": { "value": "4px", "type": "radius" }
+      }
+    }
+  }
+}
