@@ -400,12 +400,18 @@
 			$booking['resources'] = phpgw::get_var('resources', 'int');
 			#The string replace is a workaround for a problem at Bergen Kommune
 
-			$booking['from_'] = str_replace('%3A', ':', phpgw::get_var('from_', 'string'));
-			$booking['to_'] = str_replace('%3A', ':', phpgw::get_var('to_', 'string'));
-			foreach ($booking['from_'] as $k => $v)
+			if(!is_array($_REQUEST['from_']))
 			{
-				$booking['from_'][$k] = pretty_timestamp($booking['from_'][$k]);
-				$booking['to_'][$k] = pretty_timestamp($booking['to_'][$k]);
+				$booking['from_'] = pretty_timestamp(str_replace('%3A', ':', Sanitizer::get_var('from_', 'string')));
+				$booking['to_'] = pretty_timestamp(str_replace('%3A', ':', Sanitizer::get_var('to_', 'string')));
+			}
+			else
+			{
+				foreach ($booking['from_'] as $k => $v)
+				{
+					$booking['from_'][$k] = pretty_timestamp($booking['from_'][$k]);
+					$booking['to_'][$k] = pretty_timestamp($booking['to_'][$k]);
+				}
 			}
 
 			$time_from = explode(" ", phpgw::get_var('from_', 'string'));
