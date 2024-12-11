@@ -674,10 +674,10 @@ class PECalendar {
     });
 
     availableTimeSlotWithOverlaps = ko.computed(() => {
-        if (!this.resourceEvents() || this.resourceEvents().length === 0) {
-            return []
-        }
-        const allocations = this.resourceEvents();
+        // if (!this.resourceEvents() || this.resourceEvents().length === 0) {
+        //     return []
+        // }
+        const allocations = this.resourceEvents() || [];
         const availableSlots = this.availableTimeSlots()[this.resource_id()] || [];
 
         const updatedslots = availableSlots.map(slot => {
@@ -699,7 +699,6 @@ class PECalendar {
             return {...slot, overlap: overlap ? 2 : slot.overlap, overlappingEvents
             };
         });
-
         return updatedslots;
 
         // Update the availableTimeSlots observable to trigger reactivity
