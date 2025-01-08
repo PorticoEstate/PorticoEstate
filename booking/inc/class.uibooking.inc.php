@@ -402,8 +402,8 @@
 
 			if(!is_array($_REQUEST['from_']))
 			{
-				$booking['from_'] = pretty_timestamp(str_replace('%3A', ':', Sanitizer::get_var('from_', 'string')));
-				$booking['to_'] = pretty_timestamp(str_replace('%3A', ':', Sanitizer::get_var('to_', 'string')));
+				$booking['from_'] = pretty_timestamp(str_replace('%3A', ':', phpgw::get_var('from_', 'string')));
+				$booking['to_'] = pretty_timestamp(str_replace('%3A', ':', phpgw::get_var('to_', 'string')));
 			}
 			else
 			{
