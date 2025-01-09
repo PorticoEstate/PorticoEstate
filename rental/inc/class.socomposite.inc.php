@@ -146,7 +146,8 @@
 						WHERE  
 						(
 							(
-								rental_contract_composite.contract_id IS NOT NULL
+								(rental_contract.cancelled IS NULL OR rental_contract.cancelled = 0)
+								AND rental_contract_composite.contract_id IS NOT NULL
 								AND
 								(
 									(rental_contract.date_start >= $availability_date_from AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
