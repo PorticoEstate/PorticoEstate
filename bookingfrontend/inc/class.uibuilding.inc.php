@@ -37,6 +37,7 @@
 			$res		 = phpgw::get_var('res', 'int', 'GET');
 			$resource_id = phpgw::get_var('resource_id', 'int', 'GET');
 			$color		 = phpgw::get_var('color', 'string', 'GET');
+			$color_back	 = phpgw::get_var('color_back', 'string', 'GET');
 			$fontsize	 = phpgw::get_var('fontsize', 'int', 'GET');
 			$weekend	 = phpgw::get_var('weekend', 'int', 'GET');
 
@@ -158,7 +159,16 @@
 			$html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
 			$html .= '<meta name="author" content="Aktiv Kommune">';
 			$html .= '<style>';
-			$html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
+
+			if($color_back)
+			{
+				$html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px; background-color: #' . $color_back . ';} ';
+			}
+			else
+			{
+				$html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
+			}
+
 			if ($fontsize != '')
 			{
 				$html .= 'table { font-family: Tahoma, Verdana, Helvetica; width: 100%; height: 100%; margin: 0px; font-size: ' . $fontsize . 'px; border-collapse: collapse;} ';
