@@ -63,7 +63,7 @@
 		{
 			if (!empty($this->config['debug']))
 			{
-				$headers = getallheaders();
+				$headers = array_change_key_case(getallheaders(), CASE_LOWER);
 				_debug_array($headers);
 			}
 			if (!$sub)

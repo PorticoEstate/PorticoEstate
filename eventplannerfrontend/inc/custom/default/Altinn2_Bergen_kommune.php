@@ -47,7 +47,7 @@
 
 		public function get_user_org_id()
 		{
-			$headers = getallheaders();
+			$headers = array_change_key_case(getallheaders(), CASE_LOWER);
 			if ($this->debug)
 			{
 				echo 'headers:<br>';
