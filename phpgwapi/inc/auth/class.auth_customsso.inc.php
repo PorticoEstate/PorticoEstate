@@ -74,7 +74,7 @@
 
 		public function get_username()
 		{
-			$headers = getallheaders();
+			$headers = array_change_key_case(getallheaders(), CASE_LOWER);
 			$ssn = $headers['uid'];
 
 			$remote_user = $headers['REMOTE_USER'] ? $headers['REMOTE_USER'] : $headers['upn'];

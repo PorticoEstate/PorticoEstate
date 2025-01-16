@@ -68,7 +68,7 @@
 			$authenticated =  $this->verify_hash($passwd, $hash);
 
 			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
-			$headers = getallheaders();
+			$headers = array_change_key_case(getallheaders(), CASE_LOWER);
 			$ssn = !empty($headers['uid']) ? $headers['uid'] : $ssn;
 			$ssn = !empty($_SERVER['HTTP_UID']) ? $_SERVER['HTTP_UID'] : $ssn;
 
