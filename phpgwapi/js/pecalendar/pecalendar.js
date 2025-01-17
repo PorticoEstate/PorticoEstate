@@ -263,8 +263,8 @@ class PECalendar {
         this.sizedEvents.subscribe(newData => this.loadPopperData())
 
         this.disableResourceSwap(disableResourceSwap)
-        this.building_id(building_id);
         this.resource_id(resource_id);
+        this.building_id(building_id);
         this.loadBuildingData();
 
         this.dayColumnSpan(+getComputedStyle(document.documentElement)
@@ -409,6 +409,7 @@ class PECalendar {
             let urlFreeTime = phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uibooking.get_freetime',
                 building_id: this.building_id(),
+                resource_id: this.resource_id(),
                 start_date: currDate.toFormat('dd/LL-yyyy'),
                 end_date: maxEndDate.toFormat('dd/LL-yyyy')
             }, true, this.instance);
