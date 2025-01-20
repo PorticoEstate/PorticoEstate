@@ -88,48 +88,57 @@
 		 * @param int $resource_id
 		 * @return array
 		 */
-		public function get_resource_seasons( $resource_id, $from_ = null, $to_ = null )
-		{
-			static $seasons = array();
+        public function get_resource_seasons( $resource_id, $from_ = null, $to_ = null )
+        {
+            static $seasons_cache = array();  // Change to array that will hold per-resource-date seasons
 
-			if($seasons)
-			{
-				return $seasons;
-			}
+            // Create a cache key that includes resource and dates
+            $cache_key = $resource_id;
+            if($from_ && $to_)
+            {
+                $cache_key .= "_{$from_}_{$to_}";
+            }
+            else
+            {
+                $cache_key .= '_current';  // For when using current date
+            }
 
-			$now = date('Y-m-d');
+            // Check if we have cached seasons for this specific resource and date range
+            if(isset($seasons_cache[$cache_key]))
+            {
+                return $seasons_cache[$cache_key];
+            }
 
-			$filter = '';
-			if($from_ && $to_)
-			{
-				 $filter = "AND ((from_ >= '$from_' AND from_ < '$to_') OR"
-					. " (to_ > '$from_' AND to_ <= '$to_') OR"
-					. " (from_ < '$from_' AND to_ > '$to_'))";
+            $seasons = array();  // Local array to hold seasons for this resource
+            $now = date('Y-m-d');
 
-			}
-			else
-			{
-				 $filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
-			}
-			
-//			$filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+            $filter = '';
+            if($from_ && $to_)
+            {
+                $filter = "AND ((from_ >= '$from_' AND from_ < '$to_') OR"
+                    . " (to_ > '$from_' AND to_ <= '$to_') OR"
+                    . " (from_ < '$from_' AND to_ > '$to_'))";
+            }
+            else
+            {
+                $filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+            }
 
-			$sql = "SELECT season_id FROM bb_season_resource"
-				. " JOIN bb_season ON bb_season.id = bb_season_resource.season_id"
-				. " WHERE status = 'PUBLISHED'"
-				. " {$filter}"
-//				. " AND from_ <= '{$now}'"
-//				. " AND to_ >= '{$now}'"
-				. " AND resource_id=" . (int) $resource_id;
+            $sql = "SELECT season_id FROM bb_season_resource"
+                . " JOIN bb_season ON bb_season.id = bb_season_resource.season_id"
+                . " WHERE status = 'PUBLISHED'"
+                . " {$filter}"
+                . " AND resource_id=" . (int) $resource_id;
 
-			$this->db->query($sql, __LINE__, __FILE__);
-			while($this->db->next_record())
-			{
-				$seasons[] = (int)$this->db->f('season_id');
-			}
+            $this->db->query($sql, __LINE__, __FILE__);
+            while($this->db->next_record())
+            {
+                $seasons[] = (int)$this->db->f('season_id');
+            }
 
-			return $seasons;
-		}
+            $seasons_cache[$cache_key] = $seasons;  // Cache the results for this specific resource and date range
+            return $seasons;
+        }
 
 		public function get_building_seasons( $building_id, $from_ = null, $to_ = null )
 		{
