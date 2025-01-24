@@ -271,6 +271,10 @@
 						case 'CH':
 							$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%$query%'";
 							break;
+						case 'I':
+						case 'LB':
+							$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
+							break;
 						default:
 							$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = '$query'";
 							break;
