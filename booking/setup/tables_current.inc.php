@@ -228,6 +228,7 @@
 					'default' => 0),
 				'deactivate_calendar' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
 					'default' => 0),
+				'deny_application_if_booked' => array('type' => 'int', 'nullable' => false, 'precision' => 2, 'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -368,6 +369,7 @@
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'id_string' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False,
 					'default' => '0'),
+				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
 					'default' => 1),
@@ -377,6 +379,7 @@
 				'frontend_modified' => array('type' => 'timestamp', 'nullable' => True),
 				'building_name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False,
 					'default' => 'changeme'),
+				'building_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => 0),
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'organizer' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
@@ -448,6 +451,7 @@
 				'season_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'completed' => array('type' => 'int', 'precision' => '4', 'nullable' => False,
 					'default' => 0),
+				'additional_invoice_information' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -866,6 +870,7 @@
 				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'include_in_list' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 				'participant_limit' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'additional_invoice_information' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

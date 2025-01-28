@@ -6935,3 +6935,105 @@ SQL;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.103 to 0.2.104
+	 * 	'additional_invoice_information'
+	 */
+	$test[] = '0.2.103';
+	function booking_upgrade0_2_103()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$tables = array(
+			'bb_allocation',
+			'bb_event',
+		);
+
+		foreach ($tables as $table)
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn(
+				$table,
+				'additional_invoice_information',
+				array('type' => 'text', 'nullable' => True),
+			);
+		}
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.104';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.104 to 0.2.105
+	 * 	'additional_invoice_information'
+	 */
+	$test[] = '0.2.104';
+	function booking_upgrade0_2_104()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn(
+			'bb_application',
+			'parent_id',
+			array('type' => 'int', 'nullable' => true, 'precision' => '4'),
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.105';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.105 to 0.2.106
+	 * 	'building_id'
+	 */
+	$test[] = '0.2.105';
+	function booking_upgrade0_2_105()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn(
+			'bb_application',
+			'building_id',
+			array('type' => 'int', 'precision' => '4', 'nullable' => false, 'default' => 0),
+		);
+
+		// I have a table bb_application with building_name and building_id.
+		// Builing_name is a string and building_id is an integer.
+		// I want to update the building_id with the id from the table bb_building where the name is the same as the building_name in the bb_application table.
+		$sql = "UPDATE bb_application SET building_id = bb_building.id FROM bb_building WHERE bb_application.building_name = bb_building.name AND bb_building.active = 1";
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.106';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.106 to 0.2.107
+	 * 	'deny_application_if_booked'
+	 */
+	$test[] = '0.2.106';
+	function booking_upgrade0_2_106()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn(
+			'bb_resource',
+			'deny_application_if_booked',
+			array('type' => 'int', 'precision' => '2', 'nullable' => false, 'default' => 0),
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.107';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

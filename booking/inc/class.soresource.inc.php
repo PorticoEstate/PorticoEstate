@@ -39,7 +39,7 @@
 				'hidden_in_frontend' => array('type' => 'int', 'required' => false),
 				'activate_prepayment' => array('type' => 'int', 'required' => false),
 				'booking_buffer_deadline' => array('type' => 'int', 'required' => false),
-
+				'deny_application_if_booked' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
