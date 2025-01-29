@@ -98,7 +98,17 @@
 						<xsl:value-of select="php:function('lang', 'No')"/>
 					</xsl:if>
 				</div>
-
+				<div class="pure-control-group">
+					<label for="for_field_deny_application_if_booked">
+						<xsl:value-of select="php:function('lang', 'deny application if booked')"/>
+					</label>
+					<xsl:if test="resource/deny_application_if_booked=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/deny_application_if_booked=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
 
 				<div class="pure-control-group custom-container">
 					<label>

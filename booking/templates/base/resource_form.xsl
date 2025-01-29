@@ -236,6 +236,25 @@
 							</option>
 						</select>
 					</div>
+					<div class="pure-control-group">
+						<label for="for_field_deny_application_if_booked">
+							<xsl:value-of select="php:function('lang', 'deny application if booked')"/>
+						</label>
+						<select id="for_field_deny_application_if_booked" name="deny_application_if_booked" class="pure-input-3-4" >
+							<option value="1">
+								<xsl:if test="resource/deny_application_if_booked=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/deny_application_if_booked=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</div>
 
 					<div class="pure-control-group custom-container">
 						<label>

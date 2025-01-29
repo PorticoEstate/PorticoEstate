@@ -78,6 +78,7 @@
 				'deactivate_application'		 => 'int',
 				'hidden_in_frontend'			 => 'int',
 				'activate_prepayment'			 => 'int',
+				'deny_application_if_booked'	 => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
