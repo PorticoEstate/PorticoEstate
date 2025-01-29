@@ -271,7 +271,7 @@
                                     <div class="row">
                                         <div class="d-flex justify-content-start">
                                             <div>
-                                                <button class="pe-btn pe-btn-secondary" data-bind="click: addDate">+
+                                                <button class="pe-btn pe-btn-secondary" data-bind="click: addDate" type="button">+
                                                     <xsl:value-of select="php:function('lang', 'add_rental_period')"/>
                                                 </button>
                                             </div>
