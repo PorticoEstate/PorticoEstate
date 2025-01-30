@@ -853,6 +853,7 @@ class PECalendar {
             return [];
         }
 
+
         // First, separate events by type
         const eventsByType = {
             event: [],
@@ -865,28 +866,21 @@ class PECalendar {
             eventsByType[event.type].push(event);
         });
 
-        // First, filter out allocations that are completely overlapped by events or bookings
-        const visibleAllocations = eventsByType.allocation.filter(allocation => {
-            // Check if any event or booking completely overlaps this allocation
-            const isOverlappedByEvent = eventsByType.event.some(event =>
-                this.isCompletelyOverlapped(allocation, event)
-            );
+        // First, check if any event overlaps with bookings/allocations
+        const isOverlappedByEvent = (item) => {
+            return eventsByType.event.some(event => {
+                const eventStart = luxon.DateTime.fromSQL(event._from);
+                const eventEnd = luxon.DateTime.fromSQL(event._to);
+                const itemStart = luxon.DateTime.fromSQL(item._from);
+                const itemEnd = luxon.DateTime.fromSQL(item._to);
 
-            const isOverlappedByBooking = eventsByType.booking.some(booking =>
-                this.isCompletelyOverlapped(allocation, booking)
-            );
+                return eventStart <= itemEnd && eventEnd >= itemStart;
+            });
+        };
 
-            return !isOverlappedByEvent && !isOverlappedByBooking;
-        });
-
-        // Then, filter out bookings that are completely overlapped by events
-        const visibleBookings = eventsByType.booking.filter(booking => {
-            const isOverlappedByEvent = eventsByType.event.some(event =>
-                this.isCompletelyOverlapped(booking, event)
-            );
-
-            return !isOverlappedByEvent;
-        });
+        // Filter out bookings and allocations that overlap with events
+        const visibleBookings = eventsByType.booking.filter(booking => !isOverlappedByEvent(booking));
+        const visibleAllocations = eventsByType.allocation.filter(allocation => !isOverlappedByEvent(allocation));
 
         // Combine all visible events for processing
         const visibleEvents = [
