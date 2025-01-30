@@ -679,7 +679,10 @@ function update_form_values(line_id, voucher_id_orig)
 							checked = "checked = \"checked\"";
 						}
 						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-						htmlString2 += "<td align=\"left\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+						if (!voucher[0].parked)
+						{
+							htmlString2 += "<td align=\"left\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+						}
 					});
 
 					htmlString2 += "</tr><tbody></table>";
