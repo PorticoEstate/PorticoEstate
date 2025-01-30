@@ -30,6 +30,7 @@
 				'to_' => array('type' => 'string', 'required' => true),
 				'cost' => array('type' => 'decimal', 'required' => true),
 				'completed' => array('type' => 'int', 'required' => true, 'default' => '0'),
+				'additional_invoice_information' => array('type' => 'string', 'required' => false),
 				'organization_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(

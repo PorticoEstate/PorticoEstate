@@ -37,7 +37,8 @@
 				'building_id', 'building_name',
 				'season_id', 'season_name',
 				'organization_id', 'organization_name',
-				'organization_shortname', 'from_', 'to_', 'active', 'skip_bas');
+				'organization_shortname', 'from_', 'to_', 'active', 'skip_bas',
+				'additional_invoice_information');
 
 			$this->display_name = lang('allocations');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";

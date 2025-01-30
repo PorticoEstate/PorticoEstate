@@ -23,7 +23,8 @@
 				<input type="hidden" name="outseason" value="{outseason}" />
 				<input type="hidden" name="application_id" value="{allocation/application_id}"/>
 				<input type="hidden" name="temp_id" value="{temp_id}"/>
-
+				<input type="hidden" name="additional_invoice_information" value="{allocation/additional_invoice_information}"/>
+				<input type="hidden" name="skip_bas" value="{allocation/skip_bas}"/>
 				<xsl:for-each select="allocation/resources">
 					<input type="hidden" name="resources[]" value="{.}" />
 				</xsl:for-each>

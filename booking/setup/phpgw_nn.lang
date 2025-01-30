@@ -934,4 +934,6 @@ article group	booking	nn	Artikkelgruppe
 buffer deadline	booking	nn	Buffer/frist
 skip bas	booking	nn	Ikkje trigge SD-anlegg
 multi domain	booking	nn	Støtte for kryss-instans
+additional invoice information	booking	nn	Ekstra fakturainformasjon
+Enter additional invoice information here	booking	nn	Legg til ekstra fakturainformasjon
 deny application if booked	booking	nn	Blokker søknad om oppteken

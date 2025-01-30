@@ -76,6 +76,15 @@
 						<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
 					</div>
 				</xsl:if>
+				<!--additional_invoice_information-->
+				<xsl:if test="allocation/additional_invoice_information">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Additional Invoice Information')" />
+						</label>
+						<xsl:value-of select="allocation/additional_invoice_information"/>
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label style="vertical-align:top;">
 						<xsl:value-of select="php:function('lang', 'participants')" />

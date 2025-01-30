@@ -2134,6 +2134,15 @@
 					continue; //Don't export costless rows
 				}
 
+				if (!empty($test['additional_invoice_information']))
+				{
+					$additional_invoice_information = $test['additional_invoice_information'];
+				}
+				else
+				{
+					$additional_invoice_information = '';
+				}
+
 				$type = $reservation['customer_type'];
 
 				$log_customer_name = '';
@@ -2322,6 +2331,7 @@
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$header['long_info1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 120), 120, ' ');
+					$header['long_info2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $additional_invoice_information), 0, 120), 120, ' ');
 
 					//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
 					$header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);

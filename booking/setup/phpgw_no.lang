@@ -934,4 +934,6 @@ article group	booking	no	Artikkelgruppe
 buffer deadline	booking	no	Buffer/frist
 skip bas	booking	no	Ikke trigge SD-anlegg
 multi domain	booking	no	Støtte for kryss-instans
+additional invoice information	booking	no	Ekstra fakturainformasjon
+Enter additional invoice information here	booking	no	Legg til ekstra fakturainformasjon
 deny application if booked	booking	no	Blokker søknad om opptatt
