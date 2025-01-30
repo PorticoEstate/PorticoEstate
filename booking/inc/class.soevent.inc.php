@@ -50,6 +50,7 @@
 					'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
 				'include_in_list' => array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
+				'additional_invoice_information' => array('type' => 'string', 'required' => false),
 				'activity_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(

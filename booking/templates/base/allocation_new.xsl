@@ -10,6 +10,16 @@
 			<div id="allocation_new" class="booking-container">
 				<input type="hidden" name="application_id" value="{allocation/application_id}"/>
 				<div class="pure-control-group">
+					<label>
+						<input type="checkbox" value="1" name="skip_bas">
+							<xsl:if test="allocation/skip_bas=1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+					</label>
+					<xsl:value-of select="php:function('lang', 'skip bas')"/>
+				</div>
+				<div class="pure-control-group">
 					<label for="field_building_name">
 						<xsl:value-of select="php:function('lang', 'Building')" />
 					</label>
@@ -240,6 +250,17 @@
 						</div>
 					</div>
 				</xsl:if>
+				<div class="pure-control-group">
+					<label for="field_additional_invoice_information">
+						<xsl:value-of select="php:function('lang', 'Additional Invoice Information')" />
+					</label>
+					<textarea id="field_additional_invoice_information" name="additional_invoice_information" class="pure-input-1-4">
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="php:function('lang', 'Enter additional invoice information here')" />
+						</xsl:attribute>
+						<xsl:value-of select="allocation/additional_invoice_information"/>
+					</textarea>
+				</div>
 			</div>
 		</div>
 		<div class="form-buttons">

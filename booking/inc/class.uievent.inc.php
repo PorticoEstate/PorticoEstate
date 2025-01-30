@@ -51,7 +51,8 @@
 				'contact_name', 'contact_email', 'contact_phone',
 				'from_', 'to_', 'active', 'skip_bas', 'audience', 'reminder',
 				'is_public', 'sms_total', 'participant_limit','customer_internal', 'include_in_list',
-				'customer_organization_name','customer_organization_id');
+				'customer_organization_name','customer_organization_id',
+				'additional_invoice_information');
 
 			$this->display_name = lang('events');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
