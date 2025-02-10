@@ -1,6 +1,7 @@
 ## istructions to build the image ##
 # export INSTALL_MSSQL=true
 # export INSTALL_XDEBUG=true
+# export INSTALL_ORACLE=true
 # docker compose build
 
 services:
@@ -32,6 +33,9 @@ services:
         args:
            INSTALL_MSSQL: ${INSTALL_MSSQL}
            INSTALL_XDEBUG: ${INSTALL_XDEBUG}
+           INSTALL_ORACLE: ${INSTALL_ORACLE:-false}
+           http_proxy: ${http_proxy}
+           https_proxy: ${https_proxy}
     ports:
       - 8080:80
     environment:
