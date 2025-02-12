@@ -2487,7 +2487,7 @@
 //				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1"),
 				'organizations'			=> $this->get_rows_as_array("SELECT id, organization_number, name, homepage, phone, email, co_address,"
 					. " street, zip_code, district, city, activity_id, show_in_portal"
-					. " FROM bb_organization WHERE active=1"),
+					. " FROM bb_organization WHERE active=1 AND show_in_portal=1"),
 			);
 
             return $values;
