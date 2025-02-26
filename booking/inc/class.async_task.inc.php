@@ -6,6 +6,7 @@
 
 		protected static $task_instances = array();
 		protected $asyncservice;
+		protected $global_lock = false;
 
 		function __construct()
 		{
