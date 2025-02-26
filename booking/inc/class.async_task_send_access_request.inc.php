@@ -8,7 +8,7 @@ class booking_async_task_send_access_request extends booking_async_task
 	private $account, $config, $e_lock_integration;
 	var	$cleanup_old_reservations = array();
 	var	$e_lock_host_map = array();
-	private $simulate = true;
+	private $simulate = false;
 
 	public function __construct()
 	{
