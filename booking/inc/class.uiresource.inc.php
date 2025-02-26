@@ -725,7 +725,7 @@
 			$e_lock_system_id = phpgw::get_var('e_lock_system_id', 'int');
 			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'string');
 
-			if (!$e_lock_system_id || !$e_lock_resource_id )
+			if ($e_lock_system_id === null || $e_lock_system_id === '' || $e_lock_resource_id === null || $e_lock_resource_id === '')
 			{
 				return array(
 					'ok' => false,
