@@ -874,7 +874,7 @@ class PECalendar {
                 const itemStart = luxon.DateTime.fromSQL(item._from);
                 const itemEnd = luxon.DateTime.fromSQL(item._to);
 
-                return eventStart <= itemEnd && eventEnd >= itemStart;
+                return eventStart < itemEnd && eventEnd > itemStart;
             });
         };
 

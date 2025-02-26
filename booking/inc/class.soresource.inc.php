@@ -491,7 +491,7 @@
 
 		function remove_e_lock( $resource_id, $e_lock_system_id, $e_lock_resource_id)
 		{
-			if (!$resource_id || !$e_lock_system_id || !$e_lock_resource_id)
+			if (!$resource_id || !strlen($e_lock_system_id) || !strlen($e_lock_resource_id))
 			{
 				return false;
 			}

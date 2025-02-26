@@ -62,7 +62,7 @@ ENV LANGUAGE=en_US.UTF-8
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j$(nproc) curl intl xsl pdo_pgsql pdo_mysql gd \
+RUN docker-php-ext-install -j$(nproc) curl intl xsl pdo_pgsql pgsql pdo_mysql gd \
     shmop soap zip mbstring ftp calendar exif
 
 RUN install-php-extensions imap

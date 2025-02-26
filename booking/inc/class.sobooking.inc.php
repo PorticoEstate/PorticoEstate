@@ -468,6 +468,11 @@
 
 		function allocation_ids_for_resource( $resource_id, $start, $end )
 		{
+			if(!$resource_id)
+			{
+				return array();
+			}
+			
 			if(is_array($resource_id))
 			{
 				$resource_ids = $resource_id;
