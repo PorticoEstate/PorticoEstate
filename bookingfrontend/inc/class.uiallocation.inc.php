@@ -413,118 +413,121 @@
 		}
 
         public function info_json() {
-            $config = CreateObject('phpgwapi.config', 'booking')->read();
-            $user_can_delete_allocations = $config['user_can_delete_allocations'] === 'yes' ? 1 : ($config['user_can_delete_allocations'] === 'never' ? 2 : 0);
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$user_can_delete_allocations = $config['user_can_delete_allocations'] === 'yes' ? 1 : ($config['user_can_delete_allocations'] === 'never' ? 2 : 0);
 
-            // Retrieve multiple allocation IDs
+			// Retrieve multiple allocation IDs
             $ids = phpgw::get_var('ids', 'string');
             if ($ids) {
-                $ids = explode(',', $ids);
+				$ids = explode(',', $ids);
             } elseif (!$ids || !is_array($ids)) {
                 $ids = array(phpgw::get_var('id', 'int'));
-            }
-            $allocations_info = [];
+			}
+			$allocations_info = [];
             foreach ($ids as $id) {
-                $allocation = $this->bo->read_single((int)$id);
+				$allocation = $this->bo->read_single((int)$id);
                 if (!$allocation) {
-                    continue; // Skip if the allocation is not found
-                }
+					continue; // Skip if the allocation is not found
+				}
 
-                // Process each allocation
-                $allocation['info_resource_info'] = $this->calculate_resource_info($allocation['resources']);
-                $allocation['info_building_link'] = self::link([
-                    'menuaction' => 'bookingfrontend.uibuilding.show',
-                    'id' => $allocation['building_id']
-                ]);
-                $allocation['info_org_link'] = self::link([
-                    'menuaction' => 'bookingfrontend.uiorganization.show',
-                    'id' => $allocation['organization_id']
-                ]);
-                $allocation['info_when'] = $this->info_format_allocation_time($allocation['from_'], $allocation['to_']);
-                $allocation['info_participant_limit'] = $this->info_calculate_participant_limit($allocation, $config);
-                $allocation['info_add_link'] = $this->info_determine_add_link($allocation);
-                $allocation['info_edit_link'] = $this->info_determine_edit_link($allocation);
-                $allocation['info_cancel_link'] = $this->info_determine_cancel_link($allocation, $user_can_delete_allocations);
-                $allocation['info_ical_link'] = self::link([
-                    'menuaction' => 'bookingfrontend.uiparticipant.ical',
-                    'reservation_type' => 'allocation',
-                    'reservation_id' => $allocation['id']
-                ]);
+				// Process each allocation
+				$allocation['info_resource_info'] = $this->calculate_resource_info($allocation['resources']);
+				$allocation['info_building_link'] = self::link([
+					'menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $allocation['building_id']
+				]);
+				$allocation['info_org_link'] = self::link([
+					'menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $allocation['organization_id']
+				]);
+				$allocation['info_when'] = $this->info_format_allocation_time($allocation['from_'], $allocation['to_']);
+				$allocation['info_participant_limit'] = $this->info_calculate_participant_limit($allocation, $config);
+				$allocation['info_add_link'] = $this->info_determine_add_link($allocation);
+				$allocation['info_edit_link'] = $this->info_determine_edit_link($allocation);
+				$allocation['info_cancel_link'] = $this->info_determine_cancel_link($allocation, $user_can_delete_allocations);
+				$allocation['info_ical_link'] = self::link([
+					'menuaction' => 'bookingfrontend.uiparticipant.ical',
+					'reservation_type' => 'allocation',
+					'reservation_id' => $allocation['id']
+				]);
                 $allocation['info_show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
                     'id' => $allocation['id']));
 
-                // Add processed allocation to the array
-                $allocations_info[$id] = $allocation;
-            }
+				// Add processed allocation to the array
+				$allocations_info[$id] = $allocation;
+			}
 
-            return ['allocations' => $allocations_info, 'user_can_delete_allocations' => $user_can_delete_allocations];
-        }
+			return ['allocations' => $allocations_info, 'user_can_delete_allocations' => $user_can_delete_allocations];
+		}
 
         private function info_determine_add_link($allocation) {
             $bouser = CreateObject('bookingfrontend.bouser');
             if ($bouser->is_logged_in() &&  $bouser->is_organization_admin($allocation['organization_id'])) {
-                return self::link([
-                    'menuaction' => 'bookingfrontend.uibooking.add',
-                    'allocation_id' => $allocation['id'],
-                    'from_' => $allocation['from_'],
-                    'to_' => $allocation['to_'],
+				return self::link([
+					'menuaction' => 'bookingfrontend.uibooking.add',
+					'allocation_id' => $allocation['id'],
+					'from_' => $allocation['from_'],
+					'to_' => $allocation['to_'],
                     'resource' => phpgw::get_var('resource'),
-                    'resource_ids' => $allocation['resource_ids'],
+					'resource_ids' => $allocation['resource_ids'],
                     'from_org' => phpgw::get_var('from_org', 'boolean', "GET", false)
-                ]);
-            }
-            return null;
-        }
+				]);
+			}
+			return null;
+		}
 
-        private function info_determine_cancel_link($allocation, $user_can_delete_allocations) {
-            $bouser = CreateObject('bookingfrontend.bouser');
+		private function info_determine_cancel_link($allocation, $user_can_delete_allocations) {
+			$bouser = CreateObject('bookingfrontend.bouser');
 
-            // Assuming a similar permission check as your prior implementation
-            if ($bouser->is_logged_in() && $user_can_delete_allocations == 1) {
-                // Check if the allocation's start date is in the future
-                $isFutureAllocation = $allocation['from_'] > date('Y-m-d H:i:s');
+			// First check if the user is logged in and has permission to delete allocations
+			if ($bouser->is_logged_in() && $user_can_delete_allocations == 1) {
+				// Check if the user is an organization admin for this allocation (ADDING THIS CHECK)
+				if ($bouser->is_organization_admin($allocation['organization_id'])) {
+					// Then check if the allocation's start date is in the future
+					$isFutureAllocation = $allocation['from_'] > date('Y-m-d H:i:s');
 
-                if ($isFutureAllocation) {
-                    return self::link([
-                        'menuaction' => 'bookingfrontend.uiallocation.cancel',
-                        'allocation_id' => $allocation['id'],
-                        'from_org' => phpgw::get_var('from_org', 'boolean', "GET", false)
-                    ]);
-                }
-            }
+					if ($isFutureAllocation) {
+						return self::link([
+							'menuaction' => 'bookingfrontend.uiallocation.cancel',
+							'allocation_id' => $allocation['id'],
+							'from_org' => phpgw::get_var('from_org', 'boolean', "GET", false)
+						]);
+					}
+				}
+			}
 
-            return null; // Return null if conditions are not met
-        }
+			return null; // Return null if conditions are not met
+		}
 
 
         private function info_determine_edit_link($allocation) {
             $bouser = CreateObject('bookingfrontend.bouser');
 
             if(!$bouser->is_logged_in()) {
-                return null;
-            }
+				return null;
+			}
 
-            // Assuming a method similar to is_organization_admin exists and checks if the current user can administer the given organization
-            $canEdit = $bouser->is_organization_admin($allocation['organization_id']);
+			// Assuming a method similar to is_organization_admin exists and checks if the current user can administer the given organization
+			$canEdit = $bouser->is_organization_admin($allocation['organization_id']);
 
-            // Check if the allocation's start date is in the future
-            $isFutureAllocation = $allocation['from_'] > date('Y-m-d H:i:s');
+			// Check if the allocation's start date is in the future
+			$isFutureAllocation = $allocation['from_'] > date('Y-m-d H:i:s');
 
-            // Combine conditions: user must have permission and the allocation must be in the future
+			// Combine conditions: user must have permission and the allocation must be in the future
             if ($canEdit && $isFutureAllocation) {
                 $from_org = phpgw::get_var('from_org', 'boolean', "GET", false);
 
-                // Generate and return the edit link
-                return self::link([
-                    'menuaction' => 'bookingfrontend.uiallocation.edit',
-                    'allocation_id' => $allocation['id'],
-                    'from_org' 		 => $from_org
-                ]);
-            }
+				// Generate and return the edit link
+				return self::link([
+					'menuaction' => 'bookingfrontend.uiallocation.edit',
+					'allocation_id' => $allocation['id'],
+					'from_org' 		 => $from_org
+				]);
+			}
 
-            // If conditions are not met, return null or an appropriate alternative
-            return null;
-        }
+			// If conditions are not met, return null or an appropriate alternative
+			return null;
+		}
 
 
         private function calculate_resource_info($resourceIds) {
