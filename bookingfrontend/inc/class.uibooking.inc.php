@@ -1683,30 +1683,38 @@
             return !$booking['participant_limit'] ? ($resource_participant_limit ?: (int)$config['participant_limit']) : $booking['participant_limit'];
         }
 
-        private function info_determine_edit_link($booking) {
-            if ($booking['from_'] > Date('Y-m-d H:i:s')) {
-                return self::link([
-                    'menuaction' => 'bookingfrontend.uibooking.edit',
-                    'id' => $booking['id'],
-                    'resource_ids' => $booking['resource_ids'],
-                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
-                ]);
-            }
-            return null; // No edit link if condition not met
-        }
+		private function info_determine_edit_link($booking) {
+			$bouser = CreateObject('bookingfrontend.bouser');
 
-        private function info_determine_cancel_link($booking, $user_can_delete_bookings) {
-            if ($booking['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_bookings) {
-                return self::link([
-                    'menuaction' => 'bookingfrontend.uibooking.cancel',
-                    'id' => $booking['id'],
-                    'resource_ids' => $booking['resource_ids'],
-                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
-                ]);
-            }
-            return null; // No cancel link if condition not met
-        }
+			// Check if user is logged in AND is a group admin for this booking
+			if ($bouser->is_logged_in() && $bouser->is_group_admin($booking['group_id'])) {
+				if ($booking['from_'] > Date('Y-m-d H:i:s')) {
+					return self::link([
+						'menuaction' => 'bookingfrontend.uibooking.edit',
+						'id' => $booking['id'],
+						'resource_ids' => $booking['resource_ids'],
+						'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+					]);
+				}
+			}
+			return null;
+		}
+		private function info_determine_cancel_link($booking, $user_can_delete_bookings) {
+			$bouser = CreateObject('bookingfrontend.bouser');
 
+			// Check if user is logged in AND is a group admin for this booking
+			if ($bouser->is_logged_in() && $bouser->is_group_admin($booking['group_id'])) {
+				if ($booking['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_bookings) {
+					return self::link([
+						'menuaction' => 'bookingfrontend.uibooking.cancel',
+						'id' => $booking['id'],
+						'resource_ids' => $booking['resource_ids'],
+						'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+					]);
+				}
+			}
+			return null;
+		}
 
 
         function ical()
