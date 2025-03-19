@@ -88,7 +88,8 @@
 			$request['end_date'] = $GLOBALS['phpgw']->common->show_date($request['end_date'], $dateformat);
 
 
-			$this->db = clone($GLOBALS['phpgw']->db);
+                        $this->db = & $GLOBALS['phpgw']->db;
+
 			$this->db2 = clone($this->db);
 			$this->init = true;
 			$this->like = $this->db->like;
