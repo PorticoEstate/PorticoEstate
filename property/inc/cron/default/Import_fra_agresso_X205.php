@@ -631,7 +631,20 @@
 					unset($_bilagsnr_ut);
 				}
 
-				$vendor_id = $_data['SUPPLIER.CODE'];
+				$vendor_id = (int)$_data['SUPPLIER.CODE'];
+
+				//dersom bilagsnr_ut ikke er satt, sjekk om kombinasjonen leverandør og fakturanr er registrert fra før.
+				// bruk UNION for å sjekke både i fm_ecobilag og fm_ecobilagoverf
+				if(empty($_data['VOUCHERID']) && $vendor_id)
+				{
+					$sql = "SELECT id FROM fm_ecobilag WHERE spvend_code = {$vendor_id} AND fakturanr = '{$fakturanr}' UNION SELECT id FROM fm_ecobilagoverf WHERE spvend_code = {$vendor_id} AND fakturanr = '{$fakturanr}'";
+					$this->db->query($sql, __LINE__, __FILE__);
+					if ($this->db->next_record())
+					{
+						$this->receipt['error'][] = array('msg' => "LeverandørId: {$vendor_id} og FakturaNr: {$fakturanr} er allerede registrert i Portico, Skanningreferanse: {$_data['SCANNINGNO']}, fil: {$file}");
+						$this->skip_import		 = true;
+					}
+				}
 
 				$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int)$vendor_id;
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -669,7 +682,7 @@
 						}
 					}
 				}
-				else if ($order_info['vendor_id'] != $vendor_id)
+				else if ((int)$order_info['vendor_id'] != $vendor_id)
 				{
 					$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 				}
