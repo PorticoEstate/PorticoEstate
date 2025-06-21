@@ -39,6 +39,8 @@
 	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
 	use League\Flysystem\PhpseclibV3\SftpAdapter;
 	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+	use League\Flysystem\FilesystemException;
+	use League\Flysystem\UnableToDeleteFile;
 
 	class Import_fra_agresso_X205 extends property_cron_parent
 	{
