@@ -602,7 +602,7 @@
 
 				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_ref = '{$_data['SCANNINGNO']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if ($this->db->next_record())
+				if (!empty($_data['VOUCHERID']) && $this->db->next_record())
 				{
 					$this->skip_update_voucher_id	 = true;
 					$update_voucher					 = true;
