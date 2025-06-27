@@ -276,9 +276,9 @@
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
-						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency "
+						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency, fakturanr "
 						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
-						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
+						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,fakturanr,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
 						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
 						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency";
 
@@ -333,6 +333,7 @@
 					$invoice[$i]['invoice_count']			 = $invoice_temp['invoice_count'];
 					$invoice[$i]['vendor_id']				 = $this->db->f('spvend_code');
 					$invoice[$i]['vendor']					 = $this->db->f('org_name', true);
+					$invoice[$i]['invoice_id']			 	 = $this->db->f('fakturanr');
 					$invoice[$i]['is_janitor']				 = $role['is_janitor'];
 					$invoice[$i]['is_supervisor']			 = $role['is_supervisor'];
 					$invoice[$i]['is_budget_responsible']	 = $role['is_budget_responsible'];
