@@ -1,0 +1,10 @@
+name: Issue status → Slack (reuse)
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  call:
+    uses: PorticoEstate/.github/.github/workflows/notify-slack.yml@main
+    secrets: inherit
