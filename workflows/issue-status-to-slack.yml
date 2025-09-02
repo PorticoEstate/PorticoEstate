@@ -1,0 +1,67 @@
+name: Issue status → Slack (reusable)
+
+on:
+  workflow_call:
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide recipients and message
+        id: decide
+        uses: actions/github-script@v7
+        env:
+          HENNING_ID: U02M2VD4TGF
+          SIGURD_ID:  U071XLNGX0C
+          REIDAR_ID:  U071XLNT7FE
+          ARILD_ID:   U05QQN2LCJU
+          GEIR_ID:    U071EKRU97H
+        with:
+          script: |
+            const label = context.payload.label.name;
+            const issue = context.payload.issue;
+            const url   = issue.html_url;
+            const title = issue.title;
+            const number= issue.number;
+
+            const GH_HENNING = 'promises';
+            const GH_SIGURD  = 'sigurdne';
+            const assignees = (issue.assignees || []).map(a => (a.login || '').toLowerCase());
+            const hasHenning = assignees.includes(GH_HENNING.toLowerCase());
+            const hasSigurd  = assignees.includes(GH_SIGURD.toLowerCase());
+
+            let mentions = [], message = null;
+
+            if (label === 'Klar for testing') {
+              mentions = [process.env.ARILD_ID, process.env.GEIR_ID];
+              message  = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
+            } else if (label === 'Test feilet' || label === 'Klar for Stage') {
+              if (hasHenning) mentions = [process.env.HENNING_ID];
+              else if (hasSigurd) mentions = [process.env.SIGURD_ID];
+              const prefix = (label === 'Test feilet') ? 'TEST FEILET' : 'Godkjent i test – Klar for Stage';
+              message = `[#${number}] ${prefix}: “${title}”. ${url}`;
+            } else if (label === 'Klar for prod - alle' || label === 'Klar for prod - instans') {
+              mentions = [process.env.REIDAR_ID];
+              message  = `[#${number}] ${label}: “${title}”. ${url}`;
+            }
+
+            if (!message) core.setOutput('skip', 'true');
+            else {
+              core.setOutput('skip', 'false');
+              core.setOutput('mentions', mentions.filter(Boolean).map(id => `<@${id}>`).join(' '));
+              core.setOutput('message', message);
+            }
+
+      - name: Post to Slack
+        if: steps.decide.outputs.skip == 'false'
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-message: >-
+            ${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
