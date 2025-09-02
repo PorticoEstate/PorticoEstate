@@ -1,0 +1,12 @@
+name: Slack ping test
+on: { workflow_dispatch: {} }
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-message: "✅ Secrets OK – testmelding fra GitHub Actions."
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
