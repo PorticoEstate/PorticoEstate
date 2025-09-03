@@ -3,7 +3,7 @@ name: Issue status → Slack
 on:
   issues:
     types: [labeled]
-  workflow_dispatch: {}   # valgfri: gjør at du kan kjøre manuelt
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -64,17 +64,16 @@ jobs:
               core.setOutput('message', message);
             }
 
-  - name: Post to Slack (no preview)
-  if: steps.decide.outputs.skip == 'false'
-  uses: slackapi/slack-github-action@v1.24.0
-  with:
-    channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-    slack-message: >-
-      ${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}
-    payload: |
-      {
-        "unfurl_links": false,
-        "unfurl_media": false
-      }
-  env:
-    SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Post to Slack (no preview)
+        if: steps.decide.outputs.skip == 'false'
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "text": "${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}",
+              "unfurl_links": false,
+              "unfurl_media": false
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
