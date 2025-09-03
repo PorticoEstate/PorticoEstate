@@ -1,5 +1,9 @@
-name: Issue status → Slack (reusable)
-on: { workflow_call: {} }
+name: Issue status → Slack
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch: {}   # fint å ha for manuell testing
 
 permissions:
   issues: read
@@ -29,6 +33,7 @@ jobs:
             const hasHenning = assignees.includes('promises');
             const hasSigurd  = assignees.includes('sigurdne');
 
+            // Støtt begge skrivemåter noen steder
             const isReadyForTest = ['klar for testing','klar for test'].includes(l);
             const isTestFailed   = l === 'test feilet';
             const isReadyStage   = l === 'klar for stage';
@@ -58,11 +63,4 @@ jobs:
             }
 
       - name: Post to Slack
-        if: steps.decide.outputs.skip == 'false'
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: >-
-            ${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        if: steps.decide.outputs.skip == 'fal
