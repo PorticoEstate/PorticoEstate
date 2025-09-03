@@ -1,8 +1,5 @@
-name: Issue status → Slack
-
-on:
-  issues:
-    types: [labeled]
+name: Issue status → Slack (reusable)
+on: { workflow_call: {} }
 
 permissions:
   issues: read
