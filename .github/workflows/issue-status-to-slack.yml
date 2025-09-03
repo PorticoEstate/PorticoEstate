@@ -3,11 +3,11 @@ name: Issue status → Slack
 on:
   issues:
     types: [labeled]
-  workflow_dispatch: {}   # fint å ha for manuell testing
+  workflow_dispatch: {}   # valgfri: gjør at du kan kjøre manuelt
 
 permissions:
-  issues: read
   contents: read
+  issues: read
 
 jobs:
   notify:
@@ -24,27 +24,28 @@ jobs:
           GEIR_ID:    U071EKRU97H
         with:
           script: |
-            const raw = (context.payload.label?.name || '').trim();
-            const l = raw.toLowerCase();
+            const label = (context.payload.label?.name || '').trim().toLowerCase();
             const issue = context.payload.issue;
-            const { html_url:url, title, number } = issue;
+            const url = issue.html_url;
+            const title = issue.title;
+            const number = issue.number;
 
             const assignees = (issue.assignees || []).map(a => (a.login || '').toLowerCase());
             const hasHenning = assignees.includes('promises');
             const hasSigurd  = assignees.includes('sigurdne');
 
-            // Støtt begge skrivemåter noen steder
-            const isReadyForTest = ['klar for testing','klar for test'].includes(l);
-            const isTestFailed   = l === 'test feilet';
-            const isReadyStage   = l === 'klar for stage';
-            const isProdAll      = ['klar for prod - alle','prod deploy alle'].includes(l);
-            const isProdInst     = ['klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(l);
+            const isReadyForTest = ['klar for testing','klar for test'].includes(label);
+            const isTestFailed   = label === 'test feilet';
+            const isReadyStage   = label === 'klar for stage';
+            const isProdAll      = ['klar for prod - alle','prod deploy alle'].includes(label);
+            const isProdInst     = ['klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(label);
 
-            let mentions = [], message = null;
+            let mentions = [];
+            let message  = null;
 
             if (isReadyForTest) {
               mentions = [process.env.ARILD_ID, process.env.GEIR_ID];
-              message = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
+              message  = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
             } else if (isTestFailed || isReadyStage) {
               if (hasHenning) mentions = [process.env.HENNING_ID];
               else if (hasSigurd) mentions = [process.env.SIGURD_ID];
@@ -52,15 +53,22 @@ jobs:
               message = `[#${number}] ${prefix}: “${title}”. ${url}`;
             } else if (isProdAll || isProdInst) {
               mentions = [process.env.REIDAR_ID];
-              message = `[#${number}] ${raw}: “${title}”. ${url}`;
+              message  = `[#${number}] ${context.payload.label.name}: “${title}”. ${url}`;
             }
 
-            if (!message) { core.setOutput('skip','true'); }
-            else {
+            if (!message) {
+              core.setOutput('skip','true');
+            } else {
               core.setOutput('skip','false');
               core.setOutput('mentions', mentions.filter(Boolean).map(id => `<@${id}>`).join(' '));
               core.setOutput('message', message);
             }
 
       - name: Post to Slack
-        if: steps.decide.outputs.skip == 'fal
+        if: steps.decide.outputs.skip == 'false'
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-message: ${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
