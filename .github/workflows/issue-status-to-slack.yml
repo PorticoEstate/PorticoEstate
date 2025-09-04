@@ -1,4 +1,4 @@
-name: Issue status → Slack
+name: Issue status → Slack (DM)
 
 on:
   issues:
@@ -13,65 +13,81 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Decide recipients and message
+      - name: Decide message (DM all to Arild for now)
         id: decide
         uses: actions/github-script@v7
         env:
+          # Slack user IDs
+          ARILD_ID:   U05QQN2LCJU
           HENNING_ID: U02M2VD4TGF
           SIGURD_ID:  U071XLNGX0C
           REIDAR_ID:  U071XLNT7FE
-          ARILD_ID:   U05QQN2LCJU
           GEIR_ID:    U071EKRU97H
         with:
           script: |
+            const node  = context.payload.issue;
             const label = (context.payload.label?.name || '').trim().toLowerCase();
-            const issue = context.payload.issue;
-            const url = issue.html_url;
-            const title = issue.title;
-            const number = issue.number;
+            if (!node) { core.setOutput('skip','true'); return; }
 
-            const assignees = (issue.assignees || []).map(a => (a.login || '').toLowerCase());
-            const hasHenning = assignees.includes('promises');
-            const hasSigurd  = assignees.includes('sigurdne');
+            const url = node.html_url;
+            const title = node.title;
+            const number = node.number;
 
+            // Tekstlogikk som før
             const isReadyForTest = ['klar for testing','klar for test'].includes(label);
             const isTestFailed   = label === 'test feilet';
             const isReadyStage   = label === 'klar for stage';
             const isProdAll      = ['klar for prod - alle','prod deploy alle'].includes(label);
             const isProdInst     = ['klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(label);
 
-            let mentions = [];
-            let message  = null;
-
+            let message = null;
             if (isReadyForTest) {
-              mentions = [process.env.ARILD_ID, process.env.GEIR_ID];
-              message  = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
+              message = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
             } else if (isTestFailed || isReadyStage) {
-              if (hasHenning) mentions = [process.env.HENNING_ID];
-              else if (hasSigurd) mentions = [process.env.SIGURD_ID];
               const prefix = isTestFailed ? 'TEST FEILET' : 'Godkjent i test – Klar for Stage';
               message = `[#${number}] ${prefix}: “${title}”. ${url}`;
             } else if (isProdAll || isProdInst) {
-              mentions = [process.env.REIDAR_ID];
-              message  = `[#${number}] ${context.payload.label.name}: “${title}”. ${url}`;
+              message = `[#${number}] ${context.payload.label.name}: “${title}”. ${url}`;
             }
 
             if (!message) {
               core.setOutput('skip','true');
             } else {
+              // For test: alltid DM Arild
               core.setOutput('skip','false');
-              core.setOutput('mentions', mentions.filter(Boolean).map(id => `<@${id}>`).join(' '));
+              core.setOutput('recipient', process.env.ARILD_ID);
               core.setOutput('message', message);
             }
 
-      - name: Post to Slack (no preview)
+      - name: Open DM channel
+        if: steps.decide.outputs.skip == 'false'
+        id: dm
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          RECIPIENT: ${{ steps.decide.outputs.recipient }}
+        run: |
+          set -e
+          RESP=$(curl -sS -X POST "https://slack.com/api/conversations.open" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data "{\"users\":\"$RECIPIENT\"}")
+          echo "$RESP"
+          OK=$(echo "$RESP" | jq -r '.ok')
+          if [ "$OK" != "true" ]; then
+            echo "Failed to open DM: $RESP" 1>&2
+            exit 1
+          fi
+          CH=$(echo "$RESP" | jq -r '.channel.id')
+          echo "channel_id=$CH" >> "$GITHUB_OUTPUT"
+
+      - name: Post DM (no previews)
         if: steps.decide.outputs.skip == 'false'
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          channel-id: ${{ steps.dm.outputs.channel_id }}
           payload: |
             {
-              "text": "${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}",
+              "text": "${{ steps.decide.outputs.message }}",
               "unfurl_links": false,
               "unfurl_media": false
             }
