@@ -1,4 +1,4 @@
-name: Issue status → Slack (channel)
+name: Issue status → Slack (C05PUDLBV38)
 
 on:
   issues:
@@ -37,7 +37,7 @@ jobs:
 
             const isReadyForTest = ['klar for testing','klar for test'].includes(l);
             const isTestFailed   = l === 'test feilet';
-            const isReadyStage   = l === 'klar for stage'; // behold denne som trigger
+            const isReadyStage   = l === 'klar for stage';
             const isProdAll      = ['prod deploy - alle','klar for prod - alle','prod deploy alle'].includes(l);
             const isProdInst     = ['prod deploy - instans','klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(l);
 
@@ -65,11 +65,11 @@ jobs:
               core.setOutput('message', message);
             }
 
-      - name: Post to Slack (channel, no preview)
+      - name: Post to Slack (no preview)
         if: steps.decide.outputs.skip == 'false'
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}   # sett til C05PUDLBV38 i Secrets
+          channel-id: C05PUDLBV38  # <- hardkodet kanal
           payload: |
             {
               "text": "${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}",
