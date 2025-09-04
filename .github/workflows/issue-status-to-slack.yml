@@ -13,27 +13,19 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Decide message (DM all to Arild for now)
+      - name: Build DM text (send to Arild for now)
         id: decide
         uses: actions/github-script@v7
         env:
-          # Slack user IDs
-          ARILD_ID:   U05QQN2LCJU
-          HENNING_ID: U02M2VD4TGF
-          SIGURD_ID:  U071XLNGX0C
-          REIDAR_ID:  U071XLNT7FE
-          GEIR_ID:    U071EKRU97H
+          ARILD_ID: U05QQN2LCJU
         with:
           script: |
-            const node  = context.payload.issue;
-            const label = (context.payload.label?.name || '').trim().toLowerCase();
+            const node = context.payload.issue;
             if (!node) { core.setOutput('skip','true'); return; }
 
-            const url = node.html_url;
-            const title = node.title;
-            const number = node.number;
+            const label = (context.payload.label?.name || '').trim().toLowerCase();
+            const { html_url:url, title, number } = node;
 
-            // Tekstlogikk som før
             const isReadyForTest = ['klar for testing','klar for test'].includes(label);
             const isTestFailed   = label === 'test feilet';
             const isReadyStage   = label === 'klar for stage';
@@ -50,41 +42,16 @@ jobs:
               message = `[#${number}] ${context.payload.label.name}: “${title}”. ${url}`;
             }
 
-            if (!message) {
-              core.setOutput('skip','true');
-            } else {
-              // For test: alltid DM Arild
-              core.setOutput('skip','false');
-              core.setOutput('recipient', process.env.ARILD_ID);
-              core.setOutput('message', message);
-            }
+            if (!message) { core.setOutput('skip','true'); return; }
+            core.setOutput('skip','false');
+            core.setOutput('recipient', process.env.ARILD_ID); // test: alltid Arild
+            core.setOutput('message', message);
 
-      - name: Open DM channel
-        if: steps.decide.outputs.skip == 'false'
-        id: dm
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          RECIPIENT: ${{ steps.decide.outputs.recipient }}
-        run: |
-          set -e
-          RESP=$(curl -sS -X POST "https://slack.com/api/conversations.open" \
-            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-            -H "Content-Type: application/json; charset=utf-8" \
-            --data "{\"users\":\"$RECIPIENT\"}")
-          echo "$RESP"
-          OK=$(echo "$RESP" | jq -r '.ok')
-          if [ "$OK" != "true" ]; then
-            echo "Failed to open DM: $RESP" 1>&2
-            exit 1
-          fi
-          CH=$(echo "$RESP" | jq -r '.channel.id')
-          echo "channel_id=$CH" >> "$GITHUB_OUTPUT"
-
-      - name: Post DM (no previews)
+      - name: Send DM (no preview)
         if: steps.decide.outputs.skip == 'false'
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ steps.dm.outputs.channel_id }}
+          channel-id: ${{ steps.decide.outputs.recipient }}   # Bruker-ID = DM til person
           payload: |
             {
               "text": "${{ steps.decide.outputs.message }}",
