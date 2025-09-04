@@ -1,4 +1,4 @@
-name: Issue status → Slack (DM)
+name: Issue status → Slack (channel)
 
 on:
   issues:
@@ -13,48 +13,66 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Build DM text (send to Arild for now)
+      - name: Decide recipients and message
         id: decide
         uses: actions/github-script@v7
         env:
-          ARILD_ID: U05QQN2LCJU
+          ARILD_ID:   U05QQN2LCJU
+          GEIR_ID:    U071EKRU97H
+          HENNING_ID: U02M2VD4TGF
+          SIGURD_ID:  U071XLNGX0C
+          REIDAR_ID:  U071XLNT7FE
         with:
           script: |
             const node = context.payload.issue;
             if (!node) { core.setOutput('skip','true'); return; }
 
-            const label = (context.payload.label?.name || '').trim().toLowerCase();
+            const labelRaw = (context.payload.label?.name || '').trim();
+            const l = labelRaw.toLowerCase();
             const { html_url:url, title, number } = node;
 
-            const isReadyForTest = ['klar for testing','klar for test'].includes(label);
-            const isTestFailed   = label === 'test feilet';
-            const isReadyStage   = label === 'klar for stage';
-            const isProdAll      = ['klar for prod - alle','prod deploy alle'].includes(label);
-            const isProdInst     = ['klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(label);
+            const assignees = (node.assignees || []).map(a => (a.login || '').toLowerCase());
+            const hasHenning = assignees.includes('promises');
+            const hasSigurd  = assignees.includes('sigurdne');
 
-            let message = null;
+            const isReadyForTest = ['klar for testing','klar for test'].includes(l);
+            const isTestFailed   = l === 'test feilet';
+            const isReadyStage   = l === 'klar for stage'; // behold denne som trigger
+            const isProdAll      = ['prod deploy - alle','klar for prod - alle','prod deploy alle'].includes(l);
+            const isProdInst     = ['prod deploy - instans','klar for prod - instans','prod deploy stavanger','prod deploy bergen'].includes(l);
+
+            let mentions = [];
+            let message  = null;
+
             if (isReadyForTest) {
-              message = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
+              mentions = [process.env.ARILD_ID, process.env.GEIR_ID];
+              message  = `[#${number}] “${title}” er *Klar for testing* (deployet i Test). ${url}`;
             } else if (isTestFailed || isReadyStage) {
+              if (hasHenning) mentions = [process.env.HENNING_ID];
+              else if (hasSigurd) mentions = [process.env.SIGURD_ID];
               const prefix = isTestFailed ? 'TEST FEILET' : 'Godkjent i test – Klar for Stage';
               message = `[#${number}] ${prefix}: “${title}”. ${url}`;
             } else if (isProdAll || isProdInst) {
-              message = `[#${number}] ${context.payload.label.name}: “${title}”. ${url}`;
+              mentions = [process.env.REIDAR_ID];
+              message  = `[#${number}] ${labelRaw}: “${title}”. ${url}`;
             }
 
-            if (!message) { core.setOutput('skip','true'); return; }
-            core.setOutput('skip','false');
-            core.setOutput('recipient', process.env.ARILD_ID); // test: alltid Arild
-            core.setOutput('message', message);
+            if (!message || mentions.length === 0) {
+              core.setOutput('skip','true');
+            } else {
+              core.setOutput('skip','false');
+              core.setOutput('mentions', mentions.map(id => `<@${id}>`).join(' '));
+              core.setOutput('message', message);
+            }
 
-      - name: Send DM (no preview)
+      - name: Post to Slack (channel, no preview)
         if: steps.decide.outputs.skip == 'false'
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: ${{ steps.decide.outputs.recipient }}   # Bruker-ID = DM til person
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}   # sett til C05PUDLBV38 i Secrets
           payload: |
             {
-              "text": "${{ steps.decide.outputs.message }}",
+              "text": "${{ steps.decide.outputs.mentions }} ${{ steps.decide.outputs.message }}",
               "unfurl_links": false,
               "unfurl_media": false
             }
