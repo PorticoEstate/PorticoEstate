@@ -1,8 +1,8 @@
 ---
 name: 🐛 Kompleks bug / problem
 about: Brukes for feil som krever detaljer og steg-for-steg
-title: "[bug-report]: "
-labels: ["bug-report"]
+title: "[Bug report]: "
+labels: ["Bug report"]
 assignees: []
 ---
 
