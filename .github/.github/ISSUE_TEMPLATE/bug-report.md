@@ -1,10 +1,11 @@
 ---
-name: 🐛 Kompleks bug / problem
-about: Brukes for feil som krever detaljer og steg-for-steg
-title: "[bug report]: "
-labels: ["bug report"]
+name: "🐛 Bug report"
+about: "Brukes for feil som krever detaljer og steg-for-steg"
+title: "[Bug report]: "
+labels: ["Bug report"]
 assignees: []
 ---
+
 
 ### 📍 Kontekst
 Side: [...]  
