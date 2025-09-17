@@ -1,10 +1,11 @@
 ---
-name: 🎨 Redesign / ny funksjon
-about: Brukes for større oppgaver som krever innsikt, behov og mål
-title: "[feature]: "
+name: "🌟 Feature"
+about: "Ny funksjonalitet eller større utvidelse av eksisterende løsning"
+title: "[Feature]: "
 labels: ["feature"]
 assignees: []
 ---
+
 
 ### 🎯 Behov
 [Hvilke brukerbehov ligger bak dette? Hvilke utfordringer prøver vi å løse?]
