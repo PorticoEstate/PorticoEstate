@@ -1,7 +1,7 @@
 ---
-name: 🔧 Rask feil / forbedring
-about: Brukes for små feil eller enkle forbedringer
-title: "[quick fix]: "
+name: "🔧 Quick fix"
+about: "Mindre feil eller justering som kan løses raskt"
+title: "[Quick fix]: "
 labels: ["quick fix"]
 assignees: []
 ---
