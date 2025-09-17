@@ -6,7 +6,6 @@ labels: ["feature"]
 assignees: []
 ---
 
-
 ### 🎯 Behov
 [Hvilke brukerbehov ligger bak dette? Hvilke utfordringer prøver vi å løse?]
 
