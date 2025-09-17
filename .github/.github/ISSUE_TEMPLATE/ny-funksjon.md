@@ -1,8 +1,8 @@
 ---
 name: 🎨 Redesign / ny funksjon
 about: Brukes for større oppgaver som krever innsikt, behov og mål
-title: "[REDESIGN]: "
-labels: ["enhancement", "design"]
+title: "[Ny funksjon]: "
+labels: ["Ny funksjon"]
 assignees: []
 ---
 
