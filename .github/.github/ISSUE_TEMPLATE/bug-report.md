@@ -1,0 +1,50 @@
+---
+name: 🐛 Kompleks bug / problem
+about: Brukes for feil som krever detaljer og steg-for-steg
+title: "[bug-report]: "
+labels: ["bug-report"]
+assignees: []
+---
+
+### 📍 Kontekst
+Side: [...]  
+Lenke til side: [...]  
+Enhet: [...]  
+Instans: [...]  
+
+---
+
+### 📝 Problem
+[1–2 linjer: Hva er problemet og hvorfor er det et problem for brukeren?]  
+
+---
+
+### 🪜 Steg for å gjenskape
+1. [...]  
+2. [...]  
+3. [...]  
+**Faktisk resultat**: [...]  
+**Forventet resultat**: [...]  
+
+---
+
+### 💡 Forslag til løsning
+**Hva**: [...]  
+**Hvorfor**: [...]  
+**Hvordan**: [...]  
+
+Lenke til design: [...]  
+Lenke til prototype: [...]  
+
+---
+
+### 👤 Innmeldt av
+[...] – 📅 [...]
+
+---
+
+### 🔎 Funn fra testing (hvis relevant)
+Hvor i løsningen: [...]  
+Hva ble gjort: [...]  
+Observasjoner: [...]  
+Omfang: [...]  
