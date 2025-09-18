@@ -25,3 +25,32 @@ Lenke til side: [https://…]
 
 ### 👤 Innmeldt av
 [Navn/rolle/kommune] – 📅 [DD.MM.YYYY]
+
+## 🔎 Funn fra testing
+
+### 📍 Kontekst
+- **Side/flyt:** [Hvor i løsningen oppstår feilen?]  
+- **Instans:** [Test / Stage / Produksjon]  
+- **Enhet:** [PC, mobil, nettbrett + operativsystem/nettleser]  
+
+---
+
+### 📝 Problem
+[Beskriv feilen kort og tydelig. 1–2 setninger som sier *hva som er galt* og *hvorfor det er et problem for brukeren*.]  
+
+---
+
+### 🪜 Steg for å gjenskape
+1. [Start med første steg brukeren gjør]  
+2. [Neste handling]  
+3. [Fortsett til feilen oppstår]  
+
+---
+
+### ❌ Faktisk resultat
+[Hva skjedde? Beskriv det faktiske utfallet.]  
+
+---
+
+### ✅ Forventet resultat
+[Hva burde ha skjedd? Beskriv det forventede utfallet.]  
