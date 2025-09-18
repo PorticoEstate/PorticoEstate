@@ -2,7 +2,7 @@
 name: "🐛 Bug report"
 about: "Brukes for feil som krever detaljer og steg-for-steg"
 title: "[Bug report]: "
-labels: ["Bug report"]
+labels: ["bug report"]
 assignees: []
 ---
 
