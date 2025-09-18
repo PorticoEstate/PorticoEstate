@@ -2,19 +2,26 @@
 name: "🔧 Quick fix"
 about: "Mindre feil eller justering som kan løses raskt"
 title: "[Quick fix]: "
-labels: ["quick fix"]
+labels: ["Quick fix"]
 assignees: []
 ---
 
+<!--
+Formål: Raskt beskrive en liten feil eller enkel justering.
+Tips: Én setning + kontekst er ofte nok. Legg ved lenke og ønsket endring.
+-->
+
 ### 📝 Kort beskrivelse
-[Beskriv kort hva som skal fikses eller forbedres.]
+[Hva skal fikses/justeres – maks 1–2 setninger.]  
+*Eksempel:* Knappen «Lagre» har feil farge (#AAA), skal være #007A73.
 
 ### 📍 Kontekst
-Side: [...]  
-Lenke til side: [...]
+Side: [Hvor i løsningen gjelder dette?]  
+Lenke til side: [https://…]
 
 ### 💡 Ønsket endring
-[Beskriv den konkrete endringen.]
+[Presis beskrivelse av ønsket endring.]  
+*Eksempel:* Oppdater knappestil til primær-knapp (portal-tema) i komponentbiblioteket.
 
 ### 👤 Innmeldt av
-[...] – 📅 [...]
+[Navn/rolle/kommune] – 📅 [DD.MM.YYYY]
