@@ -2,10 +2,9 @@
 name: "🐛 Bug report"
 about: "Brukes for feil som krever detaljer og steg-for-steg"
 title: "[Bug report]: "
-labels: ["bug report"]
+labels: ["Bug report"]
 assignees: []
 ---
-
 
 ### 📍 Kontekst
 Side: [...]  
@@ -16,16 +15,16 @@ Instans: [...]
 ---
 
 ### 📝 Problem
-[1–2 linjer: Hva er problemet og hvorfor er det et problem for brukeren?]  
+[1–2 linjer: Hva er problemet og hvorfor er det et problem for brukeren?]
 
 ---
 
 ### 🪜 Steg for å gjenskape
-1. [...]  
-2. [...]  
-3. [...]  
-**Faktisk resultat**: [...]  
-**Forventet resultat**: [...]  
+1. [...]
+2. [...]
+3. [...]
+**Faktisk resultat**: [...]
+**Forventet resultat**: [...]
 
 ---
 
@@ -33,19 +32,10 @@ Instans: [...]
 **Hva**: [...]  
 **Hvorfor**: [...]  
 **Hvordan**: [...]  
-
 Lenke til design: [...]  
-Lenke til prototype: [...]  
+Lenke til prototype: [...]
 
 ---
 
 ### 👤 Innmeldt av
 [...] – 📅 [...]
-
----
-
-### 🔎 Funn fra testing (hvis relevant)
-Hvor i løsningen: [...]  
-Hva ble gjort: [...]  
-Observasjoner: [...]  
-Omfang: [...]  
