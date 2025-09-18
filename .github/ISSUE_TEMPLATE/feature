@@ -7,36 +7,22 @@ assignees: []
 ---
 
 ### 🎯 Behov
-[Hvilke brukerbehov ligger bak dette? Hvilke utfordringer prøver vi å løse?]
-
----
+[Hvilket brukerbehov/utfordring løses?]
 
 ### 🌟 Mål
-[Hva skal vi oppnå med endringen? F.eks. raskere innsending, tydeligere oversikt.]
-
----
+[Hva ønsker vi å oppnå?]
 
 ### 📍 Kontekst
 Side: [...]  
 Lenke til side: [...]  
-Instans: [...]  
-
----
-
-### 🔍 Innsikt
-[Kort oppsummering av funn, sitater eller statistikk som støtter behovet.]
-
----
+Instans: [...]
 
 ### 💡 Forslag til løsning
 **Hva**: [...]  
 **Hvorfor**: [...]  
 **Hvordan**: [...]  
-
 Lenke til design: [...]  
-Lenke til prototype: [...]  
-
----
+Lenke til prototype: [...]
 
 ### 👤 Innmeldt av
 [...] – 📅 [...]
