@@ -16,6 +16,8 @@ services:
       PGDATA: /data/postgres
     volumes:
        - postgres15_volume:/data/postgres
+    networks:
+      - internal
     restart: unless-stopped
   redis:
       container_name: redis_container
@@ -25,6 +27,8 @@ services:
        - redisdata:/data
       ports:
         - '6379:6379'
+      networks:
+        - internal
   web:
     container_name: portico_container
     build:
@@ -44,6 +48,8 @@ services:
       - ./:/var/www/html/portico/
       - /var/local/:/var/local/
       # developement: store your files in '/var/local/phpgw/<domain>/tmp' and '/var/local/phpgw/<domain>/files'
+    networks:
+      - internal
     restart: always
     depends_on:
       - postgres
@@ -53,3 +59,7 @@ volumes:
     postgres15_volume:
     redisdata:
 
+networks:
+    internal:
+        name: portico_internal
+        external: true

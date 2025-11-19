@@ -1,5 +1,5 @@
 # Use an official PHP-FPM base image
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 LABEL maintainer="Sigurd Nes <sigurdne@gmail.com>"
 
@@ -14,10 +14,12 @@ ARG https_proxy
 ENV http_proxy=${http_proxy}
 ENV https_proxy=${https_proxy}
 
+
 # Download and install the install-php-extensions script
 # https://github.com/mlocati/docker-php-extension-installer
-RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o /usr/local/bin/install-php-extensions \
-    && chmod +x /usr/local/bin/install-php-extensions
+#RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o /usr/local/bin/install-php-extensions \
+#    && chmod +x /usr/local/bin/install-php-extensions
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Configure PEAR
 RUN if [ -n "${http_proxy}" ]; then pear config-set http_proxy ${http_proxy}; fi && \
@@ -33,21 +35,30 @@ else \
     echo "Skipping Oracle support installation."; \
 fi
 
+# Add contrib and non-free repositories
+RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free" > /etc/apt/sources.list \
+    && echo "deb http://deb.debian.org/debian-security trixie-security main contrib non-free" >> /etc/apt/sources.list \
+    && echo "deb http://deb.debian.org/debian trixie-updates main contrib non-free" >> /etc/apt/sources.list
+
 # Install necessary packages
-RUN apt-get update && apt-get install -y software-properties-common \
+RUN apt-get update && apt-get install -y \
     apt-utils libcurl4-openssl-dev libicu-dev libxslt-dev libpq-dev \
-    zlib1g-dev libpng-dev libfreetype-dev libjpeg62-turbo-dev \ 
-    libc-client-dev libkrb5-dev libzip-dev libonig-dev \
+    zlib1g-dev libpng-dev libfreetype-dev libjpeg62-turbo-dev \
+    libkrb5-dev libzip-dev libonig-dev \
     git \
     less vim-tiny \
     apg \
     sudo \
-    libaio1 locales wget \
+    gnupg \
+    libaio1t64 locales wget \
     libmagickwand-dev --no-install-recommends \
     apache2 libapache2-mod-fcgid ssl-cert \
-	cron \
-	iputils-ping \
-	wkhtmltopdf
+    cron \
+    iputils-ping \
+    net-tools \
+    psmisc \
+    supervisor \
+    chromium
 
 RUN touch /etc/cron.d/cronjob && chmod 0644 /etc/cron.d/cronjob
 
@@ -62,17 +73,18 @@ ENV LANGUAGE=en_US.UTF-8
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j$(nproc) curl intl xsl pdo_pgsql pgsql pdo_mysql gd \
+RUN docker-php-ext-install -j$(nproc) curl intl xsl pdo_pgsql pdo_mysql gd \
     shmop soap zip mbstring ftp calendar exif
 
-RUN install-php-extensions imap
+# Skip IMAP extension for now due to missing libc-client in Debian Trixie
+# RUN pecl install imap && docker-php-ext-enable imap
 
 # Install PECL extensions
 RUN pecl install apcu && docker-php-ext-enable apcu
 RUN pecl install redis && docker-php-ext-enable redis
 
 # Add APCu configuration
-RUN echo "apc.shm_size=128M" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
+RUN echo "apc.shm_size=64M" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
     && echo "apc.enabled=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
     && echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
 
@@ -82,7 +94,7 @@ RUN docker-php-ext-install opcache
 
 # Add OPcache configuration
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
-    && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
+    && echo "opcache.memory_consumption=64" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && echo "opcache.interned_strings_buffer=8" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && echo "opcache.max_accelerated_files=10000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
@@ -95,10 +107,27 @@ RUN install-php-extensions imagick
 RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
 RUN php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-# Conditionally install MSSQL support
+# Conditionally install MSSQL support (ODBC + PHP drivers)
 RUN if [ "${INSTALL_MSSQL}" = "true" ]; then \
-     install-php-extensions sqlsrv pdo_sqlsrv;\
-fi
+            set -eux; \
+            export DEBIAN_FRONTEND=noninteractive; \
+            export ACCEPT_EULA=Y; \
+            . /etc/os-release; \
+            MS_VER="12"; \
+            case "${VERSION_CODENAME}" in \
+                bookworm) MS_VER="12" ;; \
+                bullseye) MS_VER="11" ;; \
+                trixie)   MS_VER="12" ;; \
+                *)        MS_VER="12" ;; \
+            esac; \
+            apt-get update && apt-get install -y --no-install-recommends ca-certificates gnupg wget apt-transport-https unixodbc-dev; \
+            wget -O /tmp/packages-microsoft-prod.deb "https://packages.microsoft.com/config/debian/${MS_VER}/packages-microsoft-prod.deb"; \
+            dpkg -i /tmp/packages-microsoft-prod.deb; rm -f /tmp/packages-microsoft-prod.deb; \
+            apt-get update; \
+            apt-get install -y --no-install-recommends msodbcsql18 mssql-tools18; \
+            echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' > /etc/profile.d/mssql-tools.sh; \
+            install-php-extensions sqlsrv pdo_sqlsrv; \
+        fi
 
 # PHP configuration
 RUN if [ "${INSTALL_XDEBUG}" = "true" ]; then \
@@ -116,17 +145,14 @@ RUN echo 'session.use_only_cookies=On' >> /usr/local/etc/php/php.ini
 RUN echo 'short_open_tag=Off' >> /usr/local/etc/php/php.ini
 RUN echo 'request_order = "GPCS"' >> /usr/local/etc/php/php.ini
 RUN echo 'variables_order = "GPCS"' >> /usr/local/etc/php/php.ini
-RUN echo 'memory_limit = 5048M' >> /usr/local/etc/php/php.ini
+RUN echo 'memory_limit = 512M' >> /usr/local/etc/php/php.ini
 RUN echo 'max_input_vars = 5000' >> /usr/local/etc/php/php.ini
 RUN echo 'error_reporting = E_ALL & ~E_NOTICE' >> /usr/local/etc/php/php.ini
-RUN echo 'post_max_size = 20M' >> /usr/local/etc/php/php.ini
-RUN echo 'upload_max_filesize = 8M' >> /usr/local/etc/php/php.ini
+RUN echo 'post_max_size = 55M' >> /usr/local/etc/php/php.ini
+RUN echo 'upload_max_filesize = 50M' >> /usr/local/etc/php/php.ini
 
 # Install Java
-RUN wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/debian/$(cat /etc/debian_version | cut -d. -f1)/prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/mssql-release.list
-
-RUN apt-get update && apt-get install -y msopenjdk-21 unzip
+RUN apt-get update && apt-get install -y openjdk-21-jdk
 
 ## Verify Java installation
 RUN java -version
@@ -139,6 +165,7 @@ RUN mkdir -p /run/php && chown www-data:www-data /run/php
 
 # Update PHP-FPM configuration to use Unix socket
 RUN sed -i 's|^listen = .*|listen = /run/php/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's|^pm.max_children.*|pm.max_children = 20|' /usr/local/etc/php-fpm.d/www.conf \
     && echo 'listen.owner = www-data' >> /usr/local/etc/php-fpm.d/www.conf \
     && echo 'listen.group = www-data' >> /usr/local/etc/php-fpm.d/www.conf \
     && echo 'listen.mode = 0660' >> /usr/local/etc/php-fpm.d/www.conf
@@ -154,13 +181,7 @@ RUN sed -i 's|^listen = .*|;listen = 127.0.0.1:9000|' /usr/local/etc/php-fpm.d/w
 RUN sed -i 's|^listen = .*|;listen = 9000|' /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # Copy PHP-FPM configuration
-#COPY php-fpm.conf /etc/apache2/conf-available/php-fpm.conf
-
-RUN echo '<IfModule mod_proxy_fcgi.c>\n\
-    <FilesMatch \.php$>\n\
-        SetHandler "proxy:unix:/run/php/php-fpm.sock|fcgi://localhost"\n\
-    </FilesMatch>\n\
-</IfModule>' > /etc/apache2/conf-available/php-fpm.conf
+COPY php-fpm.conf /etc/apache2/conf-available/php-fpm.conf
 
 # Apache2 configuration
 ENV APACHE_RUN_USER=www-data
@@ -168,6 +189,7 @@ ENV APACHE_RUN_GROUP=www-data
 ENV APACHE_LOG_DIR=/var/log/apache2
 ENV APP_DOCUMENT_ROOT=/var/www/html
 
+# Expose ports
 EXPOSE 80
 
 
@@ -179,15 +201,31 @@ RUN a2enmod headers
 RUN a2enmod ssl
 RUN a2enmod proxy
 RUN a2enmod proxy_http
+RUN a2enmod proxy_wstunnel  # Required for WebSockets
+
+# Set Apache LogFormat to combined format
+RUN echo 'LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined' > /etc/apache2/conf-available/custom-log-format.conf \
+    && echo 'CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/conf-available/custom-log-format.conf \
+    && a2enconf custom-log-format
+
 
 # Copy Apache configuration
 #COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 
+# Copy Supervisor configuration
+#COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Set up working directory
+#WORKDIR /var/www/html
+
+# Copy composer files first to leverage Docker cache
+#COPY composer.json composer.lock* ./
+
+# Install all dependencies during build time
+#RUN composer install --no-dev --optimize-autoloader
+
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Copy entrypoint script
-#COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN echo '#!/bin/sh\n\
 set -e\n\
